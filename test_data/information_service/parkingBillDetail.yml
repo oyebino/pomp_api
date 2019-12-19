@@ -1,0 +1,9 @@
+
+- test:
+    name: 查看车辆收费明细
+    desc: 验证车辆收费明细
+    send_data:
+      parkId: {lightRule_parkID}
+      carNum: %create_carNum%
+    except:
+      message: %create_carNum%

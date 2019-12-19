@@ -1,0 +1,10 @@
+.idea/
+.pytest_cache
+_windows
+codestyles
+allure-report/
+allure-results/
+result/
+logs/
+__pycache__/
+/__pycache__

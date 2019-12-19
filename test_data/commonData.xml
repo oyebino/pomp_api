@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <commondata name="parkName" value="智泊云接口测试专用停车场"/>
+    <!-- 宽进宽出(智泊云接口测试专用停车场) #PARK_EQUIPMENT_CHANNEL 查询一本机code-->
+	<commondata name="lightRule_inChannelCode" value="2022"/>
+	<commondata name="lightRule_inClientID" value="20190507171500"/>
+	<commondata name="lightRule_outChannelCode" value="2023"/>
+	<commondata name="lightRule_outClientID" value="20190507171501"/>
+    <!-- 严进严出(智泊云接口测试专用停车场) -->
+	<commondata name="StrictRule_inChannelCode" value="2063"/>
+	<commondata name="StrictRule_inClientID" value="20190507171502"/>
+	<commondata name="StrictRule_outChannelCode" value="2064"/>
+	<commondata name="StrictRule_outClientID" value="20190507171503"/>
+    <!--智泊云车场(智泊云接口测试专用停车场)-->
+	<commondata name="lightRule_areaID" value="223"/>
+	<commondata name="lightRule_parkUUID" value="54a33015-d405-499e-bce2-e569cd9dce6a"/>
+	<commondata name="lightRule_parkCode" value="2KR52FYV"/>
+	<commondata name="lightRule_parkID" value="3751"/>
+    <!--select * from tbl_device_parking;-->
+	<commondata name="vip_carNum" value="粤Z10101"/>
+    <commondata name="vip_carNum2" value="粤Z10102"/>
+    <!--智泊云车场(灰度版本在用)-->
+    <commondata name="StrictRule_areaID" value="粤Z10102"/>
+    <commondata name="StrictRule_parkUUID" value="c919bea3-9166-4997-8fb4-b506b7956f21"/>
+    <commondata name="StrictRule_parkCode" value="2KPJZECG"/>
+    <commondata name="StrictRule_parkID" value="3568"/>
+</root>

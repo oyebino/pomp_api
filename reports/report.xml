@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="3" name="pytest" skips="0" tests="3" time="23.933"><testcase classname="test_suite.center_monitor_service.car_record_controller.test_correctCarCode.TestCorrectCarCode" file="test_suite\center_monitor_service\car_record_controller\test_correctCarCode.py" line="20" name="test_correctCarCode[\u5728\u573a\u8f66\u8f86\u6821\u6b63\u8f66\u724c]" time="11.51265835762024"><failure message="AssertionError">self = &lt;test_correctCarCode.TestCorrectCarCode object at 0x00000000048FA5F8&gt;
+send_data = {&apos;channel_in&apos;: 2022, &apos;clientId_in&apos;: 20190507171500}
+expect = {&apos;status&apos;: 0}
+
+        @allure.story(&quot;校正在场车辆&quot;)
+        def test_correctCarCode(self,send_data,expect):
+            &quot;&quot;&quot;
+    		用例描述：校正在场车辆
+    	    &quot;&quot;&quot;
+            re = car_record_controller().correctCarCode(send_data[&quot;channel_in&quot;],send_data[&quot;clientId_in&quot;])
+            result = re.json()
+&gt;           Assertions().assert_in_body(result,&quot;status&quot;,expect[&quot;status&quot;])
+
+test_suite\center_monitor_service\car_record_controller\test_correctCarCode.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.Assert.Assertions object at 0x0000000004912860&gt;
+body = {&apos;message&apos;: &apos;登录过期，请重新登录&apos;, &apos;resultCode&apos;: -1, &apos;status&apos;: 400}
+body_msg = &apos;status&apos;, expected_msg = 0
+
+    def assert_in_body(self, body, body_msg, expected_msg):
+        &quot;&quot;&quot;
+        验证response body中任意属性的值是否包含
+        :param body:
+        :param body_msg:
+        :param expected_msg:
+        :return:
+        &quot;&quot;&quot;
+        try:
+            msg = body[body_msg]
+&gt;           assert str(msg) in str(expected_msg)
+E           AssertionError
+
+common\Assert.py:66: AssertionError</failure></testcase><testcase classname="test_suite.center_monitor_service.car_record_controller.test_getCorrectCarCode.TestGetCorrectCarCode" file="test_suite\center_monitor_service\car_record_controller\test_getCorrectCarCode.py" line="20" name="test_getCorrectCarCode[\u83b7\u53d6\u67d0\u4e2a\u505c\u8f66\u573a\u6821\u6b63\u8f66\u724c\u65f6N\u4e2a\u6700\u5e38\u7528\u524d\u7f00\uff08\u8f66\u724c\u524d\u4e24\u4f4d\uff09]" time="0.06200361251831055"><failure message="AssertionError">self = &lt;test_getCorrectCarCode.TestGetCorrectCarCode object at 0x0000000004954208&gt;
+send_data = {&apos;parkUUID&apos;: &apos;54a33015-d405-499e-bce2-e569cd9dce6a&apos;}
+expect = {&apos;message&apos;: &apos;测&apos;}
+
+        @allure.story(&quot;获取某个停车场校正车牌时N个最常用前缀&quot;)
+        def test_getCorrectCarCode(self,send_data,expect):
+            &quot;&quot;&quot;
+    		用例描述：获取某个停车场校正车牌时N个最常用前缀
+    	    &quot;&quot;&quot;
+            re = car_record_controller().getCorrectCarCode(send_data[&quot;parkUUID&quot;])
+            result = re.json()
+&gt;           Assertions().assert_in_text(result,expect[&quot;message&quot;])
+
+test_suite\center_monitor_service\car_record_controller\test_getCorrectCarCode.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.Assert.Assertions object at 0x000000000492FC50&gt;
+body = {&apos;message&apos;: &apos;登录过期，请重新登录&apos;, &apos;resultCode&apos;: -1, &apos;status&apos;: 400}
+expected_msg = &apos;测&apos;
+
+    def assert_in_text(self, body, expected_msg):
+        &quot;&quot;&quot;
+        验证response body中是否包含预期字符串
+        :param body:
+        :param expected_msg:
+        :return:
+        &quot;&quot;&quot;
+        try:
+            expected_msg = str(expected_msg).lower()
+            text = json.dumps(body, ensure_ascii=False).lower()
+            # print(text)
+&gt;           assert expected_msg in text
+E           AssertionError
+
+common\Assert.py:87: AssertionError</failure></testcase><testcase classname="test_suite.center_monitor_service.car_record_controller.test_refreshCharge.TestRefreshCharge" file="test_suite\center_monitor_service\car_record_controller\test_refreshCharge.py" line="20" name="test_refreshCharge[\u91cd\u65b0\u67e5\u8d39]" time="11.218641757965088"><failure message="AssertionError">self = &lt;test_refreshCharge.TestRefreshCharge object at 0x0000000004C19278&gt;
+send_data = {&apos;channel_in&apos;: 2022, &apos;clientId_in&apos;: 20190507171500}
+expect = {&apos;message&apos;: &apos;测&apos;}
+
+        @allure.story(&quot;重新查费&quot;)
+        def test_refreshCharge(self,send_data,expect):
+            &quot;&quot;&quot;
+    		用例描述：重新查费
+    	    &quot;&quot;&quot;
+            re = car_record_controller().refreshCharge(send_data[&quot;channel_in&quot;],send_data[&quot;clientId_in&quot;])
+            result = re.json()
+&gt;           Assertions().assert_in_text(result,expect[&quot;message&quot;])
+
+test_suite\center_monitor_service\car_record_controller\test_refreshCharge.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.Assert.Assertions object at 0x0000000004C394E0&gt;
+body = {&apos;message&apos;: &apos;登录过期，请重新登录&apos;, &apos;resultCode&apos;: -1, &apos;status&apos;: 400}
+expected_msg = &apos;测&apos;
+
+    def assert_in_text(self, body, expected_msg):
+        &quot;&quot;&quot;
+        验证response body中是否包含预期字符串
+        :param body:
+        :param expected_msg:
+        :return:
+        &quot;&quot;&quot;
+        try:
+            expected_msg = str(expected_msg).lower()
+            text = json.dumps(body, ensure_ascii=False).lower()
+            # print(text)
+&gt;           assert expected_msg in text
+E           AssertionError
+
+common\Assert.py:87: AssertionError</failure></testcase></testsuite>
