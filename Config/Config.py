@@ -11,6 +11,8 @@ from sys import argv
 class Config(object):
 
     VALUE_ENT_HOST = "host"
+    VALUE_ENT_PARK_USER = "user"
+    VALUE_ENT_PARK_PASSWORD = "password"
     VALUE_ENT_DB = "DB"
     VALUE_ENT_DB_PORT = "port"
     VALUE_ENT_DB_NAME = "db_name"
@@ -35,6 +37,8 @@ class Config(object):
         self.db_pwd = self.config.get(self.CATEGORY, self.VALUE_ENT_DB_PWD)
         self.db_port = self.config.get(self.CATEGORY,self.VALUE_ENT_DB_PORT)
         self.db_name = self.config.get(self.CATEGORY,self.VALUE_ENT_DB_NAME)
+        self.user = self.config.get(self.CATEGORY, self.VALUE_ENT_PARK_USER)
+        self.password = self.config.get(self.CATEGORY, self.VALUE_ENT_PARK_PASSWORD)
 
 
     def get(self,title,value):
@@ -46,4 +50,4 @@ class Config(object):
 if __name__=='__main__':
     C = Config()
 
-    print(C.getValue("vip_carNum"))
+    print(C.getValue("password"))

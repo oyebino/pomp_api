@@ -1,0 +1,15 @@
+- test:
+    name: 车辆进出场流程
+    desc: 车辆进出场流程
+    send_data:
+      parkId: {lightRule_parkID}
+      carNum: %create_carNum%
+      inClientID: {lightRule_inClientID}
+      outClientID: {lightRule_outClientID}
+    except:
+      mockCarInMessage: 欢迎光临
+      presentCarMessage: %create_carNum%
+      centralPayMessage: billid
+      parkingBillDetailMessage: %create_carNum%
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: %create_carNum%

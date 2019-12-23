@@ -1,9 +1,0 @@
-
-- test:
-    name: 查看在场车辆
-    desc: 验证车辆在场记录
-    send_data:
-      parkId: {lightRule_parkID}
-      carNum: %create_carNum%
-    except:
-      message: %create_carNum%

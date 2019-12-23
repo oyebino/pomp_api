@@ -1,0 +1,23 @@
+- test:
+    name: 固定金额优惠劵使用流程
+    desc: 固定金额优惠劵使用流程
+    send_data:
+      couponName: api优惠劵%create_randomNum%
+      traderName: apitest
+      carNum: %create_carNum%
+      inClientID: {lightRule_inClientID}
+      outClientID: {lightRule_outClientID}
+      parkId: {lightRule_parkID}
+      couponType: 3
+      faceValue: 1.5
+      isCover: 1
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      sendCouponMessage: 发券成功
+      mockCarInMessage: 欢迎光临
+      mockCarOutMessage: 一路顺风
+      checkParkingBillDetailMessage: %create_carNum%
+      checkCouponGrantListMeaasge: %create_carNum%
+      checkSerialListMessage: %create_carNum%
+      centralPayMessage: billId

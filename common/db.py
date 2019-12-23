@@ -62,6 +62,6 @@ class Db:
 
 if __name__ == "__main__":
     a =Db()
-    csql = "select ID from park_month_ticket_sync_log"
-    result = a.select(csql)
+    csql = "select real_price from park_trader_coupon_template where NAME='api优惠劵4350'"
+    result = str(a.select(csql))
     print(result)

@@ -34,4 +34,5 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    s = cloudparking_service().mock_car_in_out("粤NB6667","1","20190507171500")
+    s = cloudparking_service().mock_car_in_out("粤Q12345","0","20190507171502")
+    print(s.json())

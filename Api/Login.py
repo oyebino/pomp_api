@@ -4,12 +4,9 @@
 # @Date  : 2019/11/16
 # @Desc  :
 
-from common.Req import Req
 from Config.Config import Config
 from urllib.parse import urljoin
 from common.logger import logger as log
-from collections import OrderedDict
-import allure
 
 import requests
 
@@ -22,6 +19,8 @@ class Login():
         self.conf = Config()
         self.host = self.conf.host
         self.Seesion = requests.Session()
+        self.user = Config().getValue("user")
+        self.password = Config().getValue("password")
 
     def login(self):
 
@@ -42,8 +41,8 @@ class Login():
         re = self.Seesion.post(verify_seccode,data=data)
 
         data = {
-            "username": "akeww",
-            "password": "123456",
+            "username": self.user,
+            "password": self.password,
             "seccode": 9999
         }
         re = self.Seesion.post(url,data,headers=headers)

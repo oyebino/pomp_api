@@ -135,9 +135,9 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
-        time.sleep(5)
         result = self.request('POST', url, data=data, json=json, **kwargs)
         self.postLogFormat(url,data,json,result)
+        time.sleep(5)
         return result
 
     def put(self, url, data=None, **kwargs):

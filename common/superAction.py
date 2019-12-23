@@ -20,9 +20,9 @@ class SuperAction:
         if carType == "民航":
             new_carNum = "民航" + ''.join(carNum)[1:]
         elif carType == "新能源":
-            new_carNum = "测" + ''.join(carNum) + "F"
+            new_carNum = "粤" + ''.join(carNum) + "F"
         else:
-            new_carNum = "测" + ''.join(carNum)
+            new_carNum = "粤" + ''.join(carNum)
         return new_carNum
 
     def get_time(self,strType = "%Y%m%d%H%M%S"):
@@ -54,6 +54,14 @@ class SuperAction:
             date = now - datetime.timedelta(seconds=seconds)
         return date.strftime(strType)
 
+    def cal_get_day(self,strType ="%Y%m%d", days = 1, style ="+"):
+        now = datetime.date.today()
+        if style=="+":
+            date = now + datetime.timedelta(days = days)
+        else:
+            date = now - datetime.timedelta(days = days)
+        return date.strftime(strType)
+
     def get_uuid(self):
         uuidlist = str(uuid.uuid1()).split("-")
         newstr = ""
@@ -72,6 +80,11 @@ class SuperAction:
         name= "月票"+"".join(random.sample(src_digits, 4))
         return name
 
+    def create_randomNum(self,val= 4):
+        src_digits = string.digits
+        value = "".join(random.sample(src_digits, val))
+        return value
+
     def changeDate(self,json):
         """
         深度把json数据体具有unicode转换成中文
@@ -89,5 +102,45 @@ class SuperAction:
                 json.get(key).encode()
         return json
 
+    # 获取当前时间的自然月
+    def get_now_natural_month(self):
+        import calendar
+        import datetime
+        today = datetime.datetime.today()
+        now_month = '%s-%s' % (today.year, today.month)
+        monthRange = calendar.monthrange(today.year, today.month)[1]
+        timeperiodListStr = "{}-01 00:00:00 - {}-{} 23:59:59".format(now_month, now_month, monthRange)
+        return timeperiodListStr
+
+    # 获取当前时间的下个月的自然月
+    def get_next_natural_month(self):
+        import calendar
+        import datetime
+        from dateutil.relativedelta import relativedelta
+        next_month_day = datetime.date.today() - relativedelta(months=-1)
+        next_nonth = '%s-%s' % (next_month_day.year, next_month_day.month)
+        monthRange = calendar.monthrange(next_month_day.year, next_month_day.month)[1]
+        timeperiodListStr = "{}-01 00:00:00 - {}-{} 23:59:59".format(next_nonth, next_nonth, monthRange)
+        return timeperiodListStr
+
+    # 获取当前时间的两个月的自然月
+    def get_two_natural_month(self):
+        import calendar
+        import datetime
+        from dateutil.relativedelta import relativedelta
+        today = datetime.datetime.today()
+        now_month = '%s-%s' % (today.year, today.month)
+        next_month_day = datetime.date.today() - relativedelta(months=-1)
+        next_nonth = '%s-%s' % (next_month_day.year, next_month_day.month)
+        monthRange = calendar.monthrange(next_month_day.year, next_month_day.month)[1]
+        timeperiodListStr = "{}-01 00:00:00 - {}-{} 23:59:59".format(now_month, next_nonth, monthRange)
+        return timeperiodListStr
+
+    # 获取当前时间格式为："%Y-%m-%d %H:%M:%S"
+    def get_now_time(self, strType="%Y-%m-%d %H:%M:%S"):
+        dt = datetime.datetime.now()
+        return dt.strftime(strType)
+
+
 if __name__ == "__main__":
-    print(SuperAction().create_carNum())
+    print(SuperAction().cal_get_day(strType = "%Y-%m-%d")+" 00:00:00")
