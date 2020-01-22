@@ -2,14 +2,14 @@
     name: 车辆进出场流程
     desc: 车辆进出场流程
     send_data:
-      parkId: {lightRule_parkID}
-      carNum: %create_carNum%
-      inClientID: {lightRule_inClientID}
-      outClientID: {lightRule_outClientID}
+      parkId: ${lightRule_parkID}
+      carNum: ${__create_carNum(carType=民航)}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
     except:
       mockCarInMessage: 欢迎光临
-      presentCarMessage: %create_carNum%
+      presentCarMessage: ${__create_carNum}
       centralPayMessage: billid
-      parkingBillDetailMessage: %create_carNum%
+      parkingBillDetailMessage: ${__create_carNum}
       mockCarOutMessage: 一路顺风
-      carLeaveHistoryMessage: %create_carNum%
+      carLeaveHistoryMessage: ${__create_carNum}

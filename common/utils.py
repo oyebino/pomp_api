@@ -7,14 +7,19 @@
 import os
 import re
 import yaml
-import json
+from Config.parameter import tempDataPath
 from Config.Config import Config
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 class YmlUtils(object):
 
     def __init__(self,yamlPath):
         self.C = Config()
         self.all_data = self.load_yaml(yamlPath)
+        tempPath = root_path + yamlPath.replace("test_data","temporaryDataLog").replace("yml","xml")
+        tempDataPath.temporaryDataPath = tempPath
+        FloderUtil().delFloder(tempPath.rsplit("/",1)[0])
 
     def load_yaml(self,yamlPath):
 
@@ -66,9 +71,11 @@ class YmlUtils(object):
         pass
 from common.superAction import SuperAction
 from common.XmlHander import XmlHander
+
 class YmlCommon(object):
     def __init__(self):
         self.C = Config()
+        self.commonData = root_path + "/test_data/commonData.xml"
 
     def getsubString2(self,template):
         """
@@ -85,17 +92,54 @@ class YmlCommon(object):
         :param template:
         :return:
         """
-        rule = r'%(.*)%'
+        rule = r'\${__(.*)}'
         textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
-            c = getattr(SuperAction(),key)
-            value = c()
+            funName,argsList,kwargsList=self.getFunNameAndParm(key)
+            c = getattr(SuperAction(),funName)
+            if len(argsList)==0 and len(kwargsList)==0:
+                value = c()
+            elif not len(argsList)==0 and len(kwargsList)==0:
+                argsList = tuple(argsList)
+                value = c(*argsList)
+            elif len(argsList)==0 and not len(kwargsList)==0:
+                s = ",".join(kwargsList)
+                kwargsdict = dict((l.split('=') for l in s.split(',')))
+                value = c(**kwargsdict)
+            else:
+                argsList = tuple(argsList)
+                s = ",".join(kwargsList)
+                kwargsdict = dict((l.split('=') for l in s.split(',')))
+                value = c(*argsList,**kwargsdict)
+
             text_dic[key] = value
         for key in text_dic:
-            strKey = "%" + key + "%"
+            strKey = "${__" + key + "}"
             template = template.replace(strKey, text_dic[key])
         return self.formatYmlStr(template)
+
+    def getFunNameAndParm(self,yamlFun):
+        """切割分开函数名和参数体"""
+        num = yamlFun.index('(')
+        funName = yamlFun[0:num]
+        parm = yamlFun[num+1:-1]
+        kwargsList = list()
+        argsList = list()
+        if parm == "":
+            return funName, argsList, kwargsList
+        else:
+            parmList = parm.split(',')
+            if len(parmList) ==0:
+                pass
+            else:
+                for key in parmList:
+                    if key.rfind('=') >= 0:
+                        kwargsList.append(key)
+                    else:
+                        argsList.append(key)
+                return funName,argsList,kwargsList
+
 
     def formatYmlStr(self,template):
         """
@@ -103,24 +147,68 @@ class YmlCommon(object):
         :param template:
         :return:
         """
-        rule = r'{(.*)}'
+        rule = r'\${(.*)}'
         textList = re.findall(rule, template)
         text_dic = {}
         for key in textList:
-            value = XmlHander().getValueByName(key)
+            value = XmlHander(self.commonData).getValueByName(key,"commondata")
             text_dic[key] = value
         for key in text_dic:
-            strKey = "{" + key + "}"
+            strKey = "${" + key + "}"
             template = template.replace(strKey, text_dic[key])
         return template
 
+class FloderUtil(object):
+
+    def getListFloder(self,path):
+        """
+        文件夹递归,返回全部文件list
+        :param path:
+        :return:
+        """
+        os.chdir(path)
+        all_files =list()
+        isExists = os.path.exists(path)
+        if not isExists:
+            return False
+        else:
+            file_list = os.listdir(path)
+            for file in file_list:
+                filePath = path +'\\'+file
+                if os.path.isdir(file):
+                    all_files.extend(self.getListFloder(path+'\\'+file))
+                    os.chdir(path)
+                else:
+                    all_files.append(filePath)
+
+        return all_files
+
+    def createFloder(self,path):
+        """创建文件夹"""
+        isExists=os.path.exists(path)
+        if not isExists:
+            os.makedirs(path)
+            return True
+        else:
+            return False
+
+    def delFloder(self,path):
+        """删除文件夹及文件"""
+        isExists = os.path.exists(path)
+        if not isExists:
+            return False
+        else:
+            if not os.path.isdir(path):
+                os.remove(path)
+            else:
+                import shutil
+                shutil.rmtree(path)
+            return True
+
+
 
 if __name__ == "__main__":
-    # test_data, case_desc =YmlUtils("/test_data/information_service/presentCar.yml").all_data
-    # print(test_data)
-    # c = YmlUtils("/test_data/information_service/presentCar.yml").all_data
-    # print(c)
-    x = XmlHander()
-    print(x._XmlHander__filename)
+    test_data, case_desc =YmlUtils("/test_data/information_service/carInOutDetail.yml").getData
+    print(test_data)
 
 

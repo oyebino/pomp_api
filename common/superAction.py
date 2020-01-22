@@ -69,11 +69,6 @@ class SuperAction:
             newstr += uuidlist[i]
         return newstr
 
-    def save_data(self):
-        """
-        保存案例的运行时的数值
-        :return:
-        """
 
     def create_random_name(self):
         src_digits = string.digits
@@ -141,6 +136,8 @@ class SuperAction:
         dt = datetime.datetime.now()
         return dt.strftime(strType)
 
+    def runTest(self,a,b,str=6):
+        return a+b+str
 
 if __name__ == "__main__":
-    print(SuperAction().cal_get_day(strType = "%Y-%m-%d")+" 00:00:00")
+    SuperAction().runTest(1,2,str=3)

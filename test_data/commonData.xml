@@ -24,4 +24,19 @@
     <commondata name="StrictRule_parkUUID" value="c919bea3-9166-4997-8fb4-b506b7956f21"/>
     <commondata name="StrictRule_parkCode" value="2KPJZECG"/>
     <commondata name="StrictRule_parkID" value="3568"/>
+    <!--智泊云接口测试免费停车场-->
+    <commondata name="FreePark_areaID" value=""/>
+	<commondata name="FreePark_parkUUID" value="fc41068f-3862-4979-a87d-d303893b1151"/>
+	<commondata name="FreePark_parkCode" value="2KSQ9RWC"/>
+	<commondata name="FreePark_parkID" value="3916"/>
+    <!--智泊云接口测试免费停车场-->
+    <commondata name="freePark_lightRule_inChannelCode" value="3064"/>
+	<commondata name="freePark_lightRule_inClientID" value="20200115172343"/>
+	<commondata name="freePark_lightRule_outChannelCode" value="3065"/>
+	<commondata name="freePark_lightRule_outClientID" value="20200115172347"/>
+    <!--智泊云接口测试免费停车场-->
+	<commondata name="freePark_StrictRule_inChannelCode" value="3068"/>
+	<commondata name="freePark_StrictRule_inClientID" value="20200116092926"/>
+	<commondata name="freePark_StrictRule_outChannelCode" value="3069"/>
+	<commondata name="freePark_StrictRule_outClientID" value="20200116092930"/>
 </root>

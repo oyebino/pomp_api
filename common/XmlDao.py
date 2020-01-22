@@ -17,14 +17,15 @@ class XmlDao():
         return tree
 
     @staticmethod
-    def createXml(keyName,value,outPathFile):
+    def createXml(outPathFile):
         doc = Dom.Document()
         root_node = doc.createElement("root")
+        root_node.setAttribute("name","caseTest")
         doc.appendChild(root_node)
-        case_node = doc.createElement("caseData")
-        case_node.setAttribute("name", keyName)
-        case_node.setAttribute("value", value)
-        root_node.appendChild(case_node)
+        # case_node = doc.createElement("caseData")
+        # case_node.setAttribute("name", keyName)
+        # case_node.setAttribute("value", value)
+        # root_node.appendChild(case_node)
         f = open(outPathFile, 'w', encoding='utf8')
         doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
         f.close()
@@ -116,5 +117,4 @@ class XmlDao():
         return True
 
 if __name__ == "__main__":
-    XmlDao.openXml("../test_data/commonData.xml")
-    pass
+    XmlDao().createXml('name','tom','../test_data/333.xml')

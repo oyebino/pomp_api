@@ -8,8 +8,8 @@ from common.Req import Req
 from common.db import Db as db
 from common.superAction import SuperAction as SA
 from common.XmlHander import XmlHander as xmlUtil
-from Api.cloudparking_service import cloudparking_service
 import time
+from urllib.parse import urlencode
 
 class Information_controller(Req):
     """
@@ -24,7 +24,17 @@ class Information_controller(Req):
         :param parkId:
         :return:
         """
-        self.url = "/mgr/park/presentCar/getPresentCar.do?page=1&rp=1&approchTimeFrom="+self.data+"+00:00:00&approchTimeTo="+self.data+"+23:59:59&parkIds="+str(parkId)+"&parkSysType=1&plate="+str(carNum)
+        # self.url = "/mgr/park/presentCar/getPresentCar.do?page=1&rp=1&approchTimeFrom="+self.data+"+00:00:00&approchTimeTo="+self.data+"+23:59:59&parkIds="+str(parkId)+"&parkSysType=1&plate="+str(carNum)
+        data = {
+            "page":1,
+            "rp":1,
+            "approchTimeFrom":self.data +" 00:00:00",
+            "approchTimeTo":self.data +" 23:59:59",
+            "parkIds":parkId,
+            "parkSysType":1,
+            "plate":carNum
+        }
+        self.url = "/mgr/park/presentCar/getPresentCar.do?" + urlencode(data)
         re = self.get(self.api,headers= self.api_headers)
         return re
 
@@ -34,7 +44,17 @@ class Information_controller(Req):
         :param parkId:
         :return:
         """
-        self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?page=1&rp=1&fromLeaveTime="+self.data+"+00:00:00&toLeaveTime="+self.data+"+23:59:59&query_carNo="+str(carNum)+"&parkIds="+str(parkId)+"&parkSysType=1"
+        # self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?page=1&rp=1&fromLeaveTime="+self.data+"+00:00:00&toLeaveTime="+self.data+"+23:59:59&query_carNo="+str(carNum)+"&parkIds="+str(parkId)+"&parkSysType=1"
+        data = {
+            "page":1,
+            "rp":1,
+            "fromLeaveTime":self.data + " 00:00:00",
+            "toLeaveTime":self.data +" 23:59:59",
+            "query_carNo":carNum,
+            "parkIds":parkId,
+            "parkSysType":1
+        }
+        self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?" + urlencode(data)
         time.sleep(5)
         re = self.get(self.api,headers= self.api_headers)
         return re
@@ -46,7 +66,16 @@ class Information_controller(Req):
         :return:
         """
         time.sleep(5)
-        self.url = "/mgr/park/parkingBillDetail/list.do?page=1&rp=1&query_payTimeFrom="+self.data+"+00:00:00&query_payTimeTo="+self.data+"+23:59:59&query_carCode="+str(carNum)+"&parkIds="+str(parkId)+""
+        # self.url = "/mgr/park/parkingBillDetail/list.do?page=1&rp=1&query_payTimeFrom="+self.data+"+00:00:00&query_payTimeTo="+self.data+"+23:59:59&query_carCode="+str(carNum)+"&parkIds="+str(parkId)+""
+        data = {
+            "page":1,
+            "rp":1,
+            "query_payTimeFrom":self.data + " 00:00:00",
+            "query_payTimeTo":self.data + " 23:59:59",
+            "query_carCode":carNum,
+            "parkIds":parkId
+        }
+        self.url = "/mgr/park/parkingBillDetail/list.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
         return re
 
@@ -95,9 +124,13 @@ class Information_controller(Req):
         re = self.post(self.api, json=json_data, headers=self.api_headers)
         return re
 
+    def get_traderInfo(self):
+        sql = "select * from user_trader_coupon where CAR_CODE='粤Q12348'"
+
 if __name__ == '__main__':
     # central("https://zbcloud.k8s.yidianting.com.cn").centralGetCharge()
-    re =Information_controller().centralPay("测K85914")
+    # re =Information_controller().centralPay("粤Q12347")
+    re = Information_controller().centralGetCharge("粤Q12349")
     print(re.json())
 
 

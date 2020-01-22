@@ -13,24 +13,31 @@ class XmlHander():
 
     def __init__(self,filename=None):
         if filename is None:
-            self.__filename = root_path +'/test_data/commonData.xml'
+            self.__filename = root_path +'../test_data/commonData.xml'
         else:
             self.__filename = filename
+            if os.path.exists(self.__filename):
+                pass
+            else:
+                XmlDao.createXml(self.__filename)
 
     #获取节点属性
-    def getValueByName(self,name):
-        print(self.__filename)
+    def getValueByName(self,name,nodeName='caseData'):
         tree = XmlDao.openXml(self.__filename)
-        # print('tree',tree,self.__filename)
         if tree is None:
             return None
-        nodes = XmlDao.find_nodes(tree, 'commondata')
+        nodes = XmlDao.find_nodes(tree, nodeName)
         nodes = XmlDao.get_node_by_keyvalue(nodes, {'name':name})
         if len(nodes) > 0:
             return nodes[0].attrib['value']
         return None
+
     #设置节点
     def setValueByName(self,name,value):
+        if os.path.exists(self.__filename):
+            pass
+        else:
+            XmlDao.createXml(self.__filename,)
         tree = XmlDao.openXml(self.__filename)
         if tree is None:
             return None
@@ -39,6 +46,7 @@ class XmlHander():
         if len(nodes) > 0:
             nodes[0].attrib['value'] = value
             XmlDao.saveAs(tree, self.__filename)
+
     #添加节点,已存在相同名称的则会覆盖
     def addTag(self,name,value):
         tree = XmlDao.openXml(self.__filename)
@@ -55,5 +63,6 @@ class XmlHander():
         XmlDao.saveAs(tree, self.__filename)
 
 if __name__ == "__main__":
-    # print(XmlHander().getValueByName("lightRule_parkID"))
-    print(XmlHander()._XmlHander__filename)
+    path ='E:\POMP_API/temporaryDataLog/information_service/carInOutDetail.xml'
+    XmlHander(path).getValueByName('age')
+    # print(XmlHander('E:/POMP_API/test_data/333.xml').getValueByName("age","caseData"))

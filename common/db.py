@@ -46,22 +46,44 @@ class Db:
         self.close()
 
     # 数据库查询所有操作方法:
-    def select(self, sql, L=[]):
+    def select(self, sql, L=[],showAll = "0"):
         self.open()
         try:
             self.open()
             self.cur.execute(sql, L)
             result = self.cur.fetchall()
-            print(type(result))
             if not result:
                 result = (("null",),)
-            return result[-1][0]
+            if showAll == "0":
+                return result[-1][0]
+            else:
+                return list(result[-1])
+
         except Exception as e:
             print("Failed", e)
         self.close()
 
 if __name__ == "__main__":
     a =Db()
-    csql = "select real_price from park_trader_coupon_template where NAME='api优惠劵4350'"
-    result = str(a.select(csql))
+    csql = "select * from user_trader_coupon where CAR_CODE='粤Q12348'"
+    result = a.select(csql,showAll="1")
+    # print(result)
+    json = {
+        "id":result[0],
+        "canCover":result[18],
+        "cityType":result,
+        "couponName":result[1],
+        "couponType":result[4],
+        "couponUseEnum":result,
+        "extPro":"",
+        "faceValue":result[5],
+        "favorVal":result,
+        "groupKey":result,
+        "maxCoverNum":result[19],
+        "serialNumber":result[2],
+        "traderCouponTemplateId":result,
+        "useRule":result[17],
+        "validFrom":result[6],
+        "validTo":result[7]
+    }
     print(result)

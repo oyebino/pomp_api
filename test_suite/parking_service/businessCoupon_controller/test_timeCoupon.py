@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/20 17:41
 # @Author  : 叶永彬
-# @File    : test_couponFixedAmount.py
+# @File    : test_discountAmountCoupon.py
 
 import pytest,os
 import allure
@@ -15,11 +15,11 @@ from Api.information_service.information_controller import Information_controlle
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parking_service/businessCoupon_controller/couponFree.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parking_service/businessCoupon_controller/timeCoupon.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
-class TestCouponFixedAmount():
-    """固定劵创建并使用"""
+class TestCouponDiscountAmount():
+    """时间劵创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
         re = Coupon_controller(userLogin).addCoupon(send_data["couponName"],send_data["couponType"],send_data["faceValue"],send_data["isCover"])
@@ -58,7 +58,7 @@ class TestCouponFixedAmount():
 
     def test_checkParkingBillDetail(self,userLogin,send_data,expect):
         """查看收费流水"""
-        re = Information_controller(userLogin).getParkingBillDetail(send_data["parkId"])
+        re = Information_controller(userLogin).getParkingBillDetail(send_data["parkId"],send_data["carNum"])
         result = re.json()
         Assertions().assert_in_text(result, expect["checkParkingBillDetailMessage"])
 
