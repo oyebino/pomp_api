@@ -2,12 +2,12 @@
     name: 不可叠加时间券创建（智泊云）
     desc: 不可叠加时间券创建（智泊云）
     send_data:
-      couponName: api时间券%create_randomNum%
+      couponName: api时间券${__create_randomNum()}
       traderName: apitest
-      carNum: %create_carNum%
-      inClientID: {lightRule_inClientID}
-      outClientID: {lightRule_outClientID}
-      parkId: {lightRule_parkID}
+      carNum: ${__create_carNum()}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+      parkId: ${lightRule_parkID}
       couponType: 4
       faceValue: 5
       isCover: 0
@@ -17,7 +17,7 @@
       sendCouponMessage: 发券成功
       mockCarInMessage: 欢迎光临
       mockCarOutMessage: 一路顺风
-      checkParkingBillDetailMessage: %create_carNum%
-      checkCouponGrantListMessage: %create_carNum%
-      checkSerialListMessage: %create_carNum%
+      checkParkingBillDetailMessage: ${__create_carNum()}
+      checkCouponGrantListMessage: ${__create_carNum()}
+      checkSerialListMessage: ${__create_carNum()}
       centralPayMessage: billId

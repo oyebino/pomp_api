@@ -18,7 +18,7 @@ args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parking_service/businessCoupon_controller/discountCoupon.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
-class TestCouponDiscountAmount():
+class TestDiscountAmountCoupon():
     """折扣劵创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""

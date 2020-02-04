@@ -104,41 +104,65 @@ class YmlCommon(object):
                 argsList = tuple(argsList)
                 value = c(*argsList)
             elif len(argsList)==0 and not len(kwargsList)==0:
-                s = ",".join(kwargsList)
-                kwargsdict = dict((l.split('=') for l in s.split(',')))
+                # s = ",".join(kwargsList)
+                # kwargsdict = dict((l.split('=') for l in s.split(',')))
+                kwargsdict = self.listToDict(kwargsList)
                 value = c(**kwargsdict)
             else:
                 argsList = tuple(argsList)
-                s = ",".join(kwargsList)
-                kwargsdict = dict((l.split('=') for l in s.split(',')))
+                # s = ",".join(kwargsList)
+                # kwargsdict = dict((l.split('=') for l in s.split(',')))
+                kwargsdict = self.listToDict(kwargsList)
                 value = c(*argsList,**kwargsdict)
 
             text_dic[key] = value
         for key in text_dic:
             strKey = "${__" + key + "}"
-            template = template.replace(strKey, text_dic[key])
+            template = template.replace(strKey, str(text_dic[key]))
         return self.formatYmlStr(template)
+
+    def listToDict(self,parmList):
+        s = ",".join(parmList).replace("'",'"').replace('"','')
+        kwargsdict = dict((l.split('=') for l in s.split(',')))
+        return kwargsdict
+
+    def __index_str(self,s1,s2):
+        """
+        返回字符第一次出现的地方
+        :return:
+        """
+        n1 = len(s1)
+        n2 = len(s2)
+        for i in range(n1 - n2 + 1):
+            if s1[i:i + n2] == s2:
+                return i
+        else:
+            return -1
 
     def getFunNameAndParm(self,yamlFun):
         """切割分开函数名和参数体"""
-        num = yamlFun.index('(')
-        funName = yamlFun[0:num]
-        parm = yamlFun[num+1:-1]
-        kwargsList = list()
-        argsList = list()
-        if parm == "":
-            return funName, argsList, kwargsList
+        num = self.__index_str(yamlFun,'(')
+        if num == -1:
+            pass
         else:
-            parmList = parm.split(',')
-            if len(parmList) ==0:
-                pass
+
+            funName = yamlFun[0:num]
+            parm = yamlFun[num+1:-1]
+            kwargsList = list()
+            argsList = list()
+            if parm == "":
+                return funName, argsList, kwargsList
             else:
-                for key in parmList:
-                    if key.rfind('=') >= 0:
-                        kwargsList.append(key)
-                    else:
-                        argsList.append(key)
-                return funName,argsList,kwargsList
+                parmList = parm.split(',')
+                if len(parmList) ==0:
+                    pass
+                else:
+                    for key in parmList:
+                        if key.rfind('=') >= 0:
+                            kwargsList.append(key)
+                        else:
+                            argsList.append(key)
+                    return funName,argsList,kwargsList
 
 
     def formatYmlStr(self,template):
@@ -151,11 +175,16 @@ class YmlCommon(object):
         textList = re.findall(rule, template)
         text_dic = {}
         for key in textList:
-            value = XmlHander(self.commonData).getValueByName(key,"commondata")
+            value = XmlHander(self.commonData).getValueByName(key)
             text_dic[key] = value
-        for key in text_dic:
-            strKey = "${" + key + "}"
-            template = template.replace(strKey, text_dic[key])
+        for key in list(text_dic.keys()):
+            if text_dic[key]==None:
+                text_dic.pop(key)
+            else:
+                strKey = "${" + key + "}"
+                template = template.replace(strKey, text_dic[key])
+            if not text_dic:
+                return template
         return template
 
 class FloderUtil(object):
@@ -210,5 +239,8 @@ class FloderUtil(object):
 if __name__ == "__main__":
     test_data, case_desc =YmlUtils("/test_data/information_service/carInOutDetail.yml").getData
     print(test_data)
+    print(case_desc)
+
+
 
 

@@ -12,12 +12,13 @@ from common.utils import YmlUtils
 from Api.information_service.information_controller import Information_controller
 from Api.cloudparking_service import cloudparking_service
 from common.Assert import Assertions
+from common.baseCase import BaseCase
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/information_service/carInOutDetail.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("信息查询模块")
-class TestCarInOutDetail():
+class TestCarInOutDetail(BaseCase):
     """车辆进场流程"""
     def test_mockCarIn(self,send_data,expect):
         """模拟车辆进场"""

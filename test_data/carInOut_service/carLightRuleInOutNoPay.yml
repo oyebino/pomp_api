@@ -1,0 +1,14 @@
+- test:
+    name: 临时车宽进-不需缴费宽出
+    desc: 临时车宽进-不需缴费宽出
+    send_data:
+      parkId: ${FreePark_parkID}
+      carNum: ${__create_carNum()}
+      inClientID: ${freePark_lightRule_inClientID}
+      outClientID: ${freePark_lightRule_outClientID}
+    except:
+      mockCarInMessage: 欢迎光临
+      presentCarMessage: ${__create_carNum()}
+      parkingBillDetailMessage: ${__create_carNum()}
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: ${__create_carNum()}

@@ -25,10 +25,10 @@
     name: 收费放行
     desc: 验证正常收费放行
     send_data:
-      channel_in: {lightRule_inChannelCode}
-      clientId_in: {lightRule_inClientID}
-      channel_out: {lightRule_outChannelCode}
-      clientId_out: {lightRule_outClientID}
+      channel_in: ${lightRule_inChannelCode}
+      clientId_in: ${lightRule_inClientID}
+      channel_out: ${lightRule_outChannelCode}
+      clientId_out: ${lightRule_outClientID}
       leaveType: 2
     except:
       status_code: 200
@@ -37,21 +37,44 @@
     name: 异常放行
     desc: 验证异常收费放行
     send_data:
-      channel_in: {lightRule_inChannelCode}
-      clientId_in: {lightRule_inClientID}
-      channel_out: {lightRule_outChannelCode}
-      clientId_out: {lightRule_outClientID}
+      channel_in: ${lightRule_inChannelCode}
+      clientId_in: ${lightRule_inClientID}
+      channel_out: ${lightRule_outChannelCode}
+      clientId_out: ${lightRule_outClientID}
       leaveType: 3
     except:
       status_code: 200
 ```
 - 在yml中,使用中括号加参数能直接配置文件里的值，如：
 ```
-{lightRule_inChannelCode}
-{lightRule_parkID}
+${lightRule_inChannelCode}
+${lightRule_parkID}
+```
+- 在yml中，引用superAction类文件的方法(必须要有返回值)，可直接在配置文件的值，如：
+```
+${__create_carNum()}
+${__create_carNum(1,2)}
+${__create_carNum(carType="民航")}
+${__create_carNum(3,5,carType="民航")}
+```
+- 在用例文件执行过程中能保存案例运行值，以xml文件形式保存在temporaryDataLog文件夹内，self.save_data("字段名","值")
+```
+self.save_data('carIn_jobId',result['biz_content']['job_id'])
+
+```
+- 在用例数据yml中，提取保存的值，${用例类名.变量}
+```
+- test:
+    name: 异常放行
+    desc: 验证异常收费放行
+    send_data:
+      carNo: ${TestCarInOutDetail.carNum}
+      leaveType: 3
+    except:
+      status_code: 200
 ```
 
-**3.test_suit文件保存按模块的执行用例，用例文件及用例方法必须以test为前缀**
+**3.test_suit文件保存按模块的执行用例，用例文件，类名及用例方法必须以test为前缀**
 
 ```
 def test_CarIn(self):

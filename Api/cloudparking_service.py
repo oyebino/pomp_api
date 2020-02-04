@@ -68,7 +68,7 @@ class cloudparking_service(Req):
         json_data={
           "carInOutId": carInOutId,
           "leaveType": 2,   # 放行类型 2:收费放行 3:异常放行
-          "operateTime": SA().get_time(strType ="%Y-%m-%d %H:%M:%S"),
+          "operateTime": SA().get_time(strType ="%Y-%m-%dT%H:%M:%S.000Z"),
           "operator": "auto",
           "payVal": 0,
           "reason": "收费放行"

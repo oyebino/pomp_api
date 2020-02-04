@@ -13,7 +13,7 @@ class XmlHander():
 
     def __init__(self,filename=None):
         if filename is None:
-            self.__filename = root_path +'../test_data/commonData.xml'
+            self.__filename = root_path +'/test_data/commonData.xml'
         else:
             self.__filename = filename
             if os.path.exists(self.__filename):

@@ -4,12 +4,13 @@
 # @Date  : 2018/11/15
 # @Desc  :
 import requests
-import time
+import time,os
 from common.superAction import SuperAction as SA
-from  Config.parameter import Parameter
-
-# from requests.packages.urllib3.exceptions import InsecureRequestWarning
-# requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+from common.utils import FloderUtil
+from common.XmlHander import XmlHander
+from Config.parameter import tempDataPath
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 from Config.Config import Config
 
@@ -101,8 +102,10 @@ class Req(requests.Session):
         :rtype: requests.Response
         """
         kwargs.setdefault('allow_redirects', True)
+        url = self.__formatRule(r'%24%7B(.*?)%7D',url)
+        print(url)
         result = self.request('GET', url, **kwargs)
-        self.getLogFormat(url,kwargs,result)
+        self.__getLogFormat(url,kwargs,result)
         return result
 
     def options(self, url, **kwargs):
@@ -135,10 +138,23 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
+        data = self.__formatCaseParm(data)
+        json = self.__formatCaseParm(json)
         result = self.request('POST', url, data=data, json=json, **kwargs)
-        self.postLogFormat(url,data,json,result)
+        self.__postLogFormat(url,data,json,result)
         time.sleep(5)
         return result
+
+    def __formatCaseParm(self,template):
+        """
+        解析案例保存的储存值
+        :return:
+        """
+        if not template == None:
+            template = eval(self.__formatRule(r'\${(.*?)}', str(template)))
+            return template
+        else:
+            return None
 
     def put(self, url, data=None, **kwargs):
         r"""Sends a PUT request. Returns :class:`Response` object.
@@ -172,7 +188,7 @@ class Req(requests.Session):
 
         return self.request('DELETE', url, **kwargs)
 
-    def postLogFormat(self,url,data,json,result):
+    def __postLogFormat(self,url,data,json,result):
         """
         日志打印格式
         :param url:
@@ -194,7 +210,7 @@ class Req(requests.Session):
             logger.info("===返回结果:{}".format(result.text))
 
 
-    def getLogFormat(self,url,kwargs,result):
+    def __getLogFormat(self,url,kwargs,result):
         """
         get方式的日志打印格式
         :param url:
@@ -208,5 +224,52 @@ class Req(requests.Session):
         logger.info("===返回状态码:{}".format(result.status_code))
         logger.info("===返回结果:{}".format(result.text))
 
+    def __formatRule(self,rule,template):
+        """
+        规则模板解析
+        rule = r'\${(.*)}'
+        rule1 = r'\%24%7B(.*)%7D'
+        :return:
+        """
+        import re
+        textList = re.findall(rule, template)
+        text_dic = {}
+        for key in textList:
+            caseName = str(key).split('.')[0]
+            keyProperty = str(key).split('.')[1]
+            value = self.__get_caseData(keyProperty,caseName)
+            text_dic[key] = value
+        for key in list(text_dic.keys()):
+            strKey = rule.split("(.*?)")[0] + key + rule.split("(.*?)")[1]
+            template = re.sub(strKey,text_dic[key],template)
+        return template
 
+    def __get_caseData(self,nodeName,caseName = None):
+        """
+        提取运行案例值
+        :return:
+        """
+        if caseName ==None:
+            filePath = tempDataPath.temporaryDataPath
+            fileName = (filePath.rsplit("/", 1))[1]
+            caseName = str(fileName).lower()
+        else:
+            caseName = str(caseName).lower().replace("test","")
+        fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
+        for file in fileList:
+            if str(file).lower().find(caseName):
+                run_data = XmlHander(file).getValueByName(nodeName)
+                return run_data
+            else:
+                pass
 
+if __name__ == "__main__":
+    data = {'name': '${carInOutDetail.carNum}', 'parkName': None, 'parkId': None, 'type': '美食', 'defaultType': '美食', 'contact': 'auto-zbyun', 'tel': '1380013812', 'password': '123456', 'confirmPassword': '123456', 'isLimitBuy': 0, 'userCount': 2, 'couponIdListStr': '4392', 'telIsEdit': 'true'}
+    import re
+    # bb = data['name']
+    rule = r'${(.*?)}'
+    key1 = "云HFG3ZD"
+    key = re.findall(r'\${(.*?)}', str(data))
+    aa =rule.split("(.*?)")[0] + key[0] + rule.split("(.*?)")[1]
+    print(aa)
+    print(eval((str(data).replace(aa,key1))))

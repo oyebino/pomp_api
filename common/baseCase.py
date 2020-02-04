@@ -24,17 +24,6 @@ class BaseCase(object):
         FloderUtil().createFloder(floderPath)
         XmlHander(filePath).addTag(name,value)
 
-    def get_caseData(self,caseName,nodeName):
-        """提取运行案例值"""
-        fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
-        for file in fileList:
-            if str(file).find(caseName):
-                run_data = XmlHander(file).getValueByName(nodeName)
-                return run_data
-            else:
-                pass
-
-
 
 if __name__ == "__main__":
-    print(BaseCase().save_data("age","12","E:/POMP_API/temporaryDataLog/carInOutDetail/carInOutNoPay.xml"))
+    print(BaseCase().save_data("age","12"))

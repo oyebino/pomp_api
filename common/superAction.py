@@ -136,8 +136,10 @@ class SuperAction:
         dt = datetime.datetime.now()
         return dt.strftime(strType)
 
-    def runTest(self,a,b,str=6):
-        return a+b+str
+    def runTest(self,a,b,str1=7):
+        sum = int(a)+int(b)+int(str1)
+        return sum
+        # return str(a+b+str1)
 
 if __name__ == "__main__":
-    SuperAction().runTest(1,2,str=3)
+    print(SuperAction().create_carNum(carType="新能源"))

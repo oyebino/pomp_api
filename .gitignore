@@ -6,5 +6,6 @@ allure-report/
 allure-results/
 result/
 logs/
+temporaryDataLog/
 __pycache__/
 /__pycache__

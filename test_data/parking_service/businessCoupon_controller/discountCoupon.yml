@@ -2,12 +2,12 @@
     name: 金额折扣券创建（智泊云）
     desc: 金额折扣券创建（智泊云）
     send_data:
-      couponName: api金额折扣劵%create_randomNum%
+      couponName: api金额折扣劵${__create_randomNum()}
       traderName: apitest
-      carNum: %create_carNum%
-      inClientID: {lightRule_inClientID}
-      outClientID: {lightRule_outClientID}
-      parkId: {lightRule_parkID}
+      carNum: ${__create_carNum()}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+      parkId: ${lightRule_parkID}
       couponType: 2
       faceValue: 0.5
       isCover: 1
@@ -17,7 +17,7 @@
       sendCouponMessage: 发券成功
       mockCarInMessage: 欢迎光临
       mockCarOutMessage: 一路顺风
-      checkParkingBillDetailMessage: %create_carNum%
-      checkCouponGrantListMessage: %create_carNum%
-      checkSerialListMessage: %create_carNum%
+      checkParkingBillDetailMessage: ${__create_carNum()}
+      checkCouponGrantListMessage: ${__create_carNum()}
+      checkSerialListMessage: ${__create_carNum()}
       centralPayMessage: billId

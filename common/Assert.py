@@ -9,8 +9,12 @@
 """
 from common.logger import logger
 from common import Consts
-import json
-
+import json,os
+from common.utils import FloderUtil
+from common.XmlHander import XmlHander
+from Config.parameter import tempDataPath
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 class Assertions:
     def __init__(self):
@@ -63,7 +67,7 @@ class Assertions:
         """
         try:
             msg = body[body_msg]
-            assert str(msg) in str(expected_msg)
+            assert str(msg) in str(self.__formatExpected(expected_msg))
             self.log.info("===验证结果值：{}包含{}".format(msg, expected_msg))
             return True
 
@@ -81,7 +85,7 @@ class Assertions:
         :return:
         """
         try:
-            expected_msg = str(expected_msg).lower()
+            expected_msg = self.__formatExpected(str(expected_msg)).lower()
             text = json.dumps(body, ensure_ascii=False).lower()
             # print(text)
             assert expected_msg in text
@@ -122,7 +126,7 @@ class Assertions:
         :return:
         """
         try:
-            assert body == expected_msg
+            assert body == self.__formatExpected(expected_msg)
             self.log.error("===响应结果与预期值一致, 预期值是： {}, 响应结果是： {}".format(expected_msg, body))
             return True
 
@@ -150,4 +154,40 @@ class Assertions:
 
             raise
 
+    def __formatExpected(self,template):
+        """
+        解析期望值传进的值
+        :return:
+        """
+        import re
+        rule = r'\${(.*)}'
+        textList = re.findall(rule, template)
+        text_dic = {}
+        for key in textList:
+            caseName = str(key).split('.')[0]
+            keyProperty = str(key).split('.')[1]
+            value = self.__get_caseData(keyProperty, caseName)
+            text_dic[key] = value
+        for key in list(text_dic.keys()):
+            strKey = "${" + key + "}"
+            template = template.replace(strKey, text_dic[key])
+        return template
 
+    def __get_caseData(self,nodeName,caseName = None):
+        """
+        提取运行案例值
+        :return:
+        """
+        if caseName ==None:
+            filePath = tempDataPath.temporaryDataPath
+            fileName = (filePath.rsplit("/", 1))[1]
+            caseName = str(fileName).lower()
+        else:
+            caseName = str(caseName).lower().replace("test","")
+        fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
+        for file in fileList:
+            if str(file).lower().find(caseName):
+                run_data = XmlHander(file).getValueByName(nodeName)
+                return run_data
+            else:
+                pass
