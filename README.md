@@ -57,9 +57,11 @@ ${__create_carNum(1,2)}
 ${__create_carNum(carType="民航")}
 ${__create_carNum(3,5,carType="民航")}
 ```
-- 在用例文件执行过程中能保存案例运行值，以xml文件形式保存在temporaryDataLog文件夹内，self.save_data("字段名","值")
+- 在用例文件执行过程中能保存案例运行值，以xml文件形式保存在temporaryDataLog文件夹内，案例文件类需要继承baseCase基类，self.save_data("字段名","值")
 ```
-self.save_data('carIn_jobId',result['biz_content']['job_id'])
+class TestCarStrictRuleInOutNoPay(BaseCase):
+
+	self.save_data('carIn_jobId',result['biz_content']['job_id'])
 
 ```
 - 在用例数据yml中，提取保存的值，${用例类名.变量}
