@@ -19,9 +19,11 @@ class BaseCase(object):
         保存案例的运行时的数值
         :return:
         """
-        filePath = tempDataPath.temporaryDataPath
-        floderPath = (filePath.rsplit("/",1))[0]
+        caseNameList = tempDataPath.caseNameList
+        floderPath = tempDataPath.temporaryDataPath
         FloderUtil().createFloder(floderPath)
+        tempDataPath.runingCaseName = caseNameList.pop()
+        filePath = floderPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name,value)
 
 

@@ -5,10 +5,9 @@
 # @Desc  :
 
 from common.Req import Req
-from Api.Login import Login
+from Api.Login import Login,SentryLogin
 import pytest
 
-import requests
 
 @pytest.fixture(scope="class")
 def userLogin():
@@ -16,7 +15,11 @@ def userLogin():
     Session = L.login()
     return Req(Session)
 
-
+@pytest.fixture(scope="class")
+def sentryLogin():
+    L = SentryLogin()
+    Session = L.login()
+    return Req(Session)
 
 """
 

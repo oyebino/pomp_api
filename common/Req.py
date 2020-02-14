@@ -249,12 +249,10 @@ class Req(requests.Session):
         提取运行案例值
         :return:
         """
-        if caseName ==None:
-            filePath = tempDataPath.temporaryDataPath
-            fileName = (filePath.rsplit("/", 1))[1]
-            caseName = str(fileName).lower()
+        if caseName == "mytest":
+            caseName = str(tempDataPath.runingCaseName).lower()
         else:
-            caseName = str(caseName).lower().replace("test","")
+            caseName = str(caseName).lower()
         fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
         for file in fileList:
             if str(file).lower().find(caseName):
@@ -264,12 +262,5 @@ class Req(requests.Session):
                 pass
 
 if __name__ == "__main__":
-    data = {'name': '${carInOutDetail.carNum}', 'parkName': None, 'parkId': None, 'type': '美食', 'defaultType': '美食', 'contact': 'auto-zbyun', 'tel': '1380013812', 'password': '123456', 'confirmPassword': '123456', 'isLimitBuy': 0, 'userCount': 2, 'couponIdListStr': '4392', 'telIsEdit': 'true'}
-    import re
-    # bb = data['name']
-    rule = r'${(.*?)}'
-    key1 = "云HFG3ZD"
-    key = re.findall(r'\${(.*?)}', str(data))
-    aa =rule.split("(.*?)")[0] + key[0] + rule.split("(.*?)")[1]
-    print(aa)
-    print(eval((str(data).replace(aa,key1))))
+    data = "中方蝇名"
+    print(data.lower())

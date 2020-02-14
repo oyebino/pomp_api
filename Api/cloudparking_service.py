@@ -90,8 +90,8 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mock_car_in_out("粤T54613","1","20200116092930")
-    job_id = a.json()['biz_content']['job_id']
-    s = cloudparking_service().check_car_out("粤T54613",job_id)
+    a = cloudparking_service().mock_car_in_out("粤T54615","1","20200116092930")
+    # job_id = a.json()['biz_content']['job_id']
+    # s = cloudparking_service().check_car_out("粤T54613",job_id)
     # b = cloudparking_service().mock_open_gate("383711eaa5ef7427eac14803")
     print(a.json())

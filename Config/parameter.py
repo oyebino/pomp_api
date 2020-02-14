@@ -20,7 +20,11 @@ class Parameter():
 
 class tempDataPath():
 
-    temporaryDataPath = None
+    temporaryDataPath = None # 父目录
+
+    caseNameList = None     # 当前运行的案例集名
+
+    runingCaseName = None   # 当前运行的案例名
 
 if __name__ == "__main__":
     print(type(const.parkVipTypeJson))

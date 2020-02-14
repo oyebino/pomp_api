@@ -17,9 +17,9 @@ class YmlUtils(object):
     def __init__(self,yamlPath):
         self.C = Config()
         self.all_data = self.load_yaml(yamlPath)
-        tempPath = root_path + yamlPath.replace("test_data","temporaryDataLog").replace("yml","xml")
+        tempPath = root_path + yamlPath.replace("test_data", "temporaryDataLog").split('.')[0]
         tempDataPath.temporaryDataPath = tempPath
-        FloderUtil().delFloder(tempPath.rsplit("/",1)[0])
+        FloderUtil().delFloder(tempPath)
 
     def load_yaml(self,yamlPath):
 
@@ -52,13 +52,16 @@ class YmlUtils(object):
         d = self.all_data
         array=[]  # 每条案例对应的测试数据信息
         desc=[]   # 每条案例对应的描述信息
+        name = [] # 每条案例的名称
         for i in range(0,len(d)):
             for value in d[i].values():
                 childarray = []
                 childarray.append(value['send_data'])
                 childarray.append(value['except'])
                 desc.append(value['desc'])
+                name.append(value['name'])
                 array.append(tuple(childarray))
+        tempDataPath.caseNameList = name
         return array,desc
 
     def single_data(self):
@@ -237,9 +240,15 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/information_service/carInOutDetail.yml").getData
-    print(test_data)
-    print(case_desc)
+    # test_data, case_desc =YmlUtils("/test_data/carInOut_service/carStrictRuleInOutNoPay.yml").getData
+    # # print(test_data)
+    # # print(case_desc)
+    # print(tempDataPath.caseNameList)
+    dList = [1,2,3,4,5,6]
+    for i in range(len(dList)):
+        dList.pop()
+        print(dList)
+
 
 
 

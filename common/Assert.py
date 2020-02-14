@@ -179,11 +179,9 @@ class Assertions:
         :return:
         """
         if caseName ==None:
-            filePath = tempDataPath.temporaryDataPath
-            fileName = (filePath.rsplit("/", 1))[1]
-            caseName = str(fileName).lower()
+            caseName = str(tempDataPath.runingCaseName).lower()
         else:
-            caseName = str(caseName).lower().replace("test","")
+            caseName = str(caseName).lower()
         fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
         for file in fileList:
             if str(file).lower().find(caseName):
