@@ -1,0 +1,32 @@
+- test:
+    name: 进出场消息处理
+    desc: 验证进出场消息处理
+    send_data:
+      user_id: strict_apitest
+      password: 123456
+      carNum1: ${__create_carNum()}
+      carNum2: ${__create_carNum()}
+      StrictRule_inClientID: ${StrictRule_inClientID}
+      StrictRule_outClientID: ${StrictRule_outClientID}
+      StrictRule_inChannelCode: ${StrictRule_inChannelCode}
+      StrictRule_outChannelCode: ${StrictRule_outChannelCode}
+    except:
+      Message1: 请稍候
+      Message2: ok
+      Message3: 缴费
+      Message4: ok
+
+#- test:
+#    name: 用户登录2
+#    desc: 验证是否登录成功2
+#    send_data:
+#      user_id: all
+#      password: 123456
+#      carNum: %create_carNum%
+#      inClientID: 20200116092926
+#      outClientID: 20200116092930
+#      lightinClientID: {lightRule_inClientID}
+#      lightoutClientID: {lightRule_outClientID}
+#      mockType: 1
+#    except:
+#      Message: ok
