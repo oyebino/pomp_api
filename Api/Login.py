@@ -58,6 +58,8 @@ class SentryLogin():
         r = self.S.post(url=url, data=data, headers=form_headers).json()
         token = r['token']
         self.S.headers.update({"user":token,"type":"ydtp-pc"})
+        print("r*****",r)
+
         if r['onDuty'] == 0:
             self.__select_channel()
         return self.S
@@ -80,8 +82,10 @@ class SentryLogin():
             "channel_ids": channelCodeList
         }
         r = self.S.post(url=url, data=data)
-        if not r.json()['status'] == 200:
-            log.info(r.json()['message'])
+        print("***********",r.text)  # 登录成功后返回内容为空
+        # if not r.json()['status'] == 200:
+        #     log.info(r.json()['message'])
+
 
     # def quit(self):
     #     """退出登录"""
