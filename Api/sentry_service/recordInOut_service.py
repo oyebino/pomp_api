@@ -25,7 +25,7 @@ class RecordInOut(Req):
             "begin_time": "{} 00:00:00".format(SuperAction().get_time(strType="%Y-%m-%d")),
             "end_time": "{} 23:59:59".format(SuperAction().get_time(strType="%Y-%m-%d"))
         }
-        re = self.get(self.api,params=data, headers=form_headers)
+        re = self.get(self.zby_api, params=data, headers=form_headers)
         r = re.json()
         return r
 
@@ -42,6 +42,6 @@ class RecordInOut(Req):
             "end_time": "{} 23:59:59".format(SuperAction().get_time(strType="%Y-%m-%d"))
         }
 
-        re = self.get(self.api,params=data, headers=form_headers)
+        re = self.get(self.zby_api, params=data, headers=form_headers)
         r = re.json()
         return r

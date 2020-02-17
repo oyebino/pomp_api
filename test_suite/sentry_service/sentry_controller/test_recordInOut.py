@@ -28,7 +28,7 @@ class TestSentryRecordInOut():
     def test_sentryRecordIn(self,sentryLogin, send_data, expect):
 
         # 进场
-        re = cloudparking_service().mock_car_in_out(send_data["carNum1"],0,send_data["lightRule_inClientID"])
+        re = cloudparking_service().mock_car_in_out(send_data["carNum1"], 0, send_data["lightRule_inClientID"])
         result1 = re.json()
         Assertions().assert_in_text(result1, expect['Message1'])
 
@@ -50,8 +50,7 @@ class TestSentryRecordInOut():
         Assertions().assert_in_text(result2, expect['Message2'])
 
         # 点击收费放行
-        id = CheckInOut(sentryLogin).check_message_in_out()
-        result3 = CheckInOut(sentryLogin).normal_car_out(id)
+        result3 = CheckInOut(sentryLogin).normal_car_out(send_data['lightRule_parkUUID'])
         Assertions().assert_in_text(result3, expect["Message3"])
         sleep(2)
 

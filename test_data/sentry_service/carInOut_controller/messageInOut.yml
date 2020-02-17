@@ -6,6 +6,7 @@
       password: 123456
       carNum1: ${__create_carNum()}
       carNum2: ${__create_carNum()}
+      lightRule_parkUUID: ${lightRule_parkUUID}
       StrictRule_inClientID: ${StrictRule_inClientID}
       StrictRule_outClientID: ${StrictRule_outClientID}
       StrictRule_inChannelCode: ${StrictRule_inChannelCode}

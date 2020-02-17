@@ -31,9 +31,7 @@ class TestSentryMessage():
         Assertions().assert_in_text(result1, expect["Message1"])
 
         # 点击进场消息，然后登记放行
-        id = CheckInOut(sentryLogin).check_message_in_out()
-        print("消息id", id)
-        result2 = CheckInOut(sentryLogin).check_car_in_out(id)
+        result2 = CheckInOut(sentryLogin).check_car_in_out(send_data['lightRule_parkUUID'])
         Assertions().assert_in_text(result2,expect["Message2"])
 
     def test_sentryMessageOut(self, sentryLogin, send_data, expect):
@@ -44,22 +42,20 @@ class TestSentryMessage():
         Assertions().assert_in_text(result1, expect["Message1"])
 
         # 点击进场消息，然后登记放行
-        id = CheckInOut(sentryLogin).check_message_in_out()
-        print("消息id", id)
-        result2 = CheckInOut(sentryLogin).check_car_in_out(id)
+        result2 = CheckInOut(sentryLogin).check_car_in_out(send_data['lightRule_parkUUID'])
         Assertions().assert_in_text(result2, expect["Message2"])
 
        # 检查进场记录
 
+
         # 离场
         sleep(2)
-        re = cloudparking_service().mock_car_in_out(send_data["carNum2"],1,send_data["StrictRule_outClientID"])
+        re = cloudparking_service().mock_car_in_out(send_data["carNum2"], 1, send_data["StrictRule_outClientID"])
         result3 = re.json()
         Assertions().assert_in_text(result3, expect["Message3"])
 
         # 点击离场消息，然后登记放行
-        id = CheckInOut(sentryLogin).check_message_in_out()
-        result4 = CheckInOut(sentryLogin).check_car_in_out(id)
+        result4 = CheckInOut(sentryLogin).check_car_in_out(send_data['lightRule_parkUUID'])
         Assertions().assert_in_text(result4,expect["Message4"])
 
         # 检查离场记录
