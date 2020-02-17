@@ -136,9 +136,16 @@ class SuperAction:
         dt = datetime.datetime.now()
         return dt.strftime(strType)
 
-    def runTest(self):
-        import inspect
-        print(inspect.stack()[1][3])
+    # 获取当前时间的上个月的自然月
+    def get_last_natural_month(self):
+        import calendar
+        import datetime
+        from dateutil.relativedelta import relativedelta
+        last_month_day = datetime.date.today() - relativedelta(months=1)
+        last_nonth = '%s-%s' % (last_month_day.year, last_month_day.month)
+        monthRange = calendar.monthrange(last_month_day.year, last_month_day.month)[1]
+        timeperiodListStr = "{}-01 00:00:00 - {}-{} 23:59:59".format(last_nonth, last_nonth, monthRange)
+        return timeperiodListStr
 
 if __name__ == "__main__":
     print("jkjkj"+SuperAction().create_randomNum(val=3))
