@@ -39,8 +39,8 @@ class XmlDao():
         '''给一个节点添加子节点
            nodelist: 节点列表
            element: 子节点'''
-        print(len(nodelist))
-        print(element)
+        # print(len(nodelist))
+        # print(element)
         for node in nodelist:
             node.append(element)
 

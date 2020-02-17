@@ -4,6 +4,7 @@
 # @Date  : 2018/11/15
 # @Desc  :
 import requests
+import inspect
 import time,os
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
@@ -143,6 +144,7 @@ class Req(requests.Session):
         result = self.request('POST', url, data=data, json=json, **kwargs)
         self.__postLogFormat(url,data,json,result)
         time.sleep(5)
+        tempDataPath.testName = inspect.stack()[2][3]
         return result
 
     def __formatCaseParm(self,template):

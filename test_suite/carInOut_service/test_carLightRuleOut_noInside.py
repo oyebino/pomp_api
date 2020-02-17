@@ -7,7 +7,7 @@
 import pytest
 import allure
 from common.utils import YmlUtils
-from common.baseCase import BaseCase
+from common.BaseCase import BaseCase
 from Api.information_service.information_controller import Information_controller
 from Api.cloudparking_service import cloudparking_service
 from common.Assert import Assertions

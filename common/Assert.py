@@ -19,6 +19,10 @@ root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 class Assertions:
     def __init__(self):
         self.log = logger
+        if len(tempDataPath.changeCaseNameList) > 0:
+            tempDataPath.changeCaseNameList.pop(0)
+        else:
+            tempDataPath.changeCaseNameList = eval(tempDataPath.caseNameList)
 
     def assert_code(self, code, expected_code):
         """

@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/1/21 11:50
 # @Author  : 叶永彬
-# @File    : baseCase.py
+# @File    : BaseCase.py
 
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
 from Config.parameter import tempDataPath
 import os
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 class BaseCase(object):
     """案例的基础测试类"""
@@ -19,13 +17,16 @@ class BaseCase(object):
         保存案例的运行时的数值
         :return:
         """
-        caseNameList = tempDataPath.caseNameList
+        if tempDataPath.changeCaseNameList == []:
+            tempDataPath.changeCaseNameList = eval(tempDataPath.caseNameList)
+        tempDataPath.runingCaseName = tempDataPath.changeCaseNameList[0]
         floderPath = tempDataPath.temporaryDataPath
         FloderUtil().createFloder(floderPath)
-        tempDataPath.runingCaseName = caseNameList.pop()
         filePath = floderPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name,value)
 
 
 if __name__ == "__main__":
-    print(BaseCase().save_data("age","12"))
+    a = []
+    if len(a)>0:
+        print(len(a))

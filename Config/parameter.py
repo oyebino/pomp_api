@@ -22,9 +22,16 @@ class tempDataPath():
 
     temporaryDataPath = None # 父目录
 
-    caseNameList = None     # 当前运行的案例集名
+    caseNameList = []     # 当前运行的案例集名
 
     runingCaseName = None   # 当前运行的案例名
 
+    testName = None # 当前的test名
+
+    changeCaseNameList = [] # 变动的案例集
+
 if __name__ == "__main__":
-    print(type(const.parkVipTypeJson))
+    if  not tempDataPath.changeCaseNameList:
+        print('not null')
+    else:
+        print('null')

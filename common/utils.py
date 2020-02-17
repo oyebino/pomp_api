@@ -62,6 +62,7 @@ class YmlUtils(object):
                 name.append(value['name'])
                 array.append(tuple(childarray))
         tempDataPath.caseNameList = name
+        tempDataPath.changeCaseNameList = name
         return array,desc
 
     def single_data(self):
@@ -95,7 +96,7 @@ class YmlCommon(object):
         :param template:
         :return:
         """
-        rule = r'\${__(.*)}'
+        rule = r'\${__(.*?)}'
         textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
@@ -240,14 +241,10 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    # test_data, case_desc =YmlUtils("/test_data/carInOut_service/carStrictRuleInOutNoPay.yml").getData
-    # # print(test_data)
-    # # print(case_desc)
-    # print(tempDataPath.caseNameList)
-    dList = [1,2,3,4,5,6]
-    for i in range(len(dList)):
-        dList.pop()
-        print(dList)
+    test_data, case_desc =YmlUtils("/test_data/carInOut_service/carStrictRuleInOutNoPay.yml").getData
+    # print(test_data)
+    # print(case_desc)
+    print(tempDataPath.caseNameList)
 
 
 

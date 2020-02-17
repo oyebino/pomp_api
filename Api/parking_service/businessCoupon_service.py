@@ -28,7 +28,7 @@ class Businessman_controller(Req):
             "type":"美食",
             "defaultType":"美食",
             "contact":"auto-zbyun",
-            "tel":"13800138312",
+            "tel":'135' + SA().create_randomNum(val=8),
             "password":"123456",
             "confirmPassword":"123456",
             "isLimitBuy":0,

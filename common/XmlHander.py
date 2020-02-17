@@ -54,7 +54,7 @@ class XmlHander():
         nodes = XmlDao.get_node_by_keyvalue(nodes, {'name': name})
         if not nodes is None:
             XmlDao.del_node_by_tagkeyvalue([tree.getroot()], 'caseData', {'name': name})
-        XmlDao.add_child_node([tree.getroot()],XmlDao.create_node('caseData', {'name':name,'value':value}))
+        XmlDao.add_child_node([tree.getroot()],XmlDao.create_node('caseData', {'name':name,'value':str(value)}))
         XmlDao.saveAs(tree, self.__filename)
     #删除节点
     def deleteTagByName(self,name):

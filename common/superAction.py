@@ -77,7 +77,7 @@ class SuperAction:
 
     def create_randomNum(self,val= 4):
         src_digits = string.digits
-        value = "".join(random.sample(src_digits, val))
+        value = "".join(random.sample(src_digits, int(val)))
         return value
 
     def changeDate(self,json):
@@ -136,10 +136,10 @@ class SuperAction:
         dt = datetime.datetime.now()
         return dt.strftime(strType)
 
-    def runTest(self,a,b,str1=7):
-        sum = int(a)+int(b)+int(str1)
-        return sum
-        # return str(a+b+str1)
+    def runTest(self):
+        import inspect
+        print(inspect.stack()[1][3])
 
 if __name__ == "__main__":
-    print(SuperAction().create_carNum(carType="新能源"))
+    print("jkjkj"+SuperAction().create_randomNum(val=3))
+    # print(type(SuperAction().create_randomNum(val=3)))

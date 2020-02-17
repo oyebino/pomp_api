@@ -18,8 +18,8 @@ class cloudparking_service(Req):
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
     host = "http://10.10.17.219:9002"
 
-    def mock_car_in_out(self,carNum,mockType,ytj_id):
-        url = "http://10.10.17.219:9002/mock_car_in_out"
+    def mock_car_in_out(self,carNum,mockType,ytj_id,confidence = 91):
+        url = "http://mock.dev.yidianting.com.cn/mock_car_in_out"
         json_data = {
         "message_id":SA().get_uuid(),
         "timestamp":SA().get_time(),
@@ -27,6 +27,7 @@ class cloudparking_service(Req):
             "car_plate":carNum,
             "mock_type":mockType,
             "ytj_id":ytj_id,
+            "confidence": confidence,
             "job_id":SA().get_uuid()
             }
         }
@@ -78,7 +79,7 @@ class cloudparking_service(Req):
         return re
 
     def mock_open_gate(self,job_id):
-        url = "http://10.10.17.219:9002/get_open_gate_msg"
+        url = "http://mock.dev.yidianting.com.cn/get_open_gate_msg"
         json_data = {
             "message_id": SA().get_uuid(),
             "timestamp": SA().get_time(),
@@ -90,8 +91,6 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mock_car_in_out("粤T54615","1","20200116092930")
-    # job_id = a.json()['biz_content']['job_id']
-    # s = cloudparking_service().check_car_out("粤T54613",job_id)
-    # b = cloudparking_service().mock_open_gate("383711eaa5ef7427eac14803")
-    print(a.json())
+    a = cloudparking_service().mock_car_in_out("粤T61627",1,"20190507171501",50)
+    # a = cloudparking_service().mock_car_in_out("粤T60627",0,"20190507171500",30)
+    a.json()

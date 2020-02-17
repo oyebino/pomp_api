@@ -11,12 +11,13 @@ root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 from common.utils import YmlUtils
 from Api.parking_service.businessCoupon_service import Businessman_controller
 from common.Assert import Assertions
+from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parking_service/businessCoupon_controller/trader.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("商户管理")
-class TestTrader():
+class TestTrader(BaseCase):
     """新增商户流程"""
     def test_addTrader(self,userLogin,send_data,expect):
         re = Businessman_controller(userLogin).addTrader(send_data["name"])
