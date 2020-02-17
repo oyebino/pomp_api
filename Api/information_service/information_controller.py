@@ -34,7 +34,7 @@ class Information_controller(Req):
             "plate":carNum
         }
         self.url = "/mgr/park/presentCar/getPresentCar.do?" + urlencode(data)
-        re = self.get(self.monitor_api,headers= self.api_headers)
+        re = self.get(self.api,headers= self.api_headers)
         return re
 
     def getCarLeaveHistory(self,parkId,carNum):
