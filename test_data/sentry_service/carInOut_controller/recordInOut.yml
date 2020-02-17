@@ -6,6 +6,7 @@
       password: 123456
       carNum1: ${__create_carNum()}
       carNum2: ${__create_carNum()}
+      lightRule_parkUUID: ${lightRule_parkUUID}
       lightRule_inClientID: ${lightRule_inClientID}
       lightRule_outClientID: ${lightRule_outClientID}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
