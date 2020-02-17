@@ -19,7 +19,7 @@ class BaseCase(object):
         """
         if tempDataPath.changeCaseNameList == []:
             tempDataPath.changeCaseNameList = eval(tempDataPath.caseNameList)
-        tempDataPath.runingCaseName = tempDataPath.changeCaseNameList[0]
+        tempDataPath.runingCaseName = tempDataPath.changeCaseNameList.pop(0)
         floderPath = tempDataPath.temporaryDataPath
         FloderUtil().createFloder(floderPath)
         filePath = floderPath + "/" + tempDataPath.runingCaseName + ".xml"

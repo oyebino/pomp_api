@@ -18,6 +18,13 @@ class Config(object):
     VALUE_ENT_DB_NAME = "db_name"
     VALUE_ENT_DB_USER = "db_user"
     VALUE_ENT_DB_PWD = "db_pwd"
+    VALUE_ENT_ZBY_HOST = "ZBY_HOST"
+    VALUE_ENT_MONITOR_HOST = "MONITOR_HOST"
+    VALUE_ENT_ZBY_USER = "zby_user"
+    VALUE_ENT_ZBY_PWD = "zby_pwd"
+    VALUE_ENT_MONITOR_USER = "monitor_user"
+    VALUE_ENT_MONITOR_PWD = "monitor_pwd"
+
 
 
 
@@ -39,6 +46,12 @@ class Config(object):
         self.db_name = self.config.get(self.CATEGORY,self.VALUE_ENT_DB_NAME)
         self.user = self.config.get(self.CATEGORY, self.VALUE_ENT_PARK_USER)
         self.password = self.config.get(self.CATEGORY, self.VALUE_ENT_PARK_PASSWORD)
+        self.monitor_host = self.config.get(self.CATEGORY,self.VALUE_ENT_MONITOR_HOST)
+        self.monitor_user = self.config.get(self.CATEGORY,self.VALUE_ENT_MONITOR_USER)
+        self.monitor_pwd = self.config.get(self.CATEGORY,self.VALUE_ENT_MONITOR_PWD)
+        self.zby_host = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_HOST)
+        self.zby_user = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_USER)
+        self.zby_pwd = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_PWD)
 
 
     def get(self,title,value):

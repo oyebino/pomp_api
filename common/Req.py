@@ -30,11 +30,14 @@ class Req(requests.Session):
 
         self.conf = Config()
         self.host = self.conf.host
+        self.monitor_host = self.conf.monitor_host
+        self.zby_host = self.conf.zby_host
         if Session == None:
             self.Session = requests.Session()
         else:
             self.Session = Session
 
+    """pomp"""
     def _api(self,url):
         """host + api_url"""
         full_url = urljoin(self.host,url)
@@ -42,8 +45,26 @@ class Req(requests.Session):
 
     @property
     def api(self):
-        """调用接口地址"""
+        """调用pomp接口地址"""
         return self._api(self.url)
+
+    @property
+    def zby_api(self):
+        """智泊云调用地址"""
+        return self._zby_host(self.url)
+
+    @property
+    def monitor_api(self):
+        """远程值班调用地址"""
+        return self._monitor_host(self.url)
+
+    def _zby_host(self,url):
+        full_url = urljoin(self.zby_host, url)
+        return full_url
+
+    def _monitor_host(self,url):
+        full_url = urljoin(self.monitor_host, url)
+        return full_url
 
     @property
     def api_headers(self):
@@ -264,5 +285,5 @@ class Req(requests.Session):
                 pass
 
 if __name__ == "__main__":
-    data = "中方蝇名"
-    print(data.lower())
+    url = '/api'
+
