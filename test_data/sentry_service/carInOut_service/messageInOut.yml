@@ -4,8 +4,8 @@
     send_data:
       user_id: strict_apitest
       password: 123456
-      carNum1: ${__create_carNum()}
-      carNum2: ${__create_carNum()}
+      carNum: ${__create_carNum()}
+      lightRule_parkID: ${lightRule_parkID}
       lightRule_parkUUID: ${lightRule_parkUUID}
       StrictRule_inClientID: ${StrictRule_inClientID}
       StrictRule_outClientID: ${StrictRule_outClientID}
@@ -16,7 +16,7 @@
       Message2: ok
       Message3: 缴费
       Message4: ok
-
+      carLeaveHistoryMessage: ${__create_carNum()}
 #- test:
 #    name: 用户登录2
 #    desc: 验证是否登录成功2

@@ -7,8 +7,8 @@ import pytest,os
 import allure
 
 from Api.Login import SentryLogin
-from Api.login_service.sentryLogin_service import SentryLogin as SLogin
-from Api.sentry_service.offduty_service import SentryOffduty
+from Api.sentry_service.personalInfo_service.sentryLogin_service import SentryLogin as SLogin
+from Api.sentry_service.personalInfo_service.offduty_service import SentryOffduty
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
@@ -16,7 +16,7 @@ from common.utils import YmlUtils
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/sentry_service/login_controller/login.yml").getData
+test_data, case_desc = YmlUtils("/test_data/sentry_service/personalInfo_service/login.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("登录或退出PC岗亭")
 class TestSentryLogin():
