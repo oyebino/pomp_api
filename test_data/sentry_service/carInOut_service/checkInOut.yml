@@ -16,3 +16,4 @@
       presentCarMessage: ${__create_carNum()}
       mockCarOutMessage: 缴费
       checkOutMessage: true
+      carLeaveHistoryMessage: ${__create_carNum()}
