@@ -1,0 +1,15 @@
+
+- test:
+    name: VIP车无在场宽出(智泊云)
+    desc: VIP车无在场宽出
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: 新Z89001
+      ticketName: 纯时间月票
+      outClientID: ${lightRule_outClientID}
+    except:
+      screen: 新Z89001\\纯时间月票
+      voice: $新Z89001$纯时间月票
+      carNum: 新Z89001
+      mock_car_out: ok
+

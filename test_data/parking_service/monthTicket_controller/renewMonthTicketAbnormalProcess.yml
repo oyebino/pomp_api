@@ -1,0 +1,28 @@
+
+- test:
+    name: 月票过期，车辆进出，不是月票，然后执行月票续费（续费日期不包含当前时间），车辆进出，不是月票(POMP)
+    desc: 月票过期，车辆进出，不是月票，然后执行月票续费（续费日期不包含当前时间），车辆进出，不是月票
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: ${__create_carNum()}
+      ticketName: 月票${__get_time()}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      message2: 操作成功
+      mock_car_in: ok
+      inscreen: ${__create_carNum()}\\欢迎光临
+      invoice: $${__create_carNum()}$欢迎光临
+      presentCarMessage: 查询在场车辆成功
+      carNum: ${__create_carNum()}
+      carType: 临时车
+      centralPayMessage: billCode
+      mock_car_out: ok
+      outscreen: ${__create_carNum()}\\一路顺风
+      outvoice: $${__create_carNum()}$一路顺风
+      CarLeaveHistoryMessage: OK
+      message3: 操作成功
+      ticketName1: 月票${__get_time()}
+      inscreen2: ${__create_carNum()}\\月票
+      invoice2: $${__create_carNum()}$月票

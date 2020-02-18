@@ -1,0 +1,19 @@
+
+- test:
+    name: 绑定计费组月票车宽进，需缴费宽出(智泊云)
+    desc: 绑定计费组月票车宽进，需缴费宽出
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: 新Z99001
+      ticketName: 绑定计费月票
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      mock_car_in: ok
+      screen: 新Z99001\\绑定计费月票
+      voice: $新Z99001$绑定计费月票
+      presentCarMessage: 查询在场车辆成功
+      centralPayMessage: billid
+      carNum: 新Z99001
+      mock_car_out: ok
+

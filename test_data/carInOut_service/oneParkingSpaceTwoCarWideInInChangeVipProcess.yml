@@ -1,0 +1,27 @@
+
+- test:
+    name: 一位两车VIP进出场流程，第一辆VIP车比第二辆车先离场（开启在场转VIP）(智泊云)
+    desc: 一位两车VIP进出场流程，第一辆VIP车比第二辆车先离场（开启在场转VIP）
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: 新Z20001
+      carNum2: 新Z20002
+      ticketName: 一位多车在场转月票
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      mock_car_in: ok
+      inscreen: 新Z20001\\一位多车在场转月票
+      invoice: $新Z20001$一位多车在场转月票
+      presentCarMessage: 查询在场车辆成功
+      carNum: 新Z20001
+      ticketName: 一位多车在场转月票
+      carNum2: 新Z20002
+      inscreen2: 新Z20002\\超出可用车位转临时车
+      invoice2: $新Z20002$超出可用车位转临时车
+      carType: 临时车
+      mock_car_out: ok
+      centralPayMessage: billid
+      outscreen2: 新Z20002\\一位多车在场转月票
+      outvoice2: $新Z20002$一位多车在场转月票
+      CarLeaveHistoryMessage: OK

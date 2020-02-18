@@ -1,0 +1,21 @@
+
+- test:
+    name: 纯月票车宽进，不需缴费宽出(智泊云)
+    desc: 纯月票车宽进，不需缴费宽出
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: 新ZVIP01
+      ticketName: 纯时间月票
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      mock_car_in: ok
+      screen: 新ZVIP01\\纯时间月票
+      voice: $新ZVIP01$纯时间月票
+      presentCarMessage: 查询在场车辆成功
+      carNum: 新ZVIP01
+      mock_car_out: ok
+
+
+
