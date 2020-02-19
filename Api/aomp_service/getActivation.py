@@ -6,8 +6,8 @@ import json
 import time
 import requests
 
-from Api.login_service.create_parking import CreateParking
-from Api.login_service.pompLogin import pomp, Operation_parking
+from Api.aomp_service.pompLogin import pomp, Operation_parking
+from Api.parking_service.createParking_service import CreateParking
 from common.db import Db as db
 from common.superAction import SuperAction
 

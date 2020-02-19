@@ -1,0 +1,19 @@
+
+- test:
+    name: 创建月票类型
+    desc: 创建月票类型、开通月票
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: ${__create_carNum()}
+      ticketName: 月票${__get_time()}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      message2: 操作成功
+      message3: 操作成功
+      message4: 操作成功
+      mock_car_in: ok
+      mock_car_out: ok
+      presentCarMessage: 查询在场车辆成功
+      CarLeaveHistoryMessage: OK
