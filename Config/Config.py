@@ -24,6 +24,9 @@ class Config(object):
     VALUE_ENT_ZBY_PWD = "zby_pwd"
     VALUE_ENT_MONITOR_USER = "monitor_user"
     VALUE_ENT_MONITOR_PWD = "monitor_pwd"
+    VALUE_ENT_AOMP_HOST = "AOMP_HOST"
+    VALUE_ENT_AOMP_USER = "aomp_user"
+    VALUE_ENT_AOMP_PWD = "aomp_pwd"
 
 
 
@@ -52,15 +55,18 @@ class Config(object):
         self.zby_host = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_HOST)
         self.zby_user = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_USER)
         self.zby_pwd = self.config.get(self.CATEGORY,self.VALUE_ENT_ZBY_PWD)
+        self.aomp_host = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_HOST)
+        self.aomp_user = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_USER)
+        self.aomp_pwd = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_PWD)
 
 
-    def get(self,title,value):
+    def get(self, title, value):
         return self.config.get(title, value)
 
-    def getValue(self,value,title = "SIT"):
+    def getValue(self, value, title="SIT"):
         return self.config.get(title,value)
 
 if __name__=='__main__':
     C = Config()
 
-    print(C.getValue("password"))
+    print(C.getValue("aomp_user"))

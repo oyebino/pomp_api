@@ -40,6 +40,7 @@ class Login():
         log.info(re.json()['message'])
         return self.Seesion
 
+
 class SentryLogin():
     """岗亭端"""
     def __init__(self, host="https://zbcloud.k8s.yidianting.com.cn"):
@@ -57,8 +58,7 @@ class SentryLogin():
         }
         r = self.S.post(url=url, data=data, headers=form_headers).json()
         token = r['token']
-        self.S.headers.update({"user":token,"type":"ydtp-pc"})
-        print("r*****",r)
+        self.S.headers.update({"user": token,"type": "ydtp-pc"})
 
         if r['onDuty'] == 0:
             self.__select_channel()
@@ -87,28 +87,46 @@ class SentryLogin():
         #     log.info(r.json()['message'])
 
 
-    # def quit(self):
-    #     """退出登录"""
-    #     url = self.host + "/ydtp-backend-service/api/offduty"
-    #     form_headers['user'] = self.token
-    #     form_headers['type'] = 'ydtp-pc'
-    #     self.S.post(url=url, headers=form_headers)
-    #
-    # def status(self):
-    #     """登录或退出检查点"""
-    #     url = self.host + "/ydtp-backend-service/api/duty_channel_status"
-    #     form_headers['user'] = self.token
-    #     form_headers['type'] = 'ydtp-pc'
-    #     r = self.S.get(url=url, headers=form_headers)
-    #     r_json = r.json()
-    #     print(r_json)
-    #     if 'message' in r_json:  # 未登录时返回的json有带message，已登录则没有
-    #         return "未登录"
-    #     else:
-    #         return "已登录"
+class AompLogin(object):
+
+    def __init__(self):
+        self.conf = Config()
+        self.host = self.conf.aomp_host
+        self.Session = requests.session()
+        self.user = self.conf.aomp_user
+        self.password = self.conf.aomp_pwd
+
+    def checkCode(self):
+
+        """"校验验证码"""
+        loginUrl = self.host + "/checkLogin.do"
+        data = {
+            "user": "{}".format(self.user),
+            "pwd": "{}".format(self.password),
+            "validateCode": "9999",
+            "isOnLine": "isOnLine",
+            "flag": "-1"
+        }
+        self.Session.post(loginUrl, data)
+
+    def login(self):
+
+        """登陆aomp"""
+        self.checkCode()
+        path = self.host + "/admin/loginTomanage.do?flag=admin&flag=admin"
+        data = {
+            "flag": "admin"
+        }
+        self.Session.post(path, data)
+        return self.Session
+
+
 if __name__ == "__main__":
 
-    L = SentryLogin()
+    # L = SentryLogin()
+
+    # L.login()
+    L = AompLogin()
 
     L.login()
 

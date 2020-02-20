@@ -1,0 +1,9 @@
+
+- test:
+    name: 新增车场
+    desc: 新增车场
+    send_data:
+      cooperativeAccount: test${__get_time()}
+      userAccount: test${__get_time()}
+    except:
+      message: OK

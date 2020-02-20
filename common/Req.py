@@ -32,6 +32,7 @@ class Req(requests.Session):
         self.host = self.conf.host
         self.monitor_host = self.conf.monitor_host
         self.zby_host = self.conf.zby_host
+        self.aomp_host = self.conf.aomp_host
         if Session == None:
             self.Session = requests.Session()
         else:
@@ -58,12 +59,21 @@ class Req(requests.Session):
         """远程值班调用地址"""
         return self._monitor_host(self.url)
 
+    @property
+    def aomp_api(self):
+        """aomp调用地址"""
+        return self._aomp_host(self.url)
+
     def _zby_host(self,url):
         full_url = urljoin(self.zby_host, url)
         return full_url
 
     def _monitor_host(self,url):
         full_url = urljoin(self.monitor_host, url)
+        return full_url
+
+    def _aomp_host(self,url):
+        full_url = urljoin(self.aomp_host, url)
         return full_url
 
     @property
