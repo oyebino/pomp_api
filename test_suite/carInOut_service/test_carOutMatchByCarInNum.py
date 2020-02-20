@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/1/16 11:15
 # @Author  : 叶永彬
-# @File    : test_carInOutFuzzyMatch.py
+# @File    : test_carOutMatchByCarInNum.py
 
 import pytest
 import allure
@@ -13,12 +13,13 @@ from Api.cloudparking_service import cloudparking_service
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/carInOut_service/carInOutFuzzyMatch.yml").getData
+test_data,case_desc = YmlUtils("/test_data/carInOut_service/carOutMatchByCarInNum.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("车辆进出模块")
-class TestCarInOutFuzzyMatch(BaseCase):
-    """临时车进出，模糊匹配"""
+class TestCarOutMatchByCarInNum(BaseCase):
+    """临时车离场模糊匹配（最终车牌为进场车牌）"""
     def test_mockCarIn(self,send_data,expect):
+        """模拟进场"""
         re = cloudparking_service().mock_car_in_out(send_data['carNumIn'],0,send_data['inClientID'],send_data['carNumInConfidence'])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])

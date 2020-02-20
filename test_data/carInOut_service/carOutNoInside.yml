@@ -1,0 +1,18 @@
+- test:
+    name: 临时车无在场需岗亭缴费宽出
+    desc: 临时车无在场需岗亭缴费宽出
+    send_data:
+      parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
+      carNum: ${__create_carNum()}
+      outClientID: ${lightRule_outClientID}
+      carOut_jobId: ${mytest.carOut_jobId}
+    except:
+      mockCarOutMessage: $${__create_carNum()}$无在场记录请稍候
+      sentryPayMessage: true
+      checkCarOutScreen: 已收费${mytest.real_value}元\\一路顺风
+      checkCarOutVoice: 已收费${mytest.real_value}元一路顺风
+      checkCarOutOpenGate: 1
+      carLeaveHistoryMessage: ${__create_carNum()}
+
+

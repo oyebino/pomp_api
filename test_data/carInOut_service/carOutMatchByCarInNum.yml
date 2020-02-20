@@ -1,0 +1,18 @@
+- test:
+    name: 临时车离场模糊匹配(最终车牌为进场车牌)
+    desc: 临时车离场模糊匹配(最终车牌为进场车牌)
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNumIn: 湘AAAAA1
+      carNumOut: 湘AAAAA2
+      carNumInConfidence: 80
+      carNumOutConfidence: 60
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      mockCarInMessage: 欢迎光临
+      presentCarMessage: 湘AAAAA1
+      centralPayMessage: billid
+      parkingBillDetailMessage: 湘AAAAA1
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: 湘AAAAA1

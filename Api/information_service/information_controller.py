@@ -121,8 +121,23 @@ class Information_controller(Req):
         re = self.post(self.api, json=json_data, headers=self.api_headers)
         return re
 
-    def get_traderInfo(self):
-        sql = "select * from user_trader_coupon where CAR_CODE='粤Q12348'"
+    def getAdjustCarWaterNum(self,newCarCode,parkIds):
+        """
+        获取校正流水
+        :return:
+        """
+        data = {
+            "page":1,
+            "rp":20,
+            "newCarCode":newCarCode,
+            "modifyDateFrom": self.data + " 00:00:00",
+            "modifyDateTo":self.data +" 23:59:59",
+            "parkIds":parkIds
+        }
+        self.url = "/mgr/park/adjustCarRecord/getAdjustCarRecord.do?" + urlencode(data)
+        re = self.get(self.api, headers=self.api_headers)
+        return re
+
 
 if __name__ == '__main__':
     # central("https://zbcloud.k8s.yidianting.com.cn").centralGetCharge()

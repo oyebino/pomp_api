@@ -7,7 +7,6 @@
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
 from Config.parameter import tempDataPath
-import os
 
 class BaseCase(object):
     """案例的基础测试类"""
@@ -17,13 +16,11 @@ class BaseCase(object):
         保存案例的运行时的数值
         :return:
         """
-        if tempDataPath.changeCaseNameList == []:
-            tempDataPath.changeCaseNameList = eval(tempDataPath.caseNameList)
-        tempDataPath.runingCaseName = tempDataPath.changeCaseNameList.pop(0)
         floderPath = tempDataPath.temporaryDataPath
         FloderUtil().createFloder(floderPath)
         filePath = floderPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name,value)
+
 
 
 if __name__ == "__main__":

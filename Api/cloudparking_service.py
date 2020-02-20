@@ -9,7 +9,6 @@
 from common.Req import Req
 from common.db import Db as db
 from common.superAction import SuperAction as SA
-from Config.Config import Config
 
 class cloudparking_service(Req):
     """
@@ -35,50 +34,12 @@ class cloudparking_service(Req):
         re = self.post(url, json=json_data, headers=self.api_headers)
         return re
 
-    def check_car_in(self,carNum,job_id):
+    def get_car_msg_ytj(self,job_id):
         """
-        严进-确认放行进场
-        :param carNum:
+        获取车场进出场一体机的返回的信息
         :param job_id:
         :return:
         """
-        carInOutIdSql = "SELECT id FROM realtime_car_in_out WHERE car_no='" + carNum +"'  ORDER BY id DESC LIMIT 1"
-        carInOutId = db().select(carInOutIdSql)
-        url = "https://zbcloud.k8s.yidianting.com.cn/car-in-out-handler-service/in-out/check-car-in"
-
-        json_data = {
-          "carInOutId": carInOutId,
-          "operateTime": SA().get_time(strType ="%Y-%m-%dT%H:%M:%S.000Z"),
-          "operator": "auto",
-          "reason": "登记放行"
-        }
-        self.post(url, json=json_data, headers=self.api_headers)
-        re = self.mock_open_gate(job_id)
-        return re
-
-    def check_car_out(self,carNum,job_id):
-        """
-        严出-确认放行
-        :param carNum:
-        :param job_id:
-        :return:
-        """
-        carInOutIdSql = "SELECT id FROM realtime_car_in_out WHERE car_no='" + carNum +"'  ORDER BY id DESC LIMIT 1"
-        carInOutId = db().select(carInOutIdSql)
-        url = "https://zbcloud.k8s.yidianting.com.cn/car-in-out-handler-service/in-out/check-car-out"
-        json_data={
-          "carInOutId": carInOutId,
-          "leaveType": 2,   # 放行类型 2:收费放行 3:异常放行
-          "operateTime": SA().get_time(strType ="%Y-%m-%dT%H:%M:%S.000Z"),
-          "operator": "auto",
-          "payVal": 0,
-          "reason": "收费放行"
-        }
-        self.post(url, json=json_data, headers=self.api_headers)
-        re = self.mock_open_gate(job_id)
-        return re
-
-    def mock_open_gate(self,job_id):
         url = "http://mock.dev.yidianting.com.cn/get_open_gate_msg"
         json_data = {
             "message_id": SA().get_uuid(),
@@ -91,6 +52,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mock_car_in_out("粤T61627",1,"20190507171501",50)
-    # a = cloudparking_service().mock_car_in_out("粤T60627",0,"20190507171500",30)
-    a.json()
+    a = cloudparking_service().mock_car_in_out("京BBBBB3",1,"20190507171501")
+    # a = cloudparking_service().get_car_msg_ytj("52dc11eab4f97427eac14803")
+    re = a.json()
+    # print(re['result']['voice'])

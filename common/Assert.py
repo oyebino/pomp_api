@@ -182,14 +182,19 @@ class Assertions:
         提取运行案例值
         :return:
         """
-        if caseName ==None:
-            caseName = str(tempDataPath.runingCaseName).lower()
+        if caseName.lower() == "mytest":
+            caseName = str(tempDataPath.runingCaseName).lower() + ".xml"
         else:
-            caseName = str(caseName).lower()
+            caseName = str(caseName).lower() + ".xml"
         fileList = FloderUtil().getListFloder(root_path + "/temporaryDataLog")
         for file in fileList:
-            if str(file).lower().find(caseName):
+            if self.__getLastFloatName(file).lower() == caseName:
                 run_data = XmlHander(file).getValueByName(nodeName)
                 return run_data
             else:
                 pass
+
+    def __getLastFloatName(self,path):
+        """获取最后的文件名"""
+        path = str(path).replace("\\","/")
+        return path.split('/')[-1]
