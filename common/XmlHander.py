@@ -63,6 +63,6 @@ class XmlHander():
         XmlDao.saveAs(tree, self.__filename)
 
 if __name__ == "__main__":
-    path ='E:\POMP_API/temporaryDataLog/information_service/carInOutDetail.xml'
+    path ='E:\POMP_API/temporaryDataLog/information/carInOutDetail.xml'
     XmlHander(path).getValueByName('age')
     # print(XmlHander('E:/POMP_API/test_data/333.xml').getValueByName("age","caseData"))

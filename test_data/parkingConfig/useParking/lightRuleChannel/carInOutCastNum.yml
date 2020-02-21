@@ -1,0 +1,18 @@
+- test:
+    name: 临时车进出场识别错-车牌强制转换为正确车牌
+    desc: 临时车进出场识别错，车牌强制转换为正确车牌
+    send_data:
+      parkUUid: ${lightRule_parkUUID}
+      parkId: ${lightRule_parkID}
+      carNumIn: 粤ADBBBB
+      carNumOut: 粤ADCCCC
+      actualCarNum: 粤ADAAAA
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      mockCarInMessage: 欢迎光临
+      presentCarMessage: 粤ADAAAA
+      centralPayMessage: billid
+      parkingBillDetailMessage: 粤ADAAAA
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: 粤ADAAAA

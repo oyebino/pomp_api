@@ -61,8 +61,6 @@ class YmlUtils(object):
                 desc.append(value['desc'])
                 name.append(value['name'])
                 array.append(tuple(childarray))
-        # tempDataPath.caseNameList = name
-        # tempDataPath.changeCaseNameList = name
         tempDataPath.runingCaseName = str(name[0])
         return array,desc
 
@@ -91,12 +89,12 @@ class YmlCommon(object):
         template = self.formatYmlFun(template)
         return template
 
-    # def getFunData(self,template):
-    #     rule = r'\${__(.*?)}'
-    #     if re.search(rule,template) != None:
-    #         re.search(rule, template).group(0)
-    #     template = re.sub(rule,)
-    #     pass
+    def getFunData(self,template):
+        rule = r'\${__(.*?)}'
+        if re.search(rule,template) != None:
+            re.search(rule, template).group(0)
+        template = re.sub(rule,)
+        pass
 
     def formatYmlFun(self,template):
         """
@@ -245,7 +243,7 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/carInOut_service/carStrictRuleInOutNoPay.yml").getData
+    test_data, case_desc =YmlUtils("/test_data/sentryDutyRoom/parkingConfig/adjustCarNum.yml").getData
     # print(test_data)
     # print(case_desc)
     print(test_data)

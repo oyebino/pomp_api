@@ -4,10 +4,7 @@
 # @Author  : 叶永彬
 # @File    : cloudparking_service.py
 
-
-
 from common.Req import Req
-from common.db import Db as db
 from common.superAction import SuperAction as SA
 
 class cloudparking_service(Req):
@@ -17,7 +14,7 @@ class cloudparking_service(Req):
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
     host = "http://10.10.17.219:9002"
 
-    def mock_car_in_out(self,carNum,mockType,ytj_id,confidence = 91):
+    def mock_car_in_out(self,carNum,mockType,ytj_id,confidence = 91,carType = 1):
         url = "http://mock.dev.yidianting.com.cn/mock_car_in_out"
         json_data = {
         "message_id":SA().get_uuid(),
@@ -27,7 +24,8 @@ class cloudparking_service(Req):
             "mock_type":mockType,
             "ytj_id":ytj_id,
             "confidence": confidence,
-            "job_id":SA().get_uuid()
+            "job_id":SA().get_uuid(),
+            "car_size": carType
             }
         }
 
@@ -52,7 +50,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mock_car_in_out("京BBBBB3",1,"20190507171501")
+    a = cloudparking_service().mock_car_in_out("京BBBBB3",0,"20190507171500",carType=4)
     # a = cloudparking_service().get_car_msg_ytj("52dc11eab4f97427eac14803")
     re = a.json()
     # print(re['result']['voice'])

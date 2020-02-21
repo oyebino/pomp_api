@@ -14,13 +14,17 @@ class SuperAction:
         ascii_uppercase = 'ABCDEGHJKLMNPQRSTWXY'
         src_digits = string.digits  # string_数字
         src_uppercase = ascii_uppercase  # string_大写字母
+        src_greenFlat = 'DF'
         # 生成字符串
         carNum = random.sample(src_uppercase, uppercase_num) + random.sample(src_digits, digits_num)
+        greenSmallCarNum = random.sample(src_uppercase, uppercase_num) + random.sample(src_greenFlat,1) +random.sample(src_digits, digits_num)
         # 列表转字符串
         if carType == "民航":
             new_carNum = "民航" + ''.join(carNum)[1:]
-        elif carType == "新能源":
-            new_carNum = "粤" + ''.join(carNum) + "F"
+        elif carType == "新能源大车":
+            new_carNum = "粤" + ''.join(carNum) + random.sample(src_greenFlat, 1)[0]
+        elif carType == "新能源小车":
+            new_carNum = "粤" + ''.join(greenSmallCarNum)
         else:
             new_carNum = "粤" + ''.join(carNum)
         return new_carNum
@@ -148,5 +152,5 @@ class SuperAction:
         return timeperiodListStr
 
 if __name__ == "__main__":
-    print("jkjkj"+SuperAction().create_randomNum(val=3))
-    # print(type(SuperAction().create_randomNum(val=3)))
+    for i in range(0,10):
+        print(SuperAction().create_carNum(carType="新能源小车"))
