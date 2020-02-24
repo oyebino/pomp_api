@@ -1,0 +1,15 @@
+- test:
+    name: 临时车严进后，不进场，再来一台临时车严进，有异常拍照上报
+    desc: 临时车严进后，不进场，再来一台临时车严进，有异常拍照上报
+    send_data:
+      carNum: ${__create_carNum()}
+      carNum2: ${__create_carNum(carType=1)}
+      lightRule_parkID: ${lightRule_parkID}
+      StrictRule_inClientID: ${StrictRule_inClientID}
+    except:
+      mockCarInMessage: 请稍候
+      mockCarIn2Message: 请稍候
+      getAbnormalPicCarMsg: 查询异常拍照车辆成功
+      carNum: ${__create_carNum()}
+
+

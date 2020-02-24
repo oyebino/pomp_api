@@ -1,0 +1,21 @@
+
+- test:
+    name: 白名单宽进宽出(智泊云)
+    desc: 白名单宽进宽出
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: 云Z66666
+      ticketName: 白名单
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      mock_car_in: ok
+      screen: 云Z66666\\白名单
+      voice: $云Z66666$白名单
+      presentCarMessage: 查询在场车辆成功
+      carNum: 云Z66666
+      mock_car_out: ok
+
+
+

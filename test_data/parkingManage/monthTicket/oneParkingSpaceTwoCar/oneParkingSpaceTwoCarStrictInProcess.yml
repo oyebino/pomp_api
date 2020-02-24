@@ -4,9 +4,10 @@
     desc: 一位两车严进流程
     send_data:
       parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
       carNum: 青Z10001
       carNum2: 青Z10002
-      ticketName: 一位多车在场转月票
+      ticketName: 一位多车不在场转月票
       inClientID: ${lightRule_inClientID}
       strictInClientID: ${StrictRule_inClientID}
       outClientID: ${lightRule_outClientID}
@@ -15,14 +16,22 @@
       inscreen: 青Z10001\\一位多车不在场转月票
       invoice: $青Z10001$一位多车不在场转月票
       presentCarMessage: 查询在场车辆成功
+      mockCarInMessage: ok
+      presentCarMessage: 查询在场车辆成功
       carNum: 青Z10001
-     ticketName: 一位多车不在场转月票
-     carNum2: 青Z10002
+      ticketName: 一位多车不在场转月票
+      mockCarInMessage2: ok
+      checkMessageInMsg: ok
       inscreen2: 青Z10002\\超出可用车位转临时车
       invoice2: $青Z10002$超出可用车位转临时车
+      carNum2: 青Z10002
       carType: 临时车
       mock_car_out: ok
+      CarLeaveHistoryMessage: OK
       centralPayMessage: billid
+      parkingBillDetailMessage: 青Z10002
+      mockCarOut2Msg: ok
+      mockCarOutMessage: ok
       outscreen2: 青Z10002\\一路顺风
       outvoice2: $青Z10002$一路顺风
       CarLeaveHistoryMessage: OK
