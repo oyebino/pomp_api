@@ -27,8 +27,8 @@ class TestCheckOutAbnormal():
     def test_mockCarIn(self, send_data, expect):
         """模拟进场"""
         re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["lightRule_inClientID"])
-        result1 = re.json()
-        Assertions().assert_in_text(result1, expect["mockCarInMessage"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_presentCar(self, userLogin, send_data, expect):
         """查看在场记录"""
@@ -39,13 +39,14 @@ class TestCheckOutAbnormal():
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
         re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["lightRule_outClientID"])
-        result2 = re.json()
-        Assertions().assert_in_text(result2, expect["mockCarOutMessage"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_CheckOutAbnormal(self, sentryLogin, send_data, expect):
         """异常放行"""
-        result3 = CarInOutHandle(sentryLogin).abnormal_car_out(send_data['lightRule_parkUUID'])
-        Assertions().assert_in_text(result3, expect["checkOutMessage"])
+        re = CarInOutHandle(sentryLogin).abnormal_car_out(send_data['carNum'])
+        result = re.json()["success"]
+        Assertions().assert_in_text(result, expect["checkOutMessage"])
 
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""

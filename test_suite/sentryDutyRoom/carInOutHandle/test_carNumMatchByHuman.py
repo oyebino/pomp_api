@@ -47,8 +47,8 @@ class TestCarNumMatchByHuman(BaseCase):
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭收费处收费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['parkUUID'])
-        result = re
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['matchCarNum'])
+        result = re.json()['success']
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkCarOutInfo(self,send_data,expect):

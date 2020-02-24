@@ -27,28 +27,31 @@ class TestSentryRecordInOut():
     """pc查看进出场记录"""
     def test_mockCarIn(self, send_data, expect):
         """模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum2"], 0, send_data["lightRule_inClientID"])
-        result1 = re.json()
-        Assertions().assert_in_text(result1, expect["Message1"])
+        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["lightRule_inClientID"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_recordIn(self, sentryLogin, send_data, expect):
         """在pc端查看进场记录"""
-        result2 = CarInOutHandle(sentryLogin).record_car_in()
-        Assertions().assert_in_text(result2, expect['carNum1'])
+        re = CarInOutHandle(sentryLogin).record_car_in(send_data['carNum'])
+        result = re.json()['rows'][0]['carCode']
+        Assertions().assert_in_text(result, expect['carNum'])
 
     def test_mockCarout(self, send_data, expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum2"], 1, send_data["lightRule_outClientID"])
+        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["lightRule_outClientID"])
         result = re.json()
-        Assertions().assert_in_text(result2, expect['Message2'])
+        Assertions().assert_in_text(result, expect['mockCarOutMessage'])
 
     def test_checkOut(self, sentryLogin, send_data, expect):
         """收费放行"""
-        result = CarInOutHandle(sentryLogin).normal_car_out(send_data['lightRule_parkUUID'])
-        Assertions().assert_in_text(result3, expect["checkOutMsg"])
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'])
+        result = re.json()["success"]
+        Assertions().assert_in_text(result, expect["checkOutMessage"])
 
     def test_recordOut(self, sentryLogin, send_data, expect):
 
         """在pc端查看离场记录"""
-        result4 = CarInOutHandle(sentryLogin).record_car_out()
-        Assertions().assert_in_text(result4, expect['carNum2'])
+        re = CarInOutHandle(sentryLogin).record_car_out(send_data['carNum'])
+        result = re.json()['rows'][0]['carCode']
+        Assertions().assert_in_text(result, expect['carNum'])

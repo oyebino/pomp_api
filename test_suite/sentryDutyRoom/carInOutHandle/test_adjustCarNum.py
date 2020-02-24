@@ -21,21 +21,21 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/adjustC
 class TestAdjustCarNum(BaseCase):
     """临时车进出场只校正车牌"""
     def test_mockCarIn(self,send_data,expect):
-        re = cloudparking_service().mock_car_in_out(send_data['carNum'],0,send_data['inClientID'])
+        re = cloudparking_service().mock_car_in_out(send_data['carNum'], 0, send_data['inClientID'])
         result = re.json()
         self.save_data('carIn_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarInMsg"])
 
     def test_adjustCarInNum(self,sentryLogin,send_data,expect):
         """校正进场车辆"""
-        re = CarInOutHandle(sentryLogin).adjust_carNum_carType(send_data['parkUUID'],send_data['adjustCarNum'])
-        result = re.json()['content']
-        Assertions().assert_in_text(result['carNo'], expect["adjustCarNum"])
+        re = CarInOutHandle(sentryLogin).adjust_carNum_carType(send_data['carNum'], send_data['adjustCarNum'])
+        result = re.json()['open_gate']  # 这个断言不太友好
+        Assertions().assert_in_text(result, expect["inOpenGateStatus"])
 
     def test_checkCarIn(self,sentryLogin,send_data,expect):
         """岗亭端登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['parkUUID'])
-        result = re
+        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['adjustCarNum'])
+        result = re.json()['success']
         Assertions().assert_in_text(result, expect["checkCarInMsg"])
 
     def test_checkCarInInof(self,send_data,expect):
@@ -61,14 +61,14 @@ class TestAdjustCarNum(BaseCase):
 
     def test_adjustCarOutNum(self,sentryLogin,send_data,expect):
         """校正出场车辆"""
-        re = CarInOutHandle(sentryLogin).adjust_carNum_carType(send_data['parkUUID'], send_data['adjustCarNum'])
-        result = re.json()['content']
-        Assertions().assert_in_text(result['leaveCarNo'], expect["adjustCarNum"])
+        re = CarInOutHandle(sentryLogin).adjust_carNum_carType(send_data['carNum'], send_data['adjustCarNum'])
+        result = re.json()['open_gate']  # 这个断言不太友好
+        Assertions().assert_in_text(result, expect["outOpenGateStatus"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭收费处收费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['parkUUID'])
-        result = re
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['adjustCarNum'])
+        result = re.json()['success']
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkCarOutInfo(self,send_data,expect):

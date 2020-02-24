@@ -4,16 +4,14 @@
     send_data:
       user_id: apitest
       password: 123456
-      carNum1: ${__create_carNum()}
-      carNum2: ${__create_carNum()}
+      carNum: ${__create_carNum()}
       lightRule_parkUUID: ${lightRule_parkUUID}
       lightRule_inClientID: ${lightRule_inClientID}
       lightRule_outClientID: ${lightRule_outClientID}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
       lightRule_outChannelCode: ${lightRule_outChannelCode}
     except:
-      Message1: 欢迎光临
-      Message2: 缴费
-      Message3: true
-      carNum1: ${__create_carNum()}
-      carNum2: ${__create_carNum()}
+      mockCarInMessage: 欢迎光临
+      mockCarOutMessage: 缴费
+      checkOutMessage: true
+      carNum: ${__create_carNum()}

@@ -12,10 +12,10 @@
       StrictRule_inChannelCode: ${StrictRule_inChannelCode}
       StrictRule_outChannelCode: ${StrictRule_outChannelCode}
     except:
-      Message1: 请稍候
-      Message2: ok
-      Message3: 缴费
-      Message4: ok
+      mockCarInMessage: 请稍候
+      checkInMessage: true
+      mockCarOutMessage: 缴费
+      checkOutMessage: true
       carLeaveHistoryMessage: ${__create_carNum()}
 #- test:
 #    name: 用户登录2
