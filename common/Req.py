@@ -304,6 +304,8 @@ class Req(requests.Session):
         保存案例中的值
         :return:
         """
+        floderPath = tempDataPath.temporaryDataPath
+        FloderUtil().createFloder(floderPath)
         filePath = tempDataPath.temporaryDataPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name, value)
 
