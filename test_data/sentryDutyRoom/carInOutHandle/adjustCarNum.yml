@@ -15,6 +15,8 @@
       mockCarInMsg: $${__create_carNum()}$临时车请稍候
       adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
       checkCarInMsg: true
+      inOpenGateStatus: false
+      outOpenGateStatus: false
       checkCarInScreen: ${__create_carNum(carType=adjustCarNum)}\\登记放行
       checkCarInVoice: $${__create_carNum(carType=adjustCarNum)}$登记放行
       checkCarInOpenGate: 1
