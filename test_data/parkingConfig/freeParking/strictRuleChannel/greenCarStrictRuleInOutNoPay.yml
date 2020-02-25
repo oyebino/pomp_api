@@ -5,7 +5,7 @@
       carType: 4
       parkId: ${FreePark_parkID}
       parkUUID: ${FreePark_parkUUID}
-      carNum: ${__create_carNum(carType=新能源)}
+      carNum: ${__create_carNum(carType=新能源小车)}
       inClientID: ${freePark_StrictRule_inClientID}
       outClientID: ${freePark_StrictRule_outClientID}
       carIn_jobId: ${mytest.carIn_jobId}
@@ -13,15 +13,15 @@
     except:
       mockCarInMessage: 临时车请稍候
       checkCarInMessage: true
-      checkCarInVoice: $${__create_carNum(carType=新能源)}$登记放行
-      checkCarInScreen: ${__create_carNum(carType=新能源)}\\登记放行
+      checkCarInVoice: $${__create_carNum(carType=新能源小车)}$登记放行
+      checkCarInScreen: ${__create_carNum(carType=新能源小车)}\\登记放行
       checkCarInIsOpenGate: 1
-      presentCarMessage: ${__create_carNum(carType=新能源)}
-      parkingBillDetailMessage: ${__create_carNum(carType=新能源)}
+      presentCarMessage: ${__create_carNum(carType=新能源小车)}
+      parkingBillDetailMessage: ${__create_carNum(carType=新能源小车)}
       mockCarOutMessage: 临时车请稍候
       checkCarOutMessage: true
-      checkCarOutVoice: $${__create_carNum(carType=新能源)}$一路顺风
-      checkCarOutScreen: ${__create_carNum(carType=新能源)}\\一路顺风
+      checkCarOutVoice: $${__create_carNum(carType=新能源小车)}$一路顺风
+      checkCarOutScreen: ${__create_carNum(carType=新能源小车)}\\一路顺风
       checkCarOutIsOpenGate: 1
-      carLeaveHistoryMessage: ${__create_carNum(carType=新能源)}
+      carLeaveHistoryMessage: ${__create_carNum(carType=新能源小车)}
 

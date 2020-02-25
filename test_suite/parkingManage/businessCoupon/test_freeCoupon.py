@@ -12,7 +12,6 @@ from common.utils import YmlUtils
 from Api.parkingManage_service.businessCoupon import WeiXin,Coupon
 from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
-from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
 
 args_item = "send_data,expect"

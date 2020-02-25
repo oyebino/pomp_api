@@ -27,6 +27,7 @@ class Config(object):
     VALUE_ENT_AOMP_HOST = "AOMP_HOST"
     VALUE_ENT_AOMP_USER = "aomp_user"
     VALUE_ENT_AOMP_PWD = "aomp_pwd"
+    VALUE_ENT_WEIXIN_HOST = "WEIXIN_HOST"
 
 
 
@@ -58,6 +59,7 @@ class Config(object):
         self.aomp_host = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_HOST)
         self.aomp_user = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_USER)
         self.aomp_pwd = self.config.get(self.CATEGORY, self.VALUE_ENT_AOMP_PWD)
+        self.weiXin_host = self.config.get(self.CATEGORY, self.VALUE_ENT_WEIXIN_HOST)
 
 
     def get(self, title, value):
@@ -69,4 +71,4 @@ class Config(object):
 if __name__=='__main__':
     C = Config()
 
-    print(C.getValue("aomp_user"))
+    print(C.getValue("weiXin_host"))

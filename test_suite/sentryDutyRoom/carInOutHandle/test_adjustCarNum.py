@@ -35,7 +35,7 @@ class TestAdjustCarNum(BaseCase):
     def test_checkCarIn(self,sentryLogin,send_data,expect):
         """岗亭端登记放行"""
         re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['parkUUID'])
-        result = re
+        result = re.json()
         Assertions().assert_in_text(result, expect["checkCarInMsg"])
 
     def test_checkCarInInof(self,send_data,expect):

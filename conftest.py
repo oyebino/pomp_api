@@ -8,7 +8,7 @@ from common.Req import Req
 from Api.Login import Login, SentryLogin, AompLogin
 import pytest
 
-
+testuser =  ["111","2222"]
 @pytest.fixture(scope="class")
 def userLogin():
     L = Login()

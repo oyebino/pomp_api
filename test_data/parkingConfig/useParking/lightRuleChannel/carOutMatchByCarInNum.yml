@@ -1,5 +1,5 @@
 - test:
-    name: 临时车离场模糊匹配(最终车牌为进场车牌)
+    name: 临时车离场模糊匹配-最终车牌为进场车牌
     desc: 临时车离场模糊匹配(最终车牌为进场车牌)
     send_data:
       prakUUid: ${lightRule_parkUUID}

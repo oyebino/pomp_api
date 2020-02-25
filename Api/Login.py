@@ -14,12 +14,16 @@ json_headers = {"Content-Type": "application/json;charset=UTF-8"}
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 
 class Login():
-    def __init__(self):
+    def __init__(self,user=None,pwd=None):
         self.conf = Config()
         self.host = self.conf.host
         self.Seesion = requests.Session()
-        self.user = Config().getValue("user")
-        self.password = Config().getValue("password")
+        if user == None and pwd == None:
+            self.user = Config().getValue("user")
+            self.password = Config().getValue("password")
+        else:
+            self.user = user
+            self.password =pwd
 
     def login(self):
         seccode = urljoin(self.host,"/mgr/normal/authz/seccode.do")
@@ -120,13 +124,30 @@ class AompLogin(object):
         self.Session.post(path, data)
         return self.Session
 
+class WeiXin():
+    def __init__(self):
+        self.conf = Config()
+        self.host = self.conf.weiXin_host
+        self.S = requests.session()
+        self.user = self.conf.aomp_user
+        self.password = self.conf.aomp_pwd
+
+    def login(self):
+        loginUrl = self.host + "/mgr-weixin/passport/signin.do"
+        data = {
+            "username": "13531412589",
+            "password": "123456"
+        }
+        self.S.post(loginUrl, data)
+        return self.S
+
 
 if __name__ == "__main__":
 
     # L = SentryLogin()
 
     # L.login()
-    L = AompLogin()
+    L = WeiXin()
 
     L.login()
 

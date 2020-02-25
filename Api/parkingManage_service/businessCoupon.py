@@ -8,6 +8,8 @@ from common.Req import Req
 from common.db import Db as db
 from common.superAction import SuperAction as SA
 from common.XmlHander import XmlHander as xmlUtil
+from common.logger import logger
+from urllib.parse import urlencode
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
@@ -20,7 +22,6 @@ class Businessman(Req):
         新增商家
         :return:
         """
-        self.url = "/mgr/trader/addTrader.do"
         json_data ={
             "name":name,
             "parkName":xmlUtil().getValueByName("parkName"),
@@ -36,8 +37,109 @@ class Businessman(Req):
             "couponIdListStr":"4392",
             "telIsEdit":"true"
         }
-        re = self.post(self.api,data=json_data,headers=form_headers)
+        if self.__isUniqueName(json_data['name']) and self.__isExistOtherTrader(json_data['tel']):
+            self.url = "/mgr/trader/addTrader.do"
+            re = self.post(self.api,data=json_data,headers=form_headers)
+            return re
+        else:
+            logger.error('商家名或电话已被注册')
+
+    def editTrader(self,id,name,tel):
+        """编辑商家"""
+        traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(name)
+        traderId = db().select(traderIdSql)
+        form_data = {
+            "id":traderId,
+            "name": name,
+            "parkName": xmlUtil().getValueByName("parkName"),
+            "parkId": xmlUtil().getValueByName("lightRule_parkUUID"),
+            "type": "美食",
+            "defaultType": "美食",
+            "contact": "auto-zbyun",
+            "tel": tel,
+            "password": "123456",
+            "confirmPassword": "123456",
+            "isLimitBuy": 0,
+            "userCount": 2,
+            "couponIdListStr": "4392",
+            "telIsEdit": "true"
+        }
+        if self.__isUniqueName(form_data['name'],id=form_data['id']) and self.__isExistOtherTrader(form_data['tel'],id=form_data['id']):
+            self.url = "/mgr/trader/editTrader.do"
+            re = self.post(self.api,data=form_data,headers=form_headers)
+            return re
+        else:
+            logger.error('商家名或电话已被注册')
+
+    def getTraderListData(self,parkId,name=''):
+        """获取商户列表"""
+        data = {
+            "page":1,
+            "rp":20,
+            "query_parkId":parkId,
+            "parkSysType":1,
+            "name":name
+        }
+        self.url = '/mgr/trader/getTraderListData.do?' + urlencode(data)
+        re = self.get(self.api,headers=form_headers)
         return re
+
+    def add(self,traderId):
+        """
+        销售商家劵
+        :return:
+        """
+        self.url = "/mgr/coupon/sell/add.do"
+        re = self.__getCoupon2BugByTraderId(traderId)
+
+        json_data = {
+            "coupon":couponIndex,
+            "realPrice":1,
+            "originalPrice":1,
+            "traderName":11,
+            "traderId":1,
+            "totalAvilableToBuy":1,
+            "maxBuyNum":1,
+            "sellNum":1,
+            "totalMoney":1,
+            "sellMoney":1,
+            "sellRemark":1,
+            "couponTmpId":1
+        }
+
+    def __findRowData(self,dataList,findKey,findValue):
+        for index,row_data in enumerate(dataList):
+            if row_data[findKey] == findValue:
+                return index,row_data
+
+    def __getCoupon2BugByTraderId(self,traderId):
+        """按商户ID查看所有优惠劵信息"""
+        form_data = {
+            "traderId":traderId
+        }
+        self.url = '/mgr/trader/getCoupon2BuyByTraderId.do?' + urlencode(form_data)
+        re = self.get(self.api,headers=form_headers)
+        return re
+
+    def __isUniqueName(self,name,id=None):
+        """判断是否存在已有相同商户名"""
+        self.url = "/mgr/trader/isUniqueName.do"
+        form_data = {
+            "name":name,
+            "traderId":id
+        }
+        re = self.post(self.api,data=form_data,headers=form_headers)
+        return re.json()['valid']
+
+    def __isExistOtherTrader(self,tel,id=None):
+        """判断是否存在已注册号码"""
+        self.url = "/mgr/trader/isExistOtherTrader.do"
+        form_data = {
+            "tel":tel,
+            "id":id
+        }
+        re = self.post(self.api,data=form_data,headers=form_headers)
+        return re.json()['valid']
 
     def enableTrader(self,name):
         """启用商家"""
@@ -175,3 +277,6 @@ class WeiXin(object):
         re = self.S.post(path,data)
         return re
 
+    def buyTraderCoupon(self):
+        """购买优惠劵"""
+        pass

@@ -29,7 +29,7 @@ class TestCarOutNoInside(BaseCase):
     def test_sentryAbnormalPay(self,sentryLogin,send_data,expect):
         """岗亭端收费异常放行"""
         re = CarInOutHandle(sentryLogin).abnormal_car_out(send_data['parkUUID'])
-        result = re
+        result = re.json()
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkCarOutInfo(self,send_data,expect):
