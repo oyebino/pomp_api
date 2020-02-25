@@ -8,8 +8,8 @@
       ticketName: 黑名单auto
       inClientID: ${StrictRule_inClientID}
       outClientID: ${StrictRule_outClientID}
-      carIn_jobId: ${黑名单严进，需缴费严出（岗亭收费处收费放行）.carIn_jobId}
-      carOut_jobId: ${黑名单严进，需缴费严出（岗亭收费处收费放行）.carOut_jobId}
+      carIn_jobId: ${mytest.carIn_jobId}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mock_car_in: ok
       inscreen: 新ZHMD01\\黑名单auto请稍候
