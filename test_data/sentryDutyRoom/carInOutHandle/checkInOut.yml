@@ -1,5 +1,5 @@
 - test:
-    name: 收费放行
+    name: 收费或异常放行
     desc: 验证收费或异常放行是否成功
     send_data:
       user_id: apitest
