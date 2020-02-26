@@ -1,6 +1,6 @@
 - test:
-    name: 用户登录
-    desc: 验证是否登录成功
+    name: 岗亭进出场记录
+    desc: 岗亭进出场记录查询
     send_data:
       user_id: apitest
       password: 123456
