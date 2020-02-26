@@ -2,7 +2,12 @@
  Created by lgc on 2020/2/7 11:24.
  微信公众号：泉头活水
 """
+import json
+from time import sleep
 
+import requests
+
+from Api.cloudparking_service import cloudparking_service
 from common.Req import Req
 from common.db import Db
 from common.superAction import SuperAction
@@ -15,7 +20,7 @@ class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
 
-    def check_car_in_out(self, carNum):
+    def check_car_in_out(self, carNum, jobId):
         """
         点击消息，然后点击确认放行
         """
@@ -30,9 +35,14 @@ class CarInOutHandle(Req):
             "reason": ""
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        return re
+        sleep(3)
+        if "success" in re.json() and re.json()["success"] == True:
+            result = cloudparking_service().get_car_msg_ytj(jobId)
+            return result
+        else:
+            return re
 
-    def normal_car_out(self, carNum):
+    def normal_car_out(self, carNum ,jobId):
         """
         点击收费放行
         """
@@ -47,9 +57,14 @@ class CarInOutHandle(Req):
             "reason": ""
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        return re
 
-    def abnormal_car_out(self, carNum):
+        if "success" in re.json() and re.json()["success"] == True:
+            result = cloudparking_service().get_car_msg_ytj(jobId)
+            return result
+        else:
+            return re
+
+    def abnormal_car_out(self, carNum, jobId):
         """
         异常放行
         """
@@ -65,8 +80,14 @@ class CarInOutHandle(Req):
             "real_value": '1'
         }
         self.save('real_value',data['real_value'])
+
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        return re
+
+        if "success" in re.json() and re.json()["success"] == True:
+            result = cloudparking_service().get_car_msg_ytj(jobId)
+            return result
+        else:
+            return re
 
     def adjust_carNum_carType(self, carNum, adjustCarNum, carType = None):
         """校正车牌与类型"""
@@ -150,3 +171,15 @@ class CarInOutHandle(Req):
         self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
         re = self.get(self.zby_api, headers=form_headers)
         return re
+
+
+if __name__ == '__main__':
+    # f =CarInOutHandle()
+    # a = f._openGateFail()
+    # print(type(a))
+    # dict
+    # ' object has no attribute '
+    # json
+    # '
+    s = {'a': 5}
+    print(json.dumps(s))

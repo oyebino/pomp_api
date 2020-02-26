@@ -82,7 +82,7 @@ class SentryLogin():
             "channel_ids": channelCodeList
         }
         r = self.S.post(url=url, data=data)
-        print("***********",r.text)  # 登录成功后返回内容为空
+        # print("***********",r.text)  # 登录成功后返回内容为空
         # if not r.json()['status'] == 200:
         #     log.info(r.json()['message'])
 
