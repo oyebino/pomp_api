@@ -1,5 +1,5 @@
 - test:
-    name: 收费放行
+    name: 收费或异常放行
     desc: 验证收费或异常放行是否成功
     send_data:
       user_id: apitest
@@ -11,13 +11,9 @@
       lightRule_outClientID: ${lightRule_outClientID}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
       lightRule_outChannelCode: ${lightRule_outChannelCode}
-      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 欢迎光临
       presentCarMessage: ${__create_carNum()}
       mockCarOutMessage: 缴费
       checkOutMessage: true
-      checkCarOutScreen: 已收费5元\\一路顺风
-      checkCarOutVoice: 已收费5元一路顺风
-      checkCarOutOpenGate: 1
       carLeaveHistoryMessage: ${__create_carNum()}

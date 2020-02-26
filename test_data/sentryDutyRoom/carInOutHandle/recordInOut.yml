@@ -10,8 +10,12 @@
       lightRule_outClientID: ${lightRule_outClientID}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
       lightRule_outChannelCode: ${lightRule_outChannelCode}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 欢迎光临
       mockCarOutMessage: 缴费
       checkOutMessage: true
       carNum: ${__create_carNum()}
+      checkCarOutScreen: 已收费5元\\一路顺风
+      checkCarOutVoice: 已收费5元一路顺风
+      checkCarOutOpenGate: 1

@@ -11,12 +11,26 @@
       StrictRule_outClientID: ${StrictRule_outClientID}
       StrictRule_inChannelCode: ${StrictRule_inChannelCode}
       StrictRule_outChannelCode: ${StrictRule_outChannelCode}
+      carIn_jobId: ${mytest.carIn_jobId}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 请稍候
       checkInMessage: true
       mockCarOutMessage: 缴费
       checkOutMessage: true
       carLeaveHistoryMessage: ${__create_carNum()}
+      checkCarInScreen: ${__create_carNum()}\\登记放行
+      checkCarInVoice: $${__create_carNum()}$登记放行
+      checkCarInOpenGate: 1
+      checkCarOutScreen: 已收费5元\\一路顺风
+      checkCarOutVoice: 已收费5元一路顺风
+      checkCarOutOpenGate: 1
+
+
+
+
+
+
 #- test:
 #    name: 用户登录2
 #    desc: 验证是否登录成功2
