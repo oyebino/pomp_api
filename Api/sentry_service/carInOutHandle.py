@@ -20,7 +20,7 @@ class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
 
-    def check_car_in_out(self, carNum, jobId):
+    def check_car_in_out(self, carNum, jobId=""):
         """
         点击消息，然后点击确认放行
         """
@@ -35,14 +35,15 @@ class CarInOutHandle(Req):
             "reason": ""
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        sleep(3)
-        if "success" in re.json() and re.json()["success"] == True:
-            result = cloudparking_service().get_car_msg_ytj(jobId)
-            return result
+        sleep(3)  # 可能需要加上延时
+        if jobId != "":
+            if "success" in re.json() and re.json()["success"] == True:
+                result = cloudparking_service().get_car_msg_ytj(jobId)
+                return result
         else:
             return re
 
-    def normal_car_out(self, carNum ,jobId):
+    def normal_car_out(self, carNum ,jobId=""):
         """
         点击收费放行
         """
@@ -57,14 +58,15 @@ class CarInOutHandle(Req):
             "reason": ""
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
-
-        if "success" in re.json() and re.json()["success"] == True:
-            result = cloudparking_service().get_car_msg_ytj(jobId)
-            return result
+        if jobId != "":
+            if "success" in re.json() and re.json()["success"] == True:
+                result = cloudparking_service().get_car_msg_ytj(jobId)
+                return result
         else:
             return re
 
-    def abnormal_car_out(self, carNum, jobId):
+
+    def abnormal_car_out(self, carNum, jobId=""):
         """
         异常放行
         """
@@ -83,9 +85,10 @@ class CarInOutHandle(Req):
 
         re = self.post(self.zby_api, data=data, headers=form_headers)
 
-        if "success" in re.json() and re.json()["success"] == True:
-            result = cloudparking_service().get_car_msg_ytj(jobId)
-            return result
+        if jobId != "":
+            if "success" in re.json() and re.json()["success"] == True:
+                result = cloudparking_service().get_car_msg_ytj(jobId)
+                return result
         else:
             return re
 
