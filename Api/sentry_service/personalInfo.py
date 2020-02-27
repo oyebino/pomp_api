@@ -91,6 +91,3 @@ class SentryLogin():
             return "未登录"
         else:
             return "已登录"
-
-if __name__ == '__main__':
-    PersonalInfo(sentryLogin).dutyInfo()
