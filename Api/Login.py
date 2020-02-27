@@ -40,6 +40,7 @@ class Login():
             "password": self.password,
             "seccode": 9999
         }
+        print(data['username'])
         re = self.Seesion.post(url,data,headers=headers)
         log.info(re.json()['message'])
         return self.Seesion
@@ -47,11 +48,16 @@ class Login():
 
 class SentryLogin():
     """岗亭端"""
-    def __init__(self, host="https://zbcloud.k8s.yidianting.com.cn"):
+    def __init__(self,user = None, pwd = None):
         self.S = requests.Session()
-        self.host = host
-        self.user = Config().getValue("user")
-        self.password = Config().getValue("password")
+        self.C = Config()
+        self.host = self.C.zby_host
+        if user == None and pwd == None:
+            self.user = self.C.zby_user
+            self.password = self.C.zby_pwd
+        else:
+            self.user = user
+            self.password = pwd
 
     def login(self):
         """登录并获取token"""
@@ -93,12 +99,16 @@ class SentryLogin():
 
 class AompLogin(object):
 
-    def __init__(self):
+    def __init__(self, user = None, pwd = None):
         self.conf = Config()
         self.host = self.conf.aomp_host
         self.Session = requests.session()
-        self.user = self.conf.aomp_user
-        self.password = self.conf.aomp_pwd
+        if user == None and pwd == None:
+            self.user = self.conf.aomp_user
+            self.password = self.conf.aomp_pwd
+        else:
+            self.user = user
+            self.password = pwd
 
     def checkCode(self):
 
@@ -124,19 +134,23 @@ class AompLogin(object):
         self.Session.post(path, data)
         return self.Session
 
-class WeiXin():
-    def __init__(self):
+class WeiXinLogin():
+    def __init__(self,user = None, pwd = None):
         self.conf = Config()
         self.host = self.conf.weiXin_host
         self.S = requests.session()
-        self.user = self.conf.aomp_user
-        self.password = self.conf.aomp_pwd
+        if user == None and pwd == None:
+            self.user = self.conf.weiXin_user
+            self.password = self.conf.weiXin_pwd
+        else:
+            self.user = user
+            self.password = pwd
 
     def login(self):
         loginUrl = self.host + "/mgr-weixin/passport/signin.do"
         data = {
-            "username": "13531412589",
-            "password": "123456"
+            "username": self.user,
+            "password": self.password
         }
         self.S.post(loginUrl, data)
         return self.S
@@ -144,10 +158,10 @@ class WeiXin():
 
 if __name__ == "__main__":
 
-    # L = SentryLogin()
+    L = SentryLogin()
 
     # L.login()
-    L = WeiXin()
+    # L = WeiXinLogin()
 
     L.login()
 

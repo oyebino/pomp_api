@@ -1,0 +1,30 @@
+- test:
+    name: 黑名单严进，需缴费严出（岗亭收费处收费放行）
+    desc: 黑名单严进，需缴费严出（岗亭收费处收费放行）（智泊云）
+    send_data:
+      parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
+      carNum: 新ZHMD01
+      ticketName: 黑名单auto
+      inClientID: ${StrictRule_inClientID}
+      outClientID: ${StrictRule_outClientID}
+      carIn_jobId: ${黑名单严进，需缴费严出（岗亭收费处收费放行）.carIn_jobId}
+      carOut_jobId: ${黑名单严进，需缴费严出（岗亭收费处收费放行）.carOut_jobId}
+    except:
+      mock_car_in: ok
+      inscreen: 新ZHMD01\\黑名单auto请稍候
+      invoice: $新ZHMD01$黑名单auto请稍候
+      mockCarInMessage: 新ZHMD01\\黑名单auto请稍候
+      checkCarInMessage: true
+      checkCarInVoice: $新ZHMD01$登记放行
+      checkCarInScreen: 新ZHMD01\\登记放行
+      checkCarInIsOpenGate: 1
+      presentCarMessage: 新ZHMD01
+      parkingBillDetailMessage: 新ZHMD01
+      mockCarOutMessage: $新ZHMD01$请扫码缴费
+      checkCarOutMessage: true
+      checkCarOutVoice: 已收费5元一路顺风
+      checkCarOutScreen: 已收费5元\\一路顺风
+      checkCarOutIsOpenGate: 1
+      carLeaveHistoryMessage: 新ZHMD01
+

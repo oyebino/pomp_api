@@ -6,7 +6,7 @@
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.parkingManage_service.businessCoupon import Businessman
+from Api.parkingManage_service.businessCoupon_service.businessman import Businessman
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
@@ -19,18 +19,27 @@ class TestTrader(BaseCase):
     """新增商户流程"""
     def test_addTrader(self,userLogin,send_data,expect):
         """商户新增"""
-        re = Businessman(userLogin).addTrader(send_data["name"])
+        re = Businessman(userLogin).addTrader(send_data["name"],send_data["parkName"],send_data['couponName'])
         result = re.json()
         Assertions().assert_in_text(result,expect["addTraderMessage"])
 
-    def test_enableTrader(self,userLogin,send_data,expect):
-        """商户禁用"""
-        re = Businessman(userLogin).enableTrader(send_data["name"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["enableTraderMessage"])
 
-    def test_deleteTrader(self,userLogin,send_data,expect):
-        """商户删除"""
-        re = Businessman(userLogin).deleteTrader(send_data["name"])
+
+    def test_editTrader(self,userLogin,send_data,expect):
+        """商户编辑"""
+        re = Businessman(userLogin).editTrader(send_data['name'],send_data["editName"],send_data["tel"],send_data['parkName'])
         result = re.json()
-        Assertions().assert_in_text(result, expect["deleteTraderMessage"])
+        self.save_data('editName',send_data["editName"])
+        Assertions().assert_in_text(result, expect["editTraderMessage"])
+
+    def test_checkEditTrader(self,userLogin,send_data,expect):
+        """查看修改后商户"""
+        re = Businessman(userLogin).getTraderListData(send_data["parkName"],send_data["editName"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["checkEditTraderMessage"])
+
+    # def test_deleteTrader(self,userLogin,send_data,expect):
+    #     """商户删除"""
+    #     re = Businessman(userLogin).deleteTrader(send_data["editName"])
+    #     result = re.json()
+    #     Assertions().assert_in_text(result, expect["deleteTraderMessage"])

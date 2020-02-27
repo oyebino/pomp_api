@@ -5,27 +5,45 @@
 # @Desc  :
 
 from common.Req import Req
-from Api.Login import Login, SentryLogin, AompLogin
+from Api.Login import Login, SentryLogin, AompLogin, WeiXinLogin
 import pytest
 
-testuser =  ["111","2222"]
 @pytest.fixture(scope="class")
-def userLogin():
-    L = Login()
+def userLogin(request):
+    if hasattr(request,'param'):
+        L = Login(request.param['user'],request.param['pwd'])
+    else:
+        L = Login()
     Session = L.login()
     return Req(Session)
 
 @pytest.fixture(scope="class")
-def sentryLogin():
-    L = SentryLogin()
+def sentryLogin(request):
+    if hasattr(request,'param'):
+        L = SentryLogin(request.param['user'], request.param['pwd'])
+    else:
+        L = SentryLogin()
     Session = L.login()
     return Req(Session)
 
 @pytest.fixture(scope="class")
-def aompLogin():
-    L = AompLogin()
+def aompLogin(request):
+    if hasattr(request, 'param'):
+        L = AompLogin(request.param['user'], request.param['pwd'])
+    else:
+        L = AompLogin()
     Session = L.login()
     return Req(Session)
+
+@pytest.fixture(scope="class")
+def weiXinLogin(request):
+    if hasattr(request,'param'):
+        L = WeiXinLogin(request.param['user'], request.param['pwd'])
+    else:
+        L = WeiXinLogin()
+    Session = L.login()
+    return Req(Session)
+
 
 """
 

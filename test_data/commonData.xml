@@ -12,6 +12,7 @@
 	<caseData name="StrictRule_outChannelCode" value="2064"/>
 	<caseData name="StrictRule_outClientID" value="20190507171503"/>
     <!--智泊云车场(智泊云接口测试专用停车场)-->
+    <caseData name="lightRule_parkName" value="智泊云接口测试专用停车场"/>
 	<caseData name="lightRule_areaID" value="223"/>
 	<caseData name="lightRule_parkUUID" value="54a33015-d405-499e-bce2-e569cd9dce6a"/>
 	<caseData name="lightRule_parkCode" value="2KR52FYV"/>

@@ -1,0 +1,25 @@
+
+- test:
+    name: 临时车异常进场(智泊云)
+    desc: 临时车异常进场
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: ${__create_carNum()}
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      mock_car_in: ok
+      inscreen: ${__create_carNum()}\\欢迎光临
+      invoice: $${__create_carNum()}$欢迎光临
+      presentCarMessage: 查询在场车辆成功
+      AbnormalInCarMessage: 查询异常进场车辆成功
+      exceptionType: 同车场再次进场
+      carNum: ${__create_carNum()}
+      centralPayMessage: billid
+      mock_car_out: ok
+      outscreen: ${__create_carNum()}\\一路顺风
+      outvoice: $${__create_carNum()}$一路顺风
+
+
+

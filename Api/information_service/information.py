@@ -139,6 +139,44 @@ class Information(Req):
         return re
 
 
+    def getAbnormalInCar(self, parkIds, carCode):
+        """
+        获取异常进场记录
+        :return:
+        """
+        data = {
+            "page":1,
+            "rp":20,
+            "carCode": carCode,
+            "modifyDateFrom": self.data + " 00:00:00",
+            "modifyDateTo":self.data +" 23:59:59",
+            "parkIds":parkIds,
+            "parkSysType": 1
+        }
+        self.url = "mgr/park/abnormalInCar/getAbnormalInCar.do?" + urlencode(data)
+        re = self.get(self.api, headers=self.api_headers)
+        return re
+
+    def getAbnormalPicCar(self, parkIds, carCode):
+        """
+        获取异常拍照记录
+        :return:
+        """
+        data = {
+            "page":1,
+            "rp":20,
+            "carCode": carCode,
+            "modifyDateFrom": self.data + " 00:00:00",
+            "modifyDateTo":self.data +" 23:59:59",
+            "parkIds":parkIds,
+            "parkSysType": 1
+        }
+        self.url = "mgr/park/parkAbnormalPicCar/getParkAbnormalPicCar.do?" + urlencode(data)
+        re = self.get(self.api, headers=self.api_headers)
+        return re
+
+
+
 if __name__ == '__main__':
     # central("https://zbcloud.k8s.yidianting.com.cn").centralGetCharge()
     # re =Information_controller().centralPay("粤Q12347")

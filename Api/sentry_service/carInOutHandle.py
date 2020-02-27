@@ -15,12 +15,15 @@ class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
 
-    def check_car_in_out(self,parkId):
+    def check_car_in_out(self, carNum):
         """
         点击消息，然后点击确认放行
         """
-        sql = "SELECT id FROM park_sentry_duty_message WHERE park_id = '{}' ORDER BY id DESC LIMIT 1".format(parkId)
-        message_id = Db().select(sql)
+        topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
+        topBillCode = Db().select(topBillCodeSql)
+        messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
+        message_id = Db().select(messageIdSql)
+
         self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
         data = {
             "type": "确认放行",
@@ -29,12 +32,15 @@ class CarInOutHandle(Req):
         re = self.post(self.zby_api, data=data, headers=form_headers)
         return re
 
-    def normal_car_out(self, parkId):
+    def normal_car_out(self, carNum):
         """
         点击收费放行
         """
-        sql = "SELECT id FROM park_sentry_duty_message WHERE park_id = '{}' ORDER BY id DESC LIMIT 1".format(parkId)
-        message_id = Db().select(sql)
+        topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
+        topBillCode = Db().select(topBillCodeSql)
+        messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
+        message_id = Db().select(messageIdSql)
+
         self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
         data = {
             "type": "收费放行",
@@ -43,12 +49,15 @@ class CarInOutHandle(Req):
         re = self.post(self.zby_api, data=data, headers=form_headers)
         return re
 
-    def abnormal_car_out(self, parkId):
+    def abnormal_car_out(self, carNum):
         """
         异常放行
         """
-        sql = "SELECT id FROM park_sentry_duty_message WHERE park_id = '{}' ORDER BY id DESC LIMIT 1".format(parkId)
-        message_id = Db().select(sql)
+        topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
+        topBillCode = Db().select(topBillCodeSql)
+        messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
+        message_id = Db().select(messageIdSql)
+
         self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
         data = {
             "type": "异常放行",
@@ -59,10 +68,13 @@ class CarInOutHandle(Req):
         re = self.post(self.zby_api, data=data, headers=form_headers)
         return re
 
-    def adjust_carNum_carType(self,parkId,adjustCarNum,carType = None):
+    def adjust_carNum_carType(self, carNum, adjustCarNum, carType = None):
         """校正车牌与类型"""
-        sql = "SELECT id FROM park_sentry_duty_message WHERE park_id = '{}' ORDER BY id DESC LIMIT 1".format(parkId)
-        message_id = Db().select(sql)
+        topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
+        topBillCode = Db().select(topBillCodeSql)
+        messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
+        message_id = Db().select(messageIdSql)
+
         self.url = "/ydtp-backend-service/api/messages/{}/carCode".format(message_id)
         data = {
             "car_code": adjustCarNum,
@@ -70,6 +82,7 @@ class CarInOutHandle(Req):
             "carType": carType
         }
         re =self.post(self.zby_api,data=data,headers = form_headers)
+        print(re.text)
         if re.json()['open_gate'] == "false":
             re = self.__update_msgId(message_id)
             return re

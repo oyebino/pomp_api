@@ -1,10 +1,17 @@
 
 - test:
-    name: 新增商户
-    desc: 验证新增商户
+    name: 商家的创建流程
+    desc: 商家的创建流程
     send_data:
-      name: pytest接口商户${__create_randomNum()}
+      name: pytest${__create_randomNum()}
+      editName: pytest修改${__create_randomNum()}
+      parkName: ${lightRule_parkName}
+      couponName: 时间扣减
+      tel: 135${__create_randomNum(8)}
     except:
       addTraderMessage: 新增商家成功
+      disAbleTraderMessage: 成功冻结
       enableTraderMessage: 成功启用
+      editTraderMessage: 修改商家成功
+      checkEditTraderMessage: ${mytest.editName}
       deleteTraderMessage: 删除商家成功

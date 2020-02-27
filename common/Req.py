@@ -5,7 +5,7 @@
 # @Desc  :
 import requests
 import inspect
-import time,os
+import time,os,json
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
@@ -33,6 +33,7 @@ class Req(requests.Session):
         self.monitor_host = self.conf.monitor_host
         self.zby_host = self.conf.zby_host
         self.aomp_host = self.conf.aomp_host
+        self.weiXin_host = self.conf.weiXin_host
         if Session == None:
             self.Session = requests.Session()
         else:
@@ -64,6 +65,11 @@ class Req(requests.Session):
         """aomp调用地址"""
         return self._aomp_host(self.url)
 
+    @property
+    def weiXin_api(self):
+        """微信商家端调用地址"""
+        return self._weiXin_host(self.url)
+
     def _zby_host(self,url):
         full_url = urljoin(self.zby_host, url)
         return full_url
@@ -74,6 +80,10 @@ class Req(requests.Session):
 
     def _aomp_host(self,url):
         full_url = urljoin(self.aomp_host, url)
+        return full_url
+
+    def _weiXin_host(self,url):
+        full_url = urljoin(self.weiXin_host, url)
         return full_url
 
     @property
@@ -118,12 +128,7 @@ class Req(requests.Session):
         :param cert: (optional)
             if String, path to ssl client cert file (.pem). If Tuple, ('cert', 'key') pair.
         """
-        # response = requests.Session.request(self, method, url, **kwargs)
         response = self.Session.request(method, url, **kwargs)
-        # logger.info("Request Method:{}".format(method))
-        # logger.info("Request URL:{}".format(url))
-        # logger.info("Request Payload:{}".format(kwargs))
-        # logger.info("Response Data :{}".format(response.text))
         return response
 
     def get(self, url, **kwargs):
@@ -135,7 +140,7 @@ class Req(requests.Session):
         """
         kwargs.setdefault('allow_redirects', True)
         url = self.__formatRule(r'%24%7B(.*?)%7D',url)
-        print(url)
+        # print(url)
         result = self.request('GET', url, **kwargs)
         self.__getLogFormat(url,kwargs,result)
         return result
@@ -309,6 +314,40 @@ class Req(requests.Session):
         filePath = tempDataPath.temporaryDataPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name, value)
 
-if __name__ == "__main__":
-    url = '/api'
+    def getDictBykey(self,json_object,key,expectedValue):
+        """
+        深度查找json的value值，返回具有value属性的dict
+        :param json_object:  传入的json值
+        :param key: 属性名
+        :param expectedValue: 查找的value值
+        :return:
+        """
+        for k in json_object:
+            if k == key:
+                if json_object[k] == expectedValue:
+                    return json_object
+            elif isinstance(json_object[k],list):
+                for item in json_object[k]:
+                    if isinstance(item,dict):
+                        result = self.getDictBykey(item, key, expectedValue)
+                        if  result != None:
+                            return result
+            elif isinstance(json_object[k],dict):
+                return self.getDictBykey(json_object[k],key,expectedValue)
 
+if __name__ == "__main__":
+    aa =    {
+                'status': 1,
+                'data': {
+                    'jj':'pp',
+                    'parkList': [{
+                        'name': '智泊云车场（主版本在用）',
+                        'lastupdatetime': 11111111111
+                    }, {
+                        'name':'智泊云接口测试专用停车场',
+                        'lastupdatetime': 1557158400000
+                    }]
+                }
+            }
+
+    print(Req().getDictBykey(aa,'jj','pp'))

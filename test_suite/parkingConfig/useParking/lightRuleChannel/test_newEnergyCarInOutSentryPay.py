@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2020/2/20 10:46
-# @Author  : 叶永彬
-# @File    : test_carNumMatchByHuman.py
+# @Time    : 2020/2/21 14:32
+# @Author  : 何涌
+# @File    : test_newEnergyCarInOutSentryPay.py
+
 
 import pytest
 import allure
@@ -14,41 +15,35 @@ from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/carNumMatchByHuman.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingConfig/useParking/lightRuleChannel/newEnergyCarInOutSentryPay.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("车辆进出模块")
-class TestCarNumMatchByHuman(BaseCase):
-    """临时车离场人工匹配，场内已有'京BBBBB2'"""
+class TestNewEnergyCarInOutSentryPay(BaseCase):
+    """新能源小车宽进，需缴费宽出（岗亭收费处收费放行）"""
     def test_mockCarIn(self,send_data,expect):
-        re = cloudparking_service().mock_car_in_out(send_data['matchCarNum'],0,send_data['inClientID'])
+        re = cloudparking_service().mock_car_in_out(send_data['carNum'],0,send_data['inClientID'])
         result = re.json()['biz_content']['result']
-        Assertions().assert_in_text(result['screen'], expect["carInScreen"])
-        Assertions().assert_in_text(result['voice'], expect["carInVoice"])
-        Assertions().assert_in_text(result['open_gate'], expect["carInOpenGate"])
+        Assertions().assert_in_text(result['screen'], expect["mockCarInScreen"])
+        Assertions().assert_in_text(result['voice'], expect["mockCarInVoice"])
+        Assertions().assert_in_text(result['open_gate'], expect["mockCarInOpenGate"])
 
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
-        re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["matchCarNum"])
+        re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["carNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["presentCarMessage"])
 
     def test_mockCarOut(self,send_data,expect):
         """离场"""
-        re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'],80)
+        re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'])
         result = re.json()
         self.save_data('carOut_jobId',result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
-    def test_matchCarNumByhuman(self,sentryLogin,send_data,expect):
-        """人工匹配车牌"""
-        re = CarInOutHandle(sentryLogin).match_carNum(send_data['parkUUID'],send_data['matchCarNum'])
-        result = re.json()['content']
-        Assertions().assert_in_text(result['leaveCarNo'], expect["matchCarNumMessage"])
-
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭收费处收费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['matchCarNum'])
-        result = re.json()['success']
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['parkUUID'])
+        result = re.json()
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkCarOutInfo(self,send_data,expect):
@@ -61,6 +56,6 @@ class TestCarNumMatchByHuman(BaseCase):
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["matchCarNum"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["carNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

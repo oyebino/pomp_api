@@ -1,0 +1,27 @@
+
+- test:
+    name: 访客宽进，需缴费宽出（岗亭收费处收费放行）(智泊云)
+    desc: 访客宽进，需缴费宽出（岗亭收费处收费放行）
+    send_data:
+      parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
+      carNum: 新ZFK001
+      ticketName: 访客auto
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      message: OK
+      mock_car_in: ok
+      ticketName: 访客auto
+      inscreen: 新ZFK001\\访客auto
+      invoice: $新ZFK001$访客auto
+      presentCarMessage: 查询在场车辆成功
+      carNum: 新ZFK001
+      mock_car_out: ok
+      outscreen: 新ZFK001\\扫码缴费
+      outvoice: $新ZFK001$请扫码缴费
+      sentryPayMessage: true
+
+
+
+

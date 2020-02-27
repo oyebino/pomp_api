@@ -42,8 +42,8 @@ class TestCarInOutSentryAbnormalPay(BaseCase):
 
     def test_sentryAbnormalPay(self,sentryLogin,send_data,expect):
         """岗亭收费处异常放行"""
-        re = CarInOutHandle(sentryLogin).abnormal_car_out(send_data['parkUUID'])
-        result = re.json()
+        re = CarInOutHandle(sentryLogin).abnormal_car_out(send_data['carNum'])
+        result = re.json()['success']
         Assertions().assert_in_text(result, expect["sentryAbnormalPayMessage"])
 
     def test_checkCarOutInfo(self,send_data,expect):

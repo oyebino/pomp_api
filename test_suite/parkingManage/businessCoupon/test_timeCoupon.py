@@ -9,14 +9,14 @@ import allure
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 from common.utils import YmlUtils
-from Api.parkingManage_service.businessCoupon import WeiXin,Coupon
+from Api.parkingManage_service.businessCoupon_service import WeiXin,Coupon
 from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
 from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/timeCoupon.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon_service/timeCoupon.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
 class TestTimeCoupon():

@@ -4,12 +4,15 @@
     desc: VIP车无在场严出
     send_data:
       parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
       carNum: 新Z89001
       ticketName: 纯时间月票
-      outClientID: ${strictRule_outClientID}
+      outClientID: ${StrictRule_outClientID}
     except:
-      screen: 新Z89001\\纯时间月票请稍候
-      voice: $新Z89001$纯时间月票请稍候
+      screen: 纯时间月票\\无在场记录
+      voice: 纯时间月票无在场记录请稍候
       carNum: 新Z89001
       mock_car_out: ok
+      checkMessageOutMsg: ok
+      carLeaveHistoryMessage: 新Z89001
 

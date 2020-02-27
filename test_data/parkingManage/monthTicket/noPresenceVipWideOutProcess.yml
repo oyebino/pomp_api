@@ -8,8 +8,10 @@
       ticketName: 纯时间月票
       outClientID: ${lightRule_outClientID}
     except:
-      screen: 新Z89001\\纯时间月票
-      voice: $新Z89001$纯时间月票
+      mock_car_out: ok
+      screen: 纯时间月票\\一路顺风
+      voice: 纯时间月票一路顺风
       carNum: 新Z89001
       mock_car_out: ok
+
 
