@@ -2,23 +2,22 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/2/25 16:37
 # @Author  : 叶永彬
-# @File    : businessman.py
+# @File    : trader.py
 
 
 from common.Req import Req
 from common.db import Db as db
 from common.superAction import SuperAction as SA
-from common.XmlHander import XmlHander as xmlUtil
 from common.logger import logger
 from urllib.parse import urlencode
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
 
-class Businessman(Req):
+class Trader(Req):
     """商户管理"""
 
-    def addTrader(self,name,parkName,couponName):
+    def addTrader(self,name,parkName,tel,couponName,pwd = '123456'):
         """
         新增商家
         :return:
@@ -32,9 +31,9 @@ class Businessman(Req):
             "type":"美食",
             "defaultType":"美食",
             "contact":"auto-zbyun",
-            "tel":'135' + SA().create_randomNum(val=8),
-            "password":"123456",
-            "confirmPassword":"123456",
+            "tel":tel,
+            "password":pwd,
+            "confirmPassword":pwd,
             "isLimitBuy":0,
             "userCount":2,
             "couponIdListStr":couponDict['id'],
@@ -63,7 +62,7 @@ class Businessman(Req):
         return re
 
 
-    def editTrader(self,name,editName,tel,parkName):
+    def editTrader(self,name,editName,tel,parkName,pwd):
         """编辑商家"""
         traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(name)
         traderId = db().select(traderIdSql)
@@ -78,8 +77,8 @@ class Businessman(Req):
             "defaultType": "美食",
             "contact": "auto-zbyun",
             "tel": tel,
-            "password": "123456",
-            "confirmPassword": "123456",
+            "password": pwd,
+            "confirmPassword": pwd,
             "isLimitBuy": 0,
             "userCount": 2,
             "couponIdListStr": "4392",
@@ -107,7 +106,7 @@ class Businessman(Req):
         re = self.get(self.api,headers=form_headers)
         return re
 
-    def addSell(self,name,sellNum,sellMoney):
+    def addSell(self,traderName,couponName,sellNum='1',sellMoney='9'):
         """
         销售商家劵
         :param name: 商家劵名称
@@ -115,11 +114,11 @@ class Businessman(Req):
         :param sellMoney: 商家折扣价
         :return:
         """
-        traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(name)
+        traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(traderName)
         traderId = db().select(traderIdSql)
 
         re = self.__getCoupon2BugByTraderId(traderId)
-        couponIndex,couponDict = self.__findRowData(re.json()['data'],'traderName',name)
+        couponIndex,couponDict = self.__findRowData(re.json()['data'],'name',couponName)
         form_data = {
             "coupon":couponIndex,
             "realPrice":couponDict['realPrice'],
@@ -129,7 +128,7 @@ class Businessman(Req):
             "totalAvilableToBuy":couponDict['totalAvilableToBuy'],
             "maxBuyNum":couponDict['totalAvilableToBuy'],
             "sellNum":sellNum,
-            "totalMoney":'{}'.format(sellNum * couponDict['realPrice']),
+            "totalMoney":'{}'.format(int(sellNum) * couponDict['realPrice']),
             "sellMoney":sellMoney,
             "sellRemark":'',
             "couponTmpId":couponDict['couponTmpId']
@@ -196,13 +195,12 @@ class Businessman(Req):
         return re
 
 
-    def deleteTrader(self,name):
+    def deleteTrader(self,parkName,name):
         """删除商户"""
-        traderIdSql = "SELECT TRADER_ID from park_trader_user where name='"+ name +"'"
-        traderId = db().select(traderIdSql)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(),'name',name)
         self.url = "/mgr/trader/deleteTrader.do"
         json_data = {
-            "id": traderId
+            "id": traderDict['id']
         }
         re = self.post(self.api, data=json_data, headers=form_headers)
         return re

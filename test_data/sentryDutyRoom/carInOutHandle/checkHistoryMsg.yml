@@ -1,0 +1,27 @@
+- test:
+    name: 岗亭收费处查看历史消息
+    desc: 岗亭收费处查看历史消息
+    send_data:
+      parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
+      carNum: 新ZLSC01
+      inClientID: ${StrictRule_inClientID}
+      outClientID: ${StrictRule_outClientID}
+      carIn_jobId: ${mytest.carIn_jobId}
+      carOut_jobId: ${mytest.carOut_jobId}
+    except:
+      mock_car_in: ok
+      inscreen: 新ZLSC01\\临时车请稍候
+      invoice: $新ZLSC01$临时车请稍候
+      checkCarInMessage: true
+      checkOneHistoryMsgCarNo: 新ZLSC01
+      checkOneHistoryMsgReason: 登记放行
+      checkOneHistoryMsgAbName: 临时车严进
+      presentCarMessage: 新ZLSC01
+      mockCarOutMessage: $新ZLSC01$请扫码缴费
+      checkCarOutMessage: true
+      checkOneHistoryMsgCarNo2: 新ZLSC01
+      checkOneHistoryMsgReason2: 收费放行
+      checkOneHistoryMsgAbName2: 临时车宽出需缴费
+      carLeaveHistoryMessage: 新ZLSC01
+

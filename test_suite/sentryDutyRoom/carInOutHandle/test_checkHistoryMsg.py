@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2020/02/21 10:15
+# @Time    : 2020/02/25 16:25
 # @Author  : 何涌
-# @File    : test_blacklistStrictRuleInOutPay.py
+# @File    : test_checkHistoryMsg.py
 
 import pytest
 import allure
@@ -14,11 +14,11 @@ from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingConfig/useParking/strictRuleChannel/blacklistStrictRuleInOutPay.yml").getData
+test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkHistoryMsg.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("车辆进出模块")
-class TestBlacklistStrictRuleInOutPay(BaseCase):
-    """黑名单严进，需缴费严出（岗亭收费处收费放行）"""
+@allure.feature("岗亭收费处")
+class TestCheckHistoryMsg(BaseCase):
+    """岗亭收费处查看历史消息"""
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mock_car_in_out(send_data["carNum"],0,send_data["inClientID"])
@@ -33,6 +33,14 @@ class TestBlacklistStrictRuleInOutPay(BaseCase):
         result = re.json()
         Assertions().assert_in_text(result, expect["checkCarInMessage"])
 
+    def test_checkOneHistoryMsg(self,sentryLogin,send_data,expect):
+        """岗亭端查看单条记录的历史消息详情"""
+        re = CarInOutHandle(sentryLogin).check_history_msg(send_data['carNum'])
+        result = re.json()
+        Assertions().assert_in_text(result["content"]["carNo"], expect["checkOneHistoryMsgCarNo"])
+        Assertions().assert_in_text(result["content"]["reason"], expect["checkOneHistoryMsgReason"])
+        Assertions().assert_in_text(result["content"]["abName"], expect["checkOneHistoryMsgAbName"])
+
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["carNum"])
@@ -43,7 +51,6 @@ class TestBlacklistStrictRuleInOutPay(BaseCase):
         """模拟车辆离场"""
         re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'])
         result = re.json()
-        self.save_data('carOut_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkCarOut(self,sentryLogin,send_data,expect):
@@ -51,6 +58,14 @@ class TestBlacklistStrictRuleInOutPay(BaseCase):
         re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'])
         result = re.json()
         Assertions().assert_in_text(result, expect["checkCarOutMessage"])
+
+    def test_checkOneHistoryMsg2(self,sentryLogin,send_data,expect):
+        """岗亭端查看单条记录的历史消息详情"""
+        re = CarInOutHandle(sentryLogin).check_history_msg(send_data['carNum'])
+        result = re.json()
+        Assertions().assert_in_text(result["content"]["leaveCarNo"], expect["checkOneHistoryMsgCarNo2"])
+        Assertions().assert_in_text(result["content"]["reason"], expect["checkOneHistoryMsgReason2"])
+        Assertions().assert_in_text(result["content"]["abName"], expect["checkOneHistoryMsgAbName2"])
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""

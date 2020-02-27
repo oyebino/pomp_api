@@ -19,7 +19,7 @@ class YmlUtils(object):
         self.all_data = self.load_yaml(yamlPath)
         tempPath = root_path + yamlPath.replace("test_data", "temporaryDataLog").split('.')[0]
         tempDataPath.temporaryDataPath = tempPath
-        FloderUtil().delFloder(tempPath)
+        # FloderUtil().delFloder(tempPath)
 
     def load_yaml(self,yamlPath):
 

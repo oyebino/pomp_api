@@ -1,0 +1,16 @@
+- test:
+    name: 岗亭收费处进场记录校正
+    desc: 岗亭收费处进场记录校正
+    send_data:
+      parkId: ${lightRule_parkID}
+      carNum: ${__create_carNum()}
+      adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
+      lightRule_inClientID: ${lightRule_inClientID}
+      lightRule_outClientID: ${lightRule_outClientID}
+    except:
+      mockCarInMessage: 欢迎光临
+      adjustCarInWaterNumMsg: ${__create_carNum(carType=adjustCarNum)}
+      adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
+      mockCarOutMessage: 缴费
+      checkOutMessage: true
+      carNum: ${__create_carNum()}

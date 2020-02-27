@@ -1,0 +1,14 @@
+- test:
+    name: 商家售卖-在商家管理页面售卖券
+    desc: 商家售卖-在商家管理页面售卖券
+    send_data:
+      traderName: pytest${__create_randomNum()}
+      parkName: ${lightRule_parkName}
+      couponName: 时间扣减
+      tel: 135${__create_randomNum(8)}
+      carNum: ${__create_carNum()}
+    except:
+      addTraderMessage: 新增商家成功
+      traderSellMsg: 操作成功
+      grantCouponToCarMsg: 发券成功
+      deleteTraderMessage: 删除商家成功

@@ -1,0 +1,33 @@
+
+- test:
+    name: VIP类型满位限行（系统有空位自动放行，无空位手动放行按VIP计费）
+    desc: VIP类型满位限行（系统有空位自动放行，无空位手动放行按VIP计费）
+    send_data:
+      parkId: ${lightRule_parkID}
+      parkUUID: ${lightRule_parkUUID}
+      carNum: 新ZVIP98
+      carNum2: 新ZVIP99
+      ticketName: 满位月票auto
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      mock_car_in: ok
+      inscreen: 新ZVIP98\\满位月票auto
+      invoice: $新ZVIP98$满位月票auto
+      presentCarMessage: 查询在场车辆成功
+      carNum: 新ZVIP98
+      ticketName: 满位月票auto
+      mockCarInMessage2: ok
+      carNum2: 新ZVIP99
+      inscreen2: 满位月票auto\\车位已满
+      invoice2: 满位月票auto车位已满
+      checkMessageInMsg: ok
+      presentCarMessage2: 查询在场车辆成功
+      carType2: 满位月票auto
+      mock_car_out: ok
+      CarLeaveHistoryMessage: OK
+      mockCarOut2Msg: ok
+      outscreen2: 新ZVIP99\\满位月票auto
+      outvoice2: $新ZVIP99$满位月票auto
+      CarLeaveHistoryMessage2: OK
+

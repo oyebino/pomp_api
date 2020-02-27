@@ -8,6 +8,7 @@ import pytest
 
 from Api.cloudparking_service import cloudparking_service
 from Api.sentry_service.carInOutHandle import CarInOutHandle
+from common.BaseCase import BaseCase
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
@@ -22,7 +23,7 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/recordI
 @allure.feature("pc查看进出场记录")
 
 
-class TestSentryRecordInOut():
+class TestSentryRecordInOut(BaseCase):
 
     """pc查看进出场记录"""
     def test_mockCarIn(self, send_data, expect):
@@ -41,13 +42,16 @@ class TestSentryRecordInOut():
         """模拟离场"""
         re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["lightRule_outClientID"])
         result = re.json()
+        self.save_data('carOut_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect['mockCarOutMessage'])
 
     def test_checkOut(self, sentryLogin, send_data, expect):
         """收费放行"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'])
-        result = re.json()["success"]
-        Assertions().assert_in_text(result, expect["checkOutMessage"])
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'], send_data['carOut_jobId'])
+        result = re.json()['biz_content']['result']
+        Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
+        Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
+        Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
 
     def test_recordOut(self, sentryLogin, send_data, expect):
 

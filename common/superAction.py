@@ -152,5 +152,7 @@ class SuperAction:
         return timeperiodListStr
 
 if __name__ == "__main__":
-    for i in range(0,10):
-        print(SuperAction().create_carNum(carType="新能源小车"))
+    import time
+
+
+    print(type(time.time()))

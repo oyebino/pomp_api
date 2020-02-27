@@ -7,9 +7,9 @@
 import pytest
 from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
 class TestAAA():
-    @pytest.mark.parametrize('weiXinLogin', [{'user':'13596023478','pwd':'123456'}], indirect=True)
+    @pytest.mark.parametrize('weiXinLogin', [{'user':'13504915876','pwd':'123456'}], indirect=True)
     def test_A(self,weiXinLogin):
-        re = WeiXin(weiXinLogin).checkTraderCouponPay()
+        re = WeiXin(weiXinLogin).findCouponList()
         re.json()
 
 

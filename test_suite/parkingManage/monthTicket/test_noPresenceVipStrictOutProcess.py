@@ -31,7 +31,7 @@ class TestNoPresenceVipStrictOutProcess():
 
     def test_checkMessageOut(self, sentryLogin, send_data, expect):
         """登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['parkUUID'])
+        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['carNum'])
         result = re.json()
         Assertions().assert_in_text(result, expect["checkMessageOutMsg"])
 

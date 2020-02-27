@@ -7,7 +7,7 @@ import pytest,os
 import allure
 
 from Api.Login import SentryLogin
-from Api.sentry_service.sentryLogin_service import SentryLogin as SLogin
+from Api.sentry_service.personalInfo import SentryLogin as SLogin
 from Api.sentry_service.personalInfo import PersonalInfo
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -27,7 +27,6 @@ class TestSentryLogin():
         s.login(send_data["user_id"],send_data["password"])
         s.select_channel(send_data['lightRule_inChannelCode'],send_data['lightRule_outChannelCode'])
         status = s.status()
-        print("***status***",status)
         Assertions().assert_in_text(status,expect["loginMessage1"])
 
     """退出pc岗亭,注意本案例登录部分通道"""
