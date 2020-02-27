@@ -36,8 +36,7 @@ class CarInOutHandle(Req):
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
         sleep(3)  # 可能需要加上延时
-        if jobId != "":
-            if "success" in re.json() and re.json()["success"] == True:
+        if jobId != "" and "success" in re.json() and re.json()["success"] == True:
                 result = cloudparking_service().get_car_msg_ytj(jobId)
                 return result
         else:
@@ -58,8 +57,8 @@ class CarInOutHandle(Req):
             "reason": ""
         }
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        if jobId != "":
-            if "success" in re.json() and re.json()["success"] == True:
+        sleep(3)  # 可能需要加上延时
+        if jobId != "" and "success" in re.json() and re.json()["success"] == True:
                 result = cloudparking_service().get_car_msg_ytj(jobId)
                 return result
         else:
@@ -85,8 +84,8 @@ class CarInOutHandle(Req):
 
         re = self.post(self.zby_api, data=data, headers=form_headers)
 
-        if jobId != "":
-            if "success" in re.json() and re.json()["success"] == True:
+        sleep(3)  # 可能需要加上延时
+        if jobId != "" and "success" in re.json() and re.json()["success"] == True:
                 result = cloudparking_service().get_car_msg_ytj(jobId)
                 return result
         else:

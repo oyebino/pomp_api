@@ -46,21 +46,21 @@ class TestCheckOutNormal(BaseCase):
 
     def test_CheckOut(self, sentryLogin, send_data, expect):
         """收费放行"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'])
-        result = re.json()["success"]
-        # result = re.json()['biz_content']['result']
-        # Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
-        # Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
-        # Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
-        Assertions().assert_in_text(result, expect["checkOutMessage"])
-
-    def test_checkCarOutInfo(self, send_data, expect):
-        """查看车辆离场信息--与确认放行的接口合在一起，故废弃"""
-        re = cloudparking_service().get_car_msg_ytj(send_data['carOut_jobId'])
+        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'], send_data['carOut_jobId'])
+        # result = re.json()["success"]
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
         Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
         Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
+        # Assertions().assert_in_text(result, expect["checkOutMessage"])
+
+    # def test_checkCarOutInfo(self, send_data, expect):
+    #     """查看车辆离场信息--与确认放行的接口合在一起，故废弃"""
+    #     re = cloudparking_service().get_car_msg_ytj(send_data['carOut_jobId'])
+    #     result = re.json()['biz_content']['result']
+    #     Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
+    #     Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
+    #     Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
 
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""
