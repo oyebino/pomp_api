@@ -1,0 +1,23 @@
+- test:
+    name: 不可叠加的扣减券创建并使用-智泊云
+    desc: 不可叠加的扣减券创建并使用-智泊云
+    send_data:
+      parkName: ${lightRule_parkName}
+      couponName: api金额扣减可叠加${__create_randomNum()}
+      traderName: pytest勿动
+      carNum: ${__create_carNum()}
+      couponType: 1
+      faceValue: 2
+      isCover: 0
+      inClientID: ${lightRule_inClientID}
+      outClientID: ${lightRule_outClientID}
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      sendCouponMessage: 发券成功
+      mockCarInMessage: $${__create_carNum()}$欢迎光临
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费3元
+      sentryPayMessage: 已收费3元\\一路顺风
+      checkParkingBillDetailMessage: ${__create_carNum()}
+      checkCouponGrantListMessage: api金额扣减可叠加${__create_randomNum()}
+      checkSerialListMessage: api金额扣减可叠加${__create_randomNum()}

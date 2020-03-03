@@ -27,7 +27,6 @@ class Req(requests.Session):
 
     def __init__(self,Session=None):
         super(Req, self).__init__()
-
         self.conf = Config()
         self.host = self.conf.host
         self.monitor_host = self.conf.monitor_host
@@ -335,19 +334,116 @@ class Req(requests.Session):
             elif isinstance(json_object[k],dict):
                 return self.getDictBykey(json_object[k],key,expectedValue)
 
-if __name__ == "__main__":
-    aa =    {
-                'status': 1,
-                'data': {
-                    'jj':'pp',
-                    'parkList': [{
-                        'name': '智泊云车场（主版本在用）',
-                        'lastupdatetime': 11111111111
-                    }, {
-                        'name':'智泊云接口测试专用停车场',
-                        'lastupdatetime': 1557158400000
-                    }]
-                }
-            }
+    def getDictByList(self,dataList,value,sonValue,expectedValue):
+        """
+        历遍list列对象，查sonJson的key-value与匹配值返回当前对象
+        :param dataList:
+        :param expectedValue:
+        :return:
+        """
+        for key in dataList:
+            if key[value][sonValue] == expectedValue:
+                return key
+            else:
+                print("return ")
 
-    print(Req().getDictBykey(aa,'jj','pp'))
+if __name__ == "__main__":
+    aa =[{
+        'create_time': '2020/03/0312: 06: 09',
+        'msg_type': 1,
+        'msg_level': 1,
+        'content': {
+            'inMatch': '1',
+            'carSizeTypeInt': 1.0,
+            'traderCouponInfoList': [],
+            'enterVipName': '临时车',
+            'payVal': '5',
+            'adjust': False,
+            'billCode': '2020030312060790799498',
+            'enterTime': '2020/03/0310: 43: 55',
+            'abName': '临时车宽出需缴费',
+            'parkFee': '5',
+            'leaveCarNo': '桂AAAABC4',
+            'carSizeType': '小车',
+            'carInOutId': '8342',
+            'paidVal': '0',
+            'normal2Vip': False,
+            'favorVal': '0',
+            'abType': '9',
+            'leaveChannelName': '智泊云接口测试出口',
+            'leavePlateImg': 'http: //ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030312060536159550-AAAABC4.jpg',
+            'leaveChannelId': '2023',
+            'stoppingTime': '1小时22分钟10秒',
+            'leavePicTime': '2020/03/0312: 06: 05',
+            'topBillCode': '200303104352824254241224',
+            'leaveCarImg': 'http: //ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030312060536159550-AAAABC4.jpg'
+        },
+        'deal_status': 0,
+        'id': 28399
+    },{
+		"id": 28385,
+		"content": {
+			"favorVal": "0",
+			"paidVal": "0",
+			"traderCouponInfoList": [],
+			"parkFee": "5",
+			"leaveCarImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030311520272667260-AAAABC4.jpg",
+			"normal2Vip": False,
+			"abType": "9",
+			"billCode": "2020030311520521640065",
+			"leaveChannelName": "智泊云接口测试出口",
+			"topBillCode": "200303104352824254241224",
+			"enterVipName": "临时车",
+			"inMatch": "1",
+			"leaveChannelId": "2023",
+			"stoppingTime": "1小时8分钟7秒",
+			"leavePlateImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030311520272667260-AAAABC4.jpg",
+			"payVal": "5",
+			"carInOutId": "8335",
+			"adjust": False,
+			"leaveCarNo": "桂AAAABC4",
+			"carSizeType": "小车",
+			"abName": "临时车宽出需缴费",
+			"leavePicTime": "2020/03/03 11:52:02",
+			"enterTime": "2020/03/03 10:43:55",
+			"carSizeTypeInt": 1.0
+		},
+		"msg_type": 1,
+		"msg_level": 1,
+		"create_time": "2020/03/03 11:52:06",
+		"deal_status": 0
+	},{
+		"id": 21111,
+		"content": {
+			"favorVal": "0",
+			"paidVal": "0",
+			"traderCouponInfoList": [],
+			"parkFee": "5",
+			"leaveCarImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030311520272667260-AAAABC4.jpg",
+			"normal2Vip": False,
+			"abType": "9",
+			"billCode": "2020030311520521640065",
+			"leaveChannelName": "智泊云接口测试出口",
+			"topBillCode": "200303104352824254241224",
+			"enterVipName": "临时车",
+			"inMatch": "1",
+			"leaveChannelId": "2023",
+			"stoppingTime": "1小时8分钟7秒",
+			"leavePlateImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030311520272667260-AAAABC4.jpg",
+			"payVal": "5",
+			"carInOutId": "8335",
+			"adjust": False,
+			"leaveCarNo": "桂AAAABC6",
+			"carSizeType": "小车",
+			"abName": "临时车宽出需缴费",
+			"leavePicTime": "2020/03/03 11:52:02",
+			"enterTime": "2020/03/03 10:43:55",
+			"carSizeTypeInt": 1.0
+		},
+		"msg_type": 1,
+		"msg_level": 1,
+		"create_time": "2020/03/03 11:52:06",
+		"deal_status": 0
+	}]
+    # print(aa[1]['content']['enterTime'])
+    print(Req().getDictByList(aa,'content','leaveCarNo','桂AAAABC6'))

@@ -50,7 +50,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mock_car_in_out("京BBBBB3",0,"20190507171500",carType=4)
+    a = cloudparking_service().mock_car_in_out("桂AAAABC4",0,"20190507171502")
     # a = cloudparking_service().get_car_msg_ytj("52dc11eab4f97427eac14803")
     re = a.json()
     # print(re['result']['voice'])

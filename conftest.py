@@ -9,7 +9,6 @@ from common.parseTemplate import ParseTemplate
 from Api.Login import Login, SentryLogin, AompLogin, CenterMonitorLogin,WeiXinLogin
 
 import pytest
-
 @pytest.fixture(scope="function")
 def userLogin(request):
     if hasattr(request,'param'):

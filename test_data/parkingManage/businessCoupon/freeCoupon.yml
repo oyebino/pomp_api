@@ -1,13 +1,14 @@
 - test:
-    name: 免费优惠劵使用流程（智泊云）
-    desc: 免费优惠劵使用流程（智泊云）
+    name: 免费优惠劵使用流程-智泊云
+    desc: 免费优惠劵使用流程-智泊云
     send_data:
+      parkName: ${lightRule_parkName}
       couponName: api免费劵${__create_randomNum()}
-      traderName: apitest
+      traderName: pytest勿动
+      couponType: 0
       carNum: ${__create_carNum()}
       inClientID: ${lightRule_inClientID}
       outClientID: ${lightRule_outClientID}
-      parkId: ${lightRule_parkID}
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功

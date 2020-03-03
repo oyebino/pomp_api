@@ -43,7 +43,7 @@ class Login():
             "password": self.password,
             "seccode": 9999
         }
-        print(data['username'])
+        print("登录名：【"+data['username']+"】")
         re = self.Seesion.post(url,data,headers=headers)
         log.info(re.json()['message'])
         return self.Seesion
@@ -75,10 +75,10 @@ class SentryLogin():
         self.S.headers.update({"user": token,"type": "ydtp-pc"})
 
         if r['onDuty'] == 0:
-            self.__select_channel()
+            self.__selectChannel()
         return self.S
 
-    def __get_allChannel(self):
+    def __getAllChannel(self):
         """获取当前用户的全部通道"""
         url = self.host + "/ydtp-backend-service/api/sentry_user_parking"
         re = self.S.get(url=url)
@@ -88,10 +88,10 @@ class SentryLogin():
             channelList.append(channelDict['id'])
         return channelList
 
-    def __select_channel(self):
+    def __selectChannel(self):
         """选择通道上班"""
         url = self.host + "/ydtp-backend-service/api/duty"
-        channelCodeList = self.__get_allChannel()
+        channelCodeList = self.__getAllChannel()
         data = {
             "channel_ids": channelCodeList
         }
@@ -198,7 +198,6 @@ class WeiXinLogin():
         print(data['username'])
         sleep(5)
         re =self.S.post(loginUrl, data)
-        print(re.text)
         return self.S
 
 

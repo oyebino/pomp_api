@@ -2,23 +2,21 @@
     name: 固定金额优惠劵使用流程-智泊云
     desc: 固定金额优惠劵使用流程-智泊云
     send_data:
-      parkUUid: ${lightRule_parkUUID}
+      parkName: ${lightRule_parkName}
       couponName: api固定金额劵${__create_randomNum()}
-      traderName: apitest
+      traderName: pytest勿动
       carNum: ${__create_carNum()}
       inClientID: ${lightRule_inClientID}
       outClientID: ${lightRule_outClientID}
-      parkId: ${lightRule_parkID}
       couponType: 3
       faceValue: 1.5
-      isCover: 1
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功
       sendCouponMessage: 发券成功
-      mockCarInMessage: 欢迎光临
-      mockCarOutMessage: 一路顺风
+      mockCarInMessage: $${__create_carNum()}$欢迎光临
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费1.5元
+      sentryPayMessage: 已收费1.5元\\一路顺风
       checkParkingBillDetailMessage: ${__create_carNum()}
       checkCouponGrantListMessage: ${__create_carNum()}
       checkSerialListMessage: ${__create_carNum()}
-      sentryPayMessage: true

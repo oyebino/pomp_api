@@ -9,7 +9,7 @@
 """
 from common.logger import logger
 from common import Consts
-import json,os
+import json,os,re
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
 from Config.parameter import tempDataPath
@@ -19,10 +19,6 @@ root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 class Assertions:
     def __init__(self):
         self.log = logger
-        # if len(tempDataPath.changeCaseNameListList) > 0:
-        #     tempDataPath.changeCaseNameList.pop(0)
-        # else:
-        #     tempDataPath.changeCaseNameList = eval(tempDataPath.caseNameList)
 
     def assert_code(self, code, expected_code):
         """
@@ -158,13 +154,29 @@ class Assertions:
 
             raise
 
+    def __formatCodeTemplate(self,template):
+        """解析代码串"""
+        rule = r'{{(.*?)}}'
+        lc = locals()
+        textList = re.findall(rule, template)
+        text_dic = {}
+        for key in textList:
+            # findStr = key[2: -2]
+            allCode = 'codeValue = ' + str(key)
+            exec(allCode)
+            text_dic[key] = lc['codeValue']
+        for key in list(text_dic.keys()):
+            strKey = "{{" + key + "}}"
+            template = template.replace(strKey, str(text_dic[key]))
+        return template
+
+
     def __formatExpected(self,template):
         """
         解析期望值传进的值
         :return:
         """
-        import re
-        rule = r'\${(.*)}'
+        rule = r'\${(.*?)}'
         textList = re.findall(rule, template)
         text_dic = {}
         for key in textList:
@@ -175,7 +187,7 @@ class Assertions:
         for key in list(text_dic.keys()):
             strKey = "${" + key + "}"
             template = template.replace(strKey, text_dic[key])
-        return template
+        return self.__formatCodeTemplate(template)
 
     def __get_caseData(self,nodeName,caseName = None):
         """

@@ -1,28 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2019/12/20 17:41
+# @Time    : 2020/2/28 15:28
 # @Author  : 叶永彬
-# @File    : test_fixedAmountCoupon.py
+# @File    : test_timeCouponCover.py
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.parkingManage_service.businessCoupon_service.coupon import Coupon
 from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
+from Api.parkingManage_service.businessCoupon_service.coupon import Coupon
 from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
-from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
-from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/fixedAmountCoupon.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/timeCouponCover.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
-class TestFixedAmountCoupon(BaseCase):
-    """固定劵创建并使用"""
+class TestTimeCouponCover():
+    """可叠加时间劵创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
-        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'])
+        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue =send_data["faceValue"],isCover=send_data["isCover"])
         result = re.json()
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
@@ -48,14 +46,7 @@ class TestFixedAmountCoupon(BaseCase):
         """模拟车辆出场"""
         re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["outClientID"])
         result = re.json()
-        self.save_data('carOut_JobId',result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
-
-    def test_sentryPay(self,sentryLogin,send_data,expect):
-        """岗亭端缴费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data["carNum"],'${mytest.carOut_JobId}')
-        result = re.json()
-        Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkParkingBillDetail(self,userLogin,send_data,expect):
         """查看收费流水"""

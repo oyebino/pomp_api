@@ -139,6 +139,7 @@ class Trader(Req):
 
 
     def __findRowData(self,dataList,findKey,expectedValue):
+        """返回json的序号及，当前的子json"""
         for index,row_data in enumerate(dataList):
             if row_data[findKey] == expectedValue:
                 return index,row_data

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2019/12/20 17:41
+# @Time    : 2020/2/28 15:02
 # @Author  : 叶永彬
-# @File    : test_fixedAmountCoupon.py
+# @File    : test_reduceAmountCouponNoCover.py
+
 
 import allure,pytest
 from common.utils import YmlUtils
@@ -15,14 +16,14 @@ from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/fixedAmountCoupon.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/reduceAmountCouponNoCover.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
-class TestFixedAmountCoupon(BaseCase):
-    """固定劵创建并使用"""
+class TestReduceAmountCouponNoCover(BaseCase):
+    """不可叠加的扣减券创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
-        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'])
+        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'],isCover=send_data['isCover'])
         result = re.json()
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
