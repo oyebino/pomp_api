@@ -16,17 +16,17 @@ class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
 
-    def carInOutHandle(self,carNum,type,jobId = ""):
+    def carInOutHandle(self,carNum,carHandleType,jobId = ""):
         """
         车辆进出场处理（登记放行，收费放行，异常放行）
         :param carNum:
         :param channelName:
-        :param type: '登记放行','异常放行','登记放行','确认放行'
+        :param carHandleType: '登记放行','异常放行','登记放行','确认放行'
         :param jobId:
         :return:
         """
         # channelDict = self.getDictBykey(self.__getDutyChannelStatus().json(), 'entrance_name', channelName)
-        type = type.strip()
+        type = carHandleType.strip()
         if type == "登记放行":
             type = ""
             carHandleInfoDict = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'carNo', carNum)
@@ -51,76 +51,6 @@ class CarInOutHandle(Req):
         else:
             return re
 
-    # def check_car_in_out(self, carNum, channelName, jobId=""):
-    #     """
-    #     点击消息，然后点击确认放行
-    #     """
-    #     topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
-    #     topBillCode = Db().select(topBillCodeSql)
-    #     messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
-    #     message_id = Db().select(messageIdSql)
-    #
-    #     self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
-    #     data = {
-    #         "type": "确认放行",
-    #         "reason": ""
-    #     }
-    #     re = self.post(self.zby_api, data=data, headers=form_headers)
-    #     sleep(3)  # 可能需要加上延时
-    #     if jobId != "" and "success" in re.json() and re.json()["success"] == True:
-    #             result = cloudparking_service().get_car_msg_ytj(jobId)
-    #             return result
-    #     else:
-    #         return re
-    #
-    # def normal_car_out(self, carNum ,jobId=""):
-    #     """
-    #     点击收费放行
-    #     """
-    #     topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
-    #     topBillCode = Db().select(topBillCodeSql)
-    #     messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
-    #     message_id = Db().select(messageIdSql)
-    #
-    #     self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
-    #     data = {
-    #         "type": "收费放行",
-    #         "reason": ""
-    #     }
-    #     re = self.post(self.zby_api, data=data, headers=form_headers)
-    #     sleep(3)  # 可能需要加上延时
-    #     if jobId != "" and "success" in re.json() and re.json()["success"] == True:
-    #             result = cloudparking_service().get_car_msg_ytj(jobId)
-    #             return result
-    #     else:
-    #         return re
-    #
-    #
-    # def abnormal_car_out(self, carNum, jobId=""):
-    #     """
-    #     异常放行
-    #     """
-    #     topBillCodeSql = "SELECT top_bill_code FROM realtime_car_in_out WHERE  car_no = '{}' ORDER BY id DESC LIMIT 1".format(carNum)
-    #     topBillCode = Db().select(topBillCodeSql)
-    #     messageIdSql = "SELECT id FROM park_sentry_duty_message WHERE top_bill_code = '{}' ORDER BY id DESC LIMIT 1".format(topBillCode)
-    #     message_id = Db().select(messageIdSql)
-    #
-    #     self.url = "/ydtp-backend-service/api/messages/{}/go".format(message_id)
-    #     data = {
-    #         "type": "异常放行",
-    #         "reason": "",
-    #         "real_value": '1'
-    #     }
-    #     self.save('real_value',data['real_value'])
-    #     re = self.post(self.zby_api, data=data, headers=form_headers)
-    #     sleep(3)  # 可能需要加上延时
-    #     if jobId != "" and "success" in re.json() and re.json()["success"] == True:
-    #             result = cloudparking_service().get_car_msg_ytj(jobId)
-    #             return result
-    #     else:
-    #         return re
-
-    # def adjust_carNum_carType(self, carNum, adjustCarNum, carType = None):
     def adjustCarNum(self, carNum, adjustCarNum, carType = None):
         """校正车牌与类型"""
         carInOutHandle = self.__getCarInOutHandleIdList()
@@ -142,7 +72,6 @@ class CarInOutHandle(Req):
         else:
             return re
 
-    # def match_carNum(self,carNum,matchCarNum):
     def matchCarNum(self,carNum,matchCarNum):
         """人工匹配车牌"""
         carHandleInfo = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'leaveCarNo', carNum)
@@ -168,7 +97,6 @@ class CarInOutHandle(Req):
         re = self.get(self.zby_api,headers = json_headers)
         return re
 
-    # def record_car_in(self,car_code,parkId='',mode=''):
     def getCarInRecord(self,car_code, parkName, mode=''):
         """
         获取进场记录
@@ -186,7 +114,6 @@ class CarInOutHandle(Req):
         re = self.get(self.zby_api, headers=form_headers)
         return re
 
-    # def record_car_out(self,carNum,mode = "",parkId = ""):
     def getCarOutRecord(self,carNum, parkName, mode = ""):
         """
         获取出场记录
