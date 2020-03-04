@@ -6,8 +6,8 @@
       couponName: api固定金额劵${__create_randomNum()}
       traderName: pytest勿动
       carNum: ${__create_carNum()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
       couponType: 3
       faceValue: 1.5
     except:

@@ -1,11 +1,12 @@
 - test:
-    name: 岗亭进出场记录
-    desc: 岗亭进出场记录查询
+    name: 收费或异常放行
+    desc: 验证收费或异常放行是否成功
     send_data:
       user_id: apitest
       password: 123456
       carNum: ${__create_carNum()}
-      lightRule_parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
+      carOutHandleType: 异常放行
       lightRule_inClientID: ${wideInClientId}
       lightRule_outClientID: ${wideOutClientId}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
@@ -13,9 +14,10 @@
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 欢迎光临
+      presentCarMessage: ${__create_carNum()}
       mockCarOutMessage: 缴费
       checkOutMessage: true
-      carNum: ${__create_carNum()}
       checkCarOutScreen: 已收费5元\\一路顺风
       checkCarOutVoice: 已收费5元一路顺风
       checkCarOutOpenGate: 1
+      carLeaveHistoryMessage: ${__create_carNum()}

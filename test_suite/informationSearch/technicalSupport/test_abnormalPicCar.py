@@ -11,9 +11,6 @@ from common.utils import YmlUtils
 from common.Assert import Assertions
 from Api.information_service.information import Information
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
-
 args_item = "send_data,expect"
 test_data, case_desc = YmlUtils("/test_data/informationSearch/technicalSupport/abnormalPicCar.yml").getData
 
@@ -25,13 +22,13 @@ class TestabnormalPicCar():
 
     def test_mockCarIn(self, send_data, expect):
         """第一辆车模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_mockCarIn2(self, send_data, expect):
         """第二辆车模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum2"], 0, send_data["StrictRule_inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum2"], 0, send_data["StrictRule_inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarIn2Message"])
 

@@ -16,7 +16,7 @@ from common.utils import YmlUtils
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkInOut.yml").getData
+test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkOutAbnormal.yml").getData
 
 
 @pytest.mark.parametrize(args_item, test_data)

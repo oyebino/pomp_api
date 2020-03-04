@@ -2,11 +2,11 @@
     name: 临时车宽进-在岗亭端异常放行
     desc: 临时车宽进-在岗亭端异常放行
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      carOutHandleType: 异常放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInScreen: ${__create_carNum()}\\欢迎光临
@@ -14,8 +14,7 @@
       mockCarInOpenGate: 1
       presentCarMessage: ${__create_carNum()}
       mockCarOutMessage: $${__create_carNum()}$请扫码缴费
-      sentryAbnormalPayMessage: true
-      checkCarOutScreen: 已收费${mytest.real_value}元\\一路顺风
-      checkCarOutVoice: 已收费${mytest.real_value}元一路顺风
+      checkCarOutScreen: 已收费${mytest.payVal}元\\一路顺风
+      checkCarOutVoice: 已收费${mytest.payVal}元一路顺风
       checkCarOutOpenGate: 1
       carLeaveHistoryMessage: 异常放行

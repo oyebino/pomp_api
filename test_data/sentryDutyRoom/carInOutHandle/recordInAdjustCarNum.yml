@@ -2,11 +2,11 @@
     name: 岗亭收费处进场记录校正
     desc: 岗亭收费处进场记录校正
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
       adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
-      lightRule_inClientID: ${lightRule_inClientID}
-      lightRule_outClientID: ${lightRule_outClientID}
+      lightRule_inClientID: ${wideInClientId}
+      lightRule_outClientID: ${wideOutClientId}
     except:
       mockCarInMessage: 欢迎光临
       adjustCarInWaterNumMsg: ${__create_carNum(carType=adjustCarNum)}

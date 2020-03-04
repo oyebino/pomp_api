@@ -20,7 +20,7 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/carNumM
 class TestCarNumMatchByHuman(BaseCase):
     """临时车离场人工匹配，场内已有'京BBBBB2'"""
     def test_mockCarIn(self,send_data,expect):
-        re = cloudparking_service().mock_car_in_out(send_data['matchCarNum'],0,send_data['inClientID'])
+        re = cloudparking_service().mockCarInOut(send_data['matchCarNum'],0,send_data['inClientID'])
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['screen'], expect["carInScreen"])
         Assertions().assert_in_text(result['voice'], expect["carInVoice"])
@@ -28,32 +28,26 @@ class TestCarNumMatchByHuman(BaseCase):
 
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
-        re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["matchCarNum"])
+        re = Information(userLogin).getPresentCar(send_data["parkName"],send_data["matchCarNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["presentCarMessage"])
 
     def test_mockCarOut(self,send_data,expect):
         """离场"""
-        re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'],80)
+        re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
         result = re.json()
         self.save_data('carOut_jobId',result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_matchCarNumByhuman(self,sentryLogin,send_data,expect):
         """人工匹配车牌"""
-        re = CarInOutHandle(sentryLogin).match_carNum(send_data['parkUUID'],send_data['matchCarNum'])
+        re = CarInOutHandle(sentryLogin).matchCarNum(send_data['carNum'],send_data['matchCarNum'])
         result = re.json()['content']
         Assertions().assert_in_text(result['leaveCarNo'], expect["matchCarNumMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
-        """岗亭收费处收费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['matchCarNum'])
-        result = re.json()['success']
-        Assertions().assert_in_text(result, expect["sentryPayMessage"])
-
-    def test_checkCarOutInfo(self,send_data,expect):
-        """查看车辆离场信息"""
-        re = cloudparking_service().get_car_msg_ytj(send_data['carOut_jobId'])
+        """岗亭收费处收费-查看车辆离场信息"""
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['matchCarNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
         Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
@@ -61,6 +55,6 @@ class TestCarNumMatchByHuman(BaseCase):
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["matchCarNum"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["matchCarNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

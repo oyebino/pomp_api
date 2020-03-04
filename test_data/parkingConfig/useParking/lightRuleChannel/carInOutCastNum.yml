@@ -2,17 +2,17 @@
     name: 临时车进出场识别错-车牌强制转换为正确车牌
     desc: 临时车进出场识别错，车牌强制转换为正确车牌
     send_data:
-      parkUUid: ${lightRule_parkUUID}
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNumIn: 粤ADBBBB
       carNumOut: 粤ADCCCC
       actualCarNum: 粤ADAAAA
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      carOutHandleType: 收费放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       mockCarInMessage: 欢迎光临
       presentCarMessage: 粤ADAAAA
-      centralPayMessage: billid
+      sentryPayMessage: 已收费5元一路顺风
       parkingBillDetailMessage: 粤ADAAAA
-      mockCarOutMessage: 一路顺风
+      mockCarOutMessage: $粤ADAAAA$请扫码缴费5元
       carLeaveHistoryMessage: 粤ADAAAA

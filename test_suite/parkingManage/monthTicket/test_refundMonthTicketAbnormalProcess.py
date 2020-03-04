@@ -36,7 +36,7 @@ class TestRefundMonthTicketAbnormalProcess():
     # 开通月票后进车
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],0,send_data["inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
@@ -53,7 +53,7 @@ class TestRefundMonthTicketAbnormalProcess():
     # 开通月票后出车
     def test_mockCarOut(self, send_data, expect):
         """模拟车辆离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],1,send_data["outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_out"])
         Assertions().assert_in_text(result, expect["inscreen"])

@@ -21,7 +21,7 @@ class CarInOutHandle(Req):
         车辆进出场处理（登记放行，收费放行，异常放行）
         :param carNum:
         :param channelName:
-        :param type:登录放行为空，type='收费放行'，type='异常放行'
+        :param type: '登记放行','异常放行','登记放行','确认放行'
         :param jobId:
         :return:
         """
@@ -30,7 +30,7 @@ class CarInOutHandle(Req):
         if type == "登记放行":
             type = ""
             carHandleInfoDict = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'carNo', carNum)
-        elif type == "收费放行" or "异常放行":
+        elif type == "收费放行" or "异常放行" or "确认放行":
             carHandleInfoDict = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'leaveCarNo', carNum)
         self.url = "/ydtp-backend-service/api/messages/{}/go".format(carHandleInfoDict['id'])
         data = {
@@ -39,14 +39,14 @@ class CarInOutHandle(Req):
             "real_value":1
         }
         if type == "收费放行":
-            self.save('payVal', carHandleInfoDict['payVal'])
+            self.save('payVal', carHandleInfoDict['content']['payVal'])
         else:
             self.save('payVal', data['real_value'])
         re = self.post(self.zby_api, data=data, headers=form_headers)
         sleep(3)  # 可能需要加上延时
 
         if jobId != "" and "success" in re.json() and re.json()["success"] == True:
-            result = cloudparking_service().get_car_msg_ytj(jobId)
+            result = cloudparking_service().getCarMsgYtj(jobId)
             return result
         else:
             return re
@@ -120,9 +120,14 @@ class CarInOutHandle(Req):
     #     else:
     #         return re
 
-    def adjust_carNum_carType(self, carNum, adjustCarNum, carType = None):
+    # def adjust_carNum_carType(self, carNum, adjustCarNum, carType = None):
+    def adjustCarNum(self, carNum, adjustCarNum, carType = None):
         """校正车牌与类型"""
-        carHandleInfo = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'carNo', carNum)
+        carInOutHandle = self.__getCarInOutHandleIdList()
+        try:
+            carHandleInfo = self.getDictByList(carInOutHandle, 'content', 'carNo', carNum)
+        except KeyError:
+            carHandleInfo = self.getDictByList(carInOutHandle, 'content', 'leaveCarNo', carNum)
         self.url = "/ydtp-backend-service/api/messages/{}/carCode".format(carHandleInfo['id'])
         data = {
             "car_code": adjustCarNum,
@@ -131,13 +136,14 @@ class CarInOutHandle(Req):
         }
         re =self.post(self.zby_api,data=data,headers = form_headers)
         print(re.text)
-        if re.json()['open_gate'] == "false":
+        if re.json()['open_gate'] == False:
             re = self.getHandleIdInfo(carHandleInfo['id'])
             return re
         else:
             return re
 
-    def match_carNum(self,carNum,matchCarNum):
+    # def match_carNum(self,carNum,matchCarNum):
+    def matchCarNum(self,carNum,matchCarNum):
         """人工匹配车牌"""
         carHandleInfo = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'leaveCarNo', carNum)
         carHandleIdInfo = self.getHandleIdInfo(carHandleInfo['id']).json()
@@ -162,13 +168,15 @@ class CarInOutHandle(Req):
         re = self.get(self.zby_api,headers = json_headers)
         return re
 
-    def record_car_in(self,car_code,parkId='',mode=''):
+    # def record_car_in(self,car_code,parkId='',mode=''):
+    def getCarInRecord(self,car_code, parkName, mode=''):
         """
         获取进场记录
         """
+        parkDict = self.getDictBykey(self.__onDutyParks().json(), 'park_name', parkName)
         data ={
             "car_code":car_code,
-            "park_id": parkId,
+            "park_id": parkDict['id'],
             "mode":mode,
             "pageSize": "40",
             "pageNumber": "1",
@@ -178,27 +186,34 @@ class CarInOutHandle(Req):
         re = self.get(self.zby_api, headers=form_headers)
         return re
 
-    def record_car_out(self,carNum,mode = "",parkId = ""):
+    # def record_car_out(self,carNum,mode = "",parkId = ""):
+    def getCarOutRecord(self,carNum, parkName, mode = ""):
         """
         获取出场记录
         """
-
+        parkDict = self.getDictBykey(self.__onDutyParks().json(),'park_name',parkName)
         data ={
             "pageSize": "40",
             "pageNumber": "1",
             "car_code": carNum,
             "mode": mode,
-            "park_id": parkId,
+            "park_id": parkDict[id],
             "record_type": "out"
         }
         self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
-        re = self.get(self.zby_api, headers=form_headers)
+        re = self.get(self.zby_api, headers = form_headers)
+        return re
+
+    def __onDutyParks(self):
+        """当前用户上班车场"""
+        self.url = "/ydtp-backend-service/api/on_duty_parks"
+        re = self.get(self.zby_api, headers = json_headers)
         return re
 
     def __getDutyChannelStatus(self):
         """获取当前用户上班通道"""
         self.url = "/ydtp-backend-service/api/duty_channel_status"
-        re = self.get(self.zby_api,headers = json_headers)
+        re = self.get(self.zby_api, headers = json_headers)
         return re
 
     def __getCarInOutHandleIdList(self):

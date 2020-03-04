@@ -7,7 +7,7 @@
       parkUUID: ${lightRule_parkUUID}
       carNum: 新Z89001
       ticketName: 纯时间月票
-      outClientID: ${StrictRule_outClientID}
+      outClientID: ${strictOutClientID}
     except:
       screen: 纯时间月票\\无在场记录
       voice: 纯时间月票无在场记录请稍候

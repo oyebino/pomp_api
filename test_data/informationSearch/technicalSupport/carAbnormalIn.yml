@@ -5,8 +5,8 @@
     send_data:
       parkId: ${lightRule_parkID}
       carNum: ${__create_carNum()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       message: OK
       mock_car_in: ok

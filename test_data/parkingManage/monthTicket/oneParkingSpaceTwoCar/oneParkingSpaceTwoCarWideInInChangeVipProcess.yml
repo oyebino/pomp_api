@@ -7,8 +7,8 @@
       carNum: 新Z20001
       carNum2: 新Z20002
       ticketName: 一位多车在场转月票
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       mock_car_in: ok
       inscreen: 新Z20001\\一位多车在场转月票

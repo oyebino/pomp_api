@@ -8,8 +8,8 @@
       carNum: ${__create_carNum()}
       couponType: 4
       isCover: 0
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
       faceValue: 5
     except:
       addCouponMessage: ok

@@ -6,8 +6,8 @@
       parkId: ${lightRule_parkID}
       carNum: 新ZVIP01
       ticketName: 纯时间月票
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       message: OK
       mock_car_in: ok

@@ -8,8 +8,8 @@
       carNum: 新ZVIP98
       carNum2: 新ZVIP99
       ticketName: 满位月票auto
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       mock_car_in: ok
       inscreen: 新ZVIP98\\满位月票auto

@@ -21,20 +21,14 @@ class TestCarLightRuleOutNoInside(BaseCase):
     """临时车无在场严出"""
     def test_mockCarOut(self,send_data,expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'])
+        re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
         result = re.json()
         self.save_data('carOut_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkCarOut(self,sentryLogin,send_data,expect):
         """岗亭端登记放出"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['parkUUID'])
-        result = re
-        Assertions().assert_in_text(result, expect["checkCarOutMessage"])
-
-    def test_checkCarOutInfo(self,send_data,expect):
-        """查看车辆进场屏显，声音，开闸信息"""
-        re = cloudparking_service().get_car_msg_ytj(send_data['carOut_jobId'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['voice'], expect["checkCarOutVoice"])
         Assertions().assert_in_text(result['open_gate'], expect["checkCarOutIsOpenGate"])
@@ -42,7 +36,7 @@ class TestCarLightRuleOutNoInside(BaseCase):
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["carNum"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])
 

@@ -3,11 +3,11 @@
     name: 白名单宽进宽出(智泊云)
     desc: 白名单宽进宽出
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: 云Z66666
       ticketName: 白名单
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       message: OK
       mock_car_in: ok

@@ -6,8 +6,8 @@
       parkId: ${lightRule_parkID}
       carNum: 新Z99001
       ticketName: 绑定计费月票
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       mock_car_in: ok
       screen: 新Z99001\\绑定计费月票

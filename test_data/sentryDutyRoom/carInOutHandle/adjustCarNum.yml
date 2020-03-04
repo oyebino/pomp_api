@@ -1,28 +1,26 @@
 - test:
-    name: 临时车进出场只车牌
-    desc: 临时车进出场只车牌
+    name: 临时车进出场只校正车牌
+    desc: 临时车进出场只校正车牌
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
       adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
-      inClientID: ${StrictRule_inClientID}
-      outClientID: ${StrictRule_outClientID}
+      carInHandleType: 登记放行
+      carOutHandleType: 收费放行
+      inClientID: ${strictInClientID}
+      outClientID: ${strictOutClientID}
       carIn_jobId: ${mytest.carIn_jobId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       carNum: ${__create_carNum()}
       mockCarInMsg: $${__create_carNum()}$临时车请稍候
-      adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
-      checkCarInMsg: true
-      inOpenGateStatus: false
-      outOpenGateStatus: false
+      adjustCarInNumMsg: ${__create_carNum(carType=adjustCarNum)}
+      adjustCarOutNumMsg: ${__create_carNum(carType=adjustCarNum)}
       checkCarInScreen: ${__create_carNum(carType=adjustCarNum)}\\登记放行
       checkCarInVoice: $${__create_carNum(carType=adjustCarNum)}$登记放行
       checkCarInOpenGate: 1
       mockCarOutMessage: $${__create_carNum()}$无在场记录请稍候
       adjustCarInWaterNumMsg: ${__create_carNum(carType=adjustCarNum)}
-      sentryPayMessage: true
       checkCarOutScreen: 已收费5元\\一路顺风
       checkCarOutVoice: 已收费5元一路顺风
       checkCarOutOpenGate: 1

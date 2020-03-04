@@ -3,23 +3,22 @@
     desc: 新能源小车严进-不需缴费严出
     send_data:
       carType: 4
-      parkId: ${FreePark_parkID}
-      parkUUID: ${FreePark_parkUUID}
+      parkName: ${freeParkName}
+      carInHandleType: 登记放行
+      carOutHandleType: 确认放行
       carNum: ${__create_carNum(carType=新能源小车)}
-      inClientID: ${freePark_StrictRule_inClientID}
-      outClientID: ${freePark_StrictRule_outClientID}
+      inClientID: ${freePark_strictInClientID}
+      outClientID: ${freePark_strictOutClientID}
       carIn_jobId: ${mytest.carIn_jobId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 临时车请稍候
-      checkCarInMessage: true
       checkCarInVoice: $${__create_carNum(carType=新能源小车)}$登记放行
       checkCarInScreen: ${__create_carNum(carType=新能源小车)}\\登记放行
       checkCarInIsOpenGate: 1
       presentCarMessage: ${__create_carNum(carType=新能源小车)}
       parkingBillDetailMessage: ${__create_carNum(carType=新能源小车)}
       mockCarOutMessage: 临时车请稍候
-      checkCarOutMessage: true
       checkCarOutVoice: $${__create_carNum(carType=新能源小车)}$一路顺风
       checkCarOutScreen: ${__create_carNum(carType=新能源小车)}\\一路顺风
       checkCarOutIsOpenGate: 1

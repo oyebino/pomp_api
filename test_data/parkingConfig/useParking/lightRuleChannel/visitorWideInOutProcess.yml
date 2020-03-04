@@ -1,14 +1,14 @@
 
 - test:
-    name: 访客宽进，需缴费宽出（岗亭收费处收费放行）(智泊云)
-    desc: 访客宽进，需缴费宽出（岗亭收费处收费放行）
+    name: 访客宽进-岗亭收费处收费放行宽出-智泊云
+    desc: 访客宽进-岗亭收费处收费放行宽出-智泊云
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
+      carHandleType: 收费放行
       carNum: 新ZFK001
       ticketName: 访客auto
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       message: OK
       mock_car_in: ok

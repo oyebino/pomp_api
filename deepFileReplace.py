@@ -42,5 +42,5 @@ class DeepFileReplace():
         print("执行完成...")
 
 if __name__ == '__main__':
-    floder = "E:/KPoco/test_data/"
-    DeepFileReplace().testRun(floder,'test','test111')
+    floder = "E:/POMP_API/test_data/sentryDutyRoom/carInOutHandle/"
+    DeepFileReplace().testRun(floder,'parkId: ${lightRule_parkID}','parkName: ${usedParkName}')

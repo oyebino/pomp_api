@@ -2,11 +2,11 @@
     name: 临时车无在场严出
     desc: 临时车无在场严出
     send_data:
-      parkUUID: ${FreePark_parkUUID}
-      parkId: ${FreePark_parkID}
+      parkName: ${freeParkName}
       carNum: ${__create_carNum()}
-      outClientID: ${freePark_StrictRule_outClientID}
-      carOut_jobId: ${临时车无在场严出.carOut_jobId}
+      carOutHandleType: 确认放行
+      outClientID: ${freePark_strictOutClientID}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarOutMessage: 无在场记录
       checkCarOutMessage: true

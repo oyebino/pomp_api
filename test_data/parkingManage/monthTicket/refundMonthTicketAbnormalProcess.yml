@@ -6,8 +6,8 @@
       parkId: ${lightRule_parkID}
       carNum: ${__create_carNum()}
       ticketName: 月票${__get_time()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
       refundValue: 30
       refundValue2: 60
     except:

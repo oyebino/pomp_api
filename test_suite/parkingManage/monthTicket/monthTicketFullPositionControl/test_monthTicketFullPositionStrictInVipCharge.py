@@ -25,7 +25,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     # 满位VIP第一辆车进车
     def test_mockCarIn1(self, send_data, expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],0,send_data["inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
@@ -41,7 +41,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
 
     # 满位VIP第二辆车进车
     def test_mockCarIn2(self, send_data, expect):
-        re = cloudparking_service().mock_car_in_out(send_data['carNum2'],0,send_data['inClientID'])
+        re = cloudparking_service().mockCarInOut(send_data['carNum2'],0,send_data['inClientID'])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage2"])
         Assertions().assert_in_text(result, expect["inscreen2"])
@@ -49,7 +49,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
 
     def test_checkMessageoutn(self, sentryLogin, send_data, expect):
         """登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['carNum2'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum2'])
         result = re.json()
         Assertions().assert_in_text(result, expect["checkMessageInMsg"])
 
@@ -64,7 +64,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     # 满位VIP第一辆车出车
     def test_mockCarOut1(self, send_data, expect):
         """模拟车辆离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],1,send_data["outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_out"])
 
@@ -78,7 +78,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     # 多位多车VIP第二辆车出车
     def test_mockCarOut2(self, send_data, expect):
         """模拟车辆离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum2"],1,send_data["outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum2"],1,send_data["outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarOut2Msg"])
         Assertions().assert_in_text(result, expect["outscreen2"])

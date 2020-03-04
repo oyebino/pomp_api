@@ -6,7 +6,7 @@
       parkId: ${lightRule_parkID}
       carNum: 新Z89001
       ticketName: 纯时间月票
-      outClientID: ${lightRule_outClientID}
+      outClientID: ${wideOutClientId}
     except:
       mock_car_out: ok
       screen: 纯时间月票\\一路顺风

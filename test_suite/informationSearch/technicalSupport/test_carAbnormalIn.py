@@ -11,9 +11,6 @@ from Api.information_service.information import Information
 from common.Assert import Assertions
 from Api.cloudparking_service import cloudparking_service
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
-
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/informationSearch/technicalSupport/carAbnormalIn.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
@@ -23,7 +20,7 @@ class TestCarAbnormalIn():
 
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],0,send_data["inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
@@ -38,7 +35,7 @@ class TestCarAbnormalIn():
 
     def test_mockCarIn2(self, send_data, expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],0,send_data["inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
@@ -73,7 +70,7 @@ class TestCarAbnormalIn():
 
     def test_mockCarOut(self, send_data, expect):
         """模拟车辆离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"],1,send_data["outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_out"])
         Assertions().assert_in_text(result, expect["outscreen"])

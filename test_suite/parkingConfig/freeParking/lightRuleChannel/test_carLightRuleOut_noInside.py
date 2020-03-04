@@ -19,13 +19,13 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/freeParking/lightRuleCh
 class TestCarLightRuleOutNoInside(BaseCase):
     """临时车无在场宽出"""
     def test_mockCarOut(self,send_data,expect):
-        re = cloudparking_service().mock_car_in_out(send_data['carNum'],1,send_data['outClientID'])
+        re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["carNum"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])
 

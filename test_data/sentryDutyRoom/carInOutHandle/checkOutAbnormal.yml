@@ -5,10 +5,10 @@
       user_id: apitest
       password: 123456
       carNum: ${__create_carNum()}
-      lightRule_parkID: ${lightRule_parkID}
-      lightRule_parkUUID: ${lightRule_parkUUID}
-      lightRule_inClientID: ${lightRule_inClientID}
-      lightRule_outClientID: ${lightRule_outClientID}
+      parkName: ${usedParkName}
+      carOutHandleType: 异常放行
+      lightRule_inClientID: ${wideInClientId}
+      lightRule_outClientID: ${wideOutClientId}
       lightRule_inChannelCode: ${lightRule_inChannelCode}
       lightRule_outChannelCode: ${lightRule_outChannelCode}
       carOut_jobId: ${mytest.carOut_jobId}

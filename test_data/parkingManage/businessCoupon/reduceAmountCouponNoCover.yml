@@ -9,8 +9,8 @@
       couponType: 1
       faceValue: 2
       isCover: 0
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功

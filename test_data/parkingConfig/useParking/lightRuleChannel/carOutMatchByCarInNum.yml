@@ -2,18 +2,18 @@
     name: 临时车离场模糊匹配-最终车牌为进场车牌
     desc: 临时车离场模糊匹配(最终车牌为进场车牌)
     send_data:
-      prakUUid: ${lightRule_parkUUID}
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNumIn: 湘AAAAA1
       carNumOut: 湘AAAAA2
       carNumInConfidence: 80
       carNumOutConfidence: 60
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      carHandleType: 收费放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       mockCarInMessage: 欢迎光临
       presentCarMessage: 湘AAAAA1
-      centralPayMessage: billid
+      sentryPayMessage: 已收费5元一路顺风
       parkingBillDetailMessage: 湘AAAAA1
-      mockCarOutMessage: 一路顺风
+      mockCarOutMessage: $湘AAAAA1$请扫码缴费5元
       carLeaveHistoryMessage: 湘AAAAA1

@@ -17,7 +17,7 @@ from common.utils import YmlUtils
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkInOut.yml").getData
+test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkOutNormal.yml").getData
 
 
 @pytest.mark.parametrize(args_item, test_data)
@@ -27,7 +27,7 @@ class TestCheckOutNormal(BaseCase):
     """pc端收费放行"""
     def test_mockCarIn(self, send_data, expect):
         """模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["lightRule_inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["lightRule_inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
@@ -39,7 +39,7 @@ class TestCheckOutNormal(BaseCase):
 
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["lightRule_outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["lightRule_outClientID"])
         result = re.json()
         self.save_data('carOut_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])

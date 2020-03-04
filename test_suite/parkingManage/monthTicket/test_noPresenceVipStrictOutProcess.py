@@ -23,7 +23,7 @@ class TestNoPresenceVipStrictOutProcess():
 
     def test_mockCarOut(self, send_data, expect):
         """模拟月票车辆离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mock_car_out"])
         Assertions().assert_in_text(result, expect["screen"])
@@ -31,7 +31,7 @@ class TestNoPresenceVipStrictOutProcess():
 
     def test_checkMessageOut(self, sentryLogin, send_data, expect):
         """登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['carNum'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'])
         result = re.json()
         Assertions().assert_in_text(result, expect["checkMessageOutMsg"])
 

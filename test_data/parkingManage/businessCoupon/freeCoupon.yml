@@ -7,8 +7,8 @@
       traderName: pytest勿动
       couponType: 0
       carNum: ${__create_carNum()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功

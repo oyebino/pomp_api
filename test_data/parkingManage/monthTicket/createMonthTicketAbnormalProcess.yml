@@ -6,8 +6,8 @@
       parkId: ${lightRule_parkID}
       carNum: ${__create_carNum()}
       ticketName: 月票${__get_time()}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
       carNum2: ${__create_carNum(carType=1)}
     except:
       message: OK

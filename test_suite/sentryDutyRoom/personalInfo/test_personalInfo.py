@@ -29,7 +29,7 @@ class TestPersonalInfo(BaseCase):
     """pc端收费放行"""
     def test_mockCarIn(self, send_data, expect):
         """模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["lightRule_inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["lightRule_inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
@@ -41,7 +41,7 @@ class TestPersonalInfo(BaseCase):
 
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["lightRule_outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["lightRule_outClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
@@ -53,7 +53,7 @@ class TestPersonalInfo(BaseCase):
 
     def test_CheckOut(self, sentryLogin, send_data, expect):
         """收费放行"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data['carNum'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'])
         result = re.json()["success"]
         Assertions().assert_in_text(result, expect["checkOutMessage"])
 

@@ -5,7 +5,7 @@
       carNum: ${__create_carNum()}
       carNum2: ${__create_carNum(carType=1)}
       lightRule_parkID: ${lightRule_parkID}
-      StrictRule_inClientID: ${StrictRule_inClientID}
+      StrictRule_inClientID: ${strictInClientID}
     except:
       mockCarInMessage: 请稍候
       mockCarIn2Message: 请稍候

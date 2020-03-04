@@ -7,8 +7,8 @@
       carNum: ${__create_carNum()}
       lightRule_parkID: ${lightRule_parkID}
       lightRule_parkUUID: ${lightRule_parkUUID}
-      StrictRule_inClientID: ${StrictRule_inClientID}
-      StrictRule_outClientID: ${StrictRule_outClientID}
+      StrictRule_inClientID: ${strictInClientID}
+      StrictRule_outClientID: ${strictOutClientID}
       StrictRule_inChannelCode: ${StrictRule_inChannelCode}
       StrictRule_outChannelCode: ${StrictRule_outChannelCode}
       carIn_jobId: ${mytest.carIn_jobId}

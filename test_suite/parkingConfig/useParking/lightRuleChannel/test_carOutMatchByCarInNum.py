@@ -21,36 +21,36 @@ class TestCarOutMatchByCarInNum(BaseCase):
     """临时车离场模糊匹配（最终车牌为进场车牌）"""
     def test_mockCarIn(self,send_data,expect):
         """模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data['carNumIn'],0,send_data['inClientID'],send_data['carNumInConfidence'])
+        re = cloudparking_service().mockCarInOut(send_data['carNumIn'],0,send_data['inClientID'],send_data['carNumInConfidence'])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
-        re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["carNumIn"])
+        re = Information(userLogin).getPresentCar(send_data["parkName"],send_data["carNumIn"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["presentCarMessage"])
 
     def test_mockCarOut(self,send_data,expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data['carNumOut'],1,send_data['outClientID'],send_data['carNumOutConfidence'])
+        re = cloudparking_service().mockCarInOut(send_data['carNumOut'],1,send_data['outClientID'],send_data['carNumOutConfidence'])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭端缴费"""
-        re = CarInOutHandle(sentryLogin).normal_car_out(send_data["parkUUid"])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNumIn"],send_data['carHandleType'],'${mytest.carOut_jobId}')
         result = re.json()
-        Assertions().assert_in_text(result, expect["centralPayMessage"])
+        Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_parkingBillDetail(self,userLogin,send_data,expect):
         """查看收费记录"""
-        re = Information(userLogin).getParkingBillDetail(send_data["parkId"],send_data["carNumIn"])
+        re = Information(userLogin).getParkingBillDetail(send_data["parkName"],send_data["carNumIn"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["parkingBillDetailMessage"])
 
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["carNumIn"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNumIn"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

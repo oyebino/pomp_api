@@ -1,20 +1,19 @@
 - test:
-    name: 新能源小车宽进，需缴费宽出（岗亭收费处收费放行）
-    desc: 新能源小车宽进，需缴费宽出（岗亭收费处收费放行）
+    name: 新能源小车宽进-岗亭收费放行宽出
+    desc: 新能源小车宽进-岗亭收费放行宽出
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum(carType="新能源小车")}
-      inClientID: ${lightRule_inClientID}
-      outClientID: ${lightRule_outClientID}
-      carOut_jobId: ${新能源小车宽进，需缴费宽出（岗亭收费处收费放行）.carOut_jobId}
+      carHandleType: 收费放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInScreen: ${__create_carNum(carType="新能源小车")}\\欢迎光临
       mockCarInVoice: $${__create_carNum(carType="新能源小车")}$欢迎光临
       mockCarInOpenGate: 1
       presentCarMessage: ${__create_carNum(carType="新能源小车")}
       mockCarOutMessage: $${__create_carNum(carType="新能源小车")}$请扫码缴费
-      sentryPayMessage: true
       checkCarOutScreen: 已收费5元\\一路顺风
       checkCarOutVoice: 已收费5元一路顺风
       checkCarOutOpenGate: 1
