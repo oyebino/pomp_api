@@ -7,7 +7,7 @@
       editName: pytest修改${__create_randomNum()}
       pwd: 123456
       editPwd: 456789
-      parkName: ${lightRule_parkName}
+      parkName: ${usedParkName}
       couponName: 时间扣减
       tel: 135${__create_randomNum(8)}
     except:

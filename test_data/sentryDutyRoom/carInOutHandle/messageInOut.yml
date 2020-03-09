@@ -2,22 +2,17 @@
     name: 进出场消息处理
     desc: 验证进出场消息处理
     send_data:
-      user_id: strict_apitest
-      password: 123456
       carNum: ${__create_carNum()}
-      lightRule_parkID: ${lightRule_parkID}
-      lightRule_parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
       StrictRule_inClientID: ${strictInClientID}
       StrictRule_outClientID: ${strictOutClientID}
-      StrictRule_inChannelCode: ${StrictRule_inChannelCode}
-      StrictRule_outChannelCode: ${StrictRule_outChannelCode}
+      carInHandleType: 登记放行
+      carOutHandleType: 收费放行
       carIn_jobId: ${mytest.carIn_jobId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 请稍候
-      checkInMessage: true
       mockCarOutMessage: 缴费
-      checkOutMessage: true
       carLeaveHistoryMessage: ${__create_carNum()}
       checkCarInScreen: ${__create_carNum()}\\登记放行
       checkCarInVoice: $${__create_carNum()}$登记放行

@@ -2,19 +2,12 @@
  Created by lgc on 2020/2/11 16:34.
  微信公众号：泉头活水
 """
-from time import sleep
-
-import pytest,os
-import allure
-
+import allure,pytest
 from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
 from Api.sentry_service.carInOutHandle import CarInOutHandle
 from Api.sentry_service.personalInfo import PersonalInfo
 from common.BaseCase import BaseCase
-
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 from common.utils import YmlUtils
 from common.Assert import Assertions
 

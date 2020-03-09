@@ -4,7 +4,7 @@
     send_data:
       carNum: ${__create_carNum()}
       carNum2: ${__create_carNum(carType=1)}
-      lightRule_parkID: ${lightRule_parkID}
+      parkName: ${usedParkName}
       StrictRule_inClientID: ${strictInClientID}
     except:
       mockCarInMessage: 请稍候

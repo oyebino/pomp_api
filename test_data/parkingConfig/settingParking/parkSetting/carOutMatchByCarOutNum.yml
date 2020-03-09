@@ -3,6 +3,7 @@
     desc: 临时车离场模糊匹配-最终车牌为离场车牌
     send_data:
       parkName: ${usedParkName}
+      settingName: 模糊匹配
       carNumIn: 湘ACCCC1
       carNumOut: 湘ACCCC2
       carNumInConfidence: 60

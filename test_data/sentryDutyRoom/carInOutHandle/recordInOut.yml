@@ -2,14 +2,11 @@
     name: 岗亭进出场记录
     desc: 岗亭进出场记录查询
     send_data:
-      user_id: apitest
-      password: 123456
       carNum: ${__create_carNum()}
-      lightRule_parkUUID: ${lightRule_parkUUID}
+      parkName: ${usedParkName}
+      carOutHandleType: 收费放行
       lightRule_inClientID: ${wideInClientId}
       lightRule_outClientID: ${wideOutClientId}
-      lightRule_inChannelCode: ${lightRule_inChannelCode}
-      lightRule_outChannelCode: ${lightRule_outChannelCode}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
       mockCarInMessage: 欢迎光临

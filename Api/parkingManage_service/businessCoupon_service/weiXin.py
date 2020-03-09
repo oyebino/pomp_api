@@ -13,7 +13,6 @@ class WeiXin(Req):
     """商家劵"""
     def grantCouponToCar(self,couponName,carNum):
         """下发商家劵"""
-
         couponDict = self.getDictBykey(self.__findCouponList().json(),'tmpName',couponName)
         self.url = "/mgr-weixin/coupon/grant/grantCouponToCar.do?t=12" + str(int(time.time()))
         data = {

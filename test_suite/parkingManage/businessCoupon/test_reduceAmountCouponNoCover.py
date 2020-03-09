@@ -54,7 +54,7 @@ class TestReduceAmountCouponNoCover(BaseCase):
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭端缴费"""
-        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNum"],'${mytest.carOut_JobId}')
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNum"],send_data['carOutHandleType'],'${mytest.carOut_JobId}')
         result = re.json()
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 

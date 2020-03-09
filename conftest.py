@@ -6,7 +6,7 @@
 
 from common.Req import Req
 from common.parseTemplate import ParseTemplate
-from Api.Login import Login, SentryLogin, AompLogin, CenterMonitorLogin,WeiXinLogin
+from Api.Login import Login, SentryLogin, AompLogin, CenterMonitorLogin,WeiXinLogin, OpenYDTLogin
 
 import pytest
 @pytest.fixture(scope="function")
@@ -64,7 +64,12 @@ def centerMonitorLogin(request):
     Session = L.login()
     return Req(Session)
 
-
+@pytest.fixture(scope="function")
+def openYDTLogin():
+    """开放平台"""
+    L = OpenYDTLogin()
+    Session = L.login()
+    return Req(Session)
 
 #
 # if __name__ == "__main__":

@@ -3,6 +3,7 @@
     desc: 临时车进出场识别错，车牌强制转换为正确车牌
     send_data:
       parkName: ${usedParkName}
+      settingName: 车牌强制转换
       carNumIn: 粤ADBBBB
       carNumOut: 粤ADCCCC
       actualCarNum: 粤ADAAAA

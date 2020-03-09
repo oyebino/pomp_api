@@ -1,6 +1,6 @@
 
 - test:
-    name: 白名单宽进宽出(智泊云)
+    name: 白名单宽进宽出-智泊云
     desc: 白名单宽进宽出
     send_data:
       parkName: ${usedParkName}

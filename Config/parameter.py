@@ -24,13 +24,9 @@ class tempDataPath():
 
     temporaryDataPath = root_path + '/temporaryDataLog' # 父目录
 
-    caseNameList = []     # 当前运行的案例集名
-
     runingCaseName = 'default'   # 当前运行的案例名
 
-    testName = None # 当前的test名
-
-    changeCaseNameList = [] # 变动的案例集
+    cur_time = None
 
 if __name__ == "__main__":
     print(root_path)

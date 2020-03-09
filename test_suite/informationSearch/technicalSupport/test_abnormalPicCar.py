@@ -34,7 +34,7 @@ class TestabnormalPicCar():
 
     def test_getAbnormalPicCar(self, userLogin, send_data, expect):
         """POMP上查看异常拍照记录"""
-        re = Information(userLogin).getAbnormalPicCar(send_data["lightRule_parkID"], send_data["carNum"])
+        re = Information(userLogin).getAbnormalPicCar(send_data["parkName"], send_data["carNum"])
         result = re.json()
         Assertions().assert_in_text(result, expect["getAbnormalPicCarMsg"])
         Assertions().assert_in_text(result["data"]["carCode"], expect["carNum"])

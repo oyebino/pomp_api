@@ -30,6 +30,7 @@ class Config(object):
     VALUE_ENT_WEIXIN_HOST = "WEIXIN_HOST"
     VALUE_ENT_WEIXIN_USER = "weixin_user"
     VALUE_ENT_WEIXIN_PWD = "weixin_pwd"
+    VALUE_ENT_OPENYDT_HOST = "openYDT_host"
 
 
 
@@ -65,6 +66,7 @@ class Config(object):
         self.weiXin_host = self.config.get(self.CATEGORY, self.VALUE_ENT_WEIXIN_HOST)
         self.weiXin_user = self.config.get(self.CATEGORY, self.VALUE_ENT_WEIXIN_USER)
         self.weiXin_pwd = self.config.get(self.CATEGORY, self.VALUE_ENT_WEIXIN_PWD)
+        self.openYDT_host = self.config.get(self.CATEGORY, self.VALUE_ENT_OPENYDT_HOST)
 
 
     def get(self, title, value):

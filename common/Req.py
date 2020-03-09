@@ -5,7 +5,7 @@
 # @Desc  :
 import requests
 import inspect
-import time,os,json
+import time,os,hashlib
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
@@ -33,10 +33,23 @@ class Req(requests.Session):
         self.zby_host = self.conf.zby_host
         self.aomp_host = self.conf.aomp_host
         self.weiXin_host = self.conf.weiXin_host
+        self.openYDT_host = self.conf.openYDT_host
         if Session == None:
             self.Session = requests.Session()
         else:
             self.Session = Session
+
+    def __createSigin(self):
+        """创建开放平台的sign"""
+        m = hashlib.md5()
+        m.update(b'test:' + str(tempDataPath.cur_time).encode('utf-8') + b':123456')
+        sign = "?sign=" + m.hexdigest()
+        return sign
+
+    def __OpenYDT_host(self,url):
+        url = url + self.__createSigin()
+        full_url = urljoin(self.openYDT_host, url)
+        return full_url
 
     """pomp"""
     def _api(self,url):
@@ -48,6 +61,11 @@ class Req(requests.Session):
     def api(self):
         """调用pomp接口地址"""
         return self._api(self.url)
+
+    @property
+    def openYDT_api(self):
+        """调用pomp接口地址"""
+        return self.__OpenYDT_host(self.url)
 
     @property
     def zby_api(self):
@@ -332,7 +350,9 @@ class Req(requests.Session):
                         if  result != None:
                             return result
             elif isinstance(json_object[k],dict):
-                return self.getDictBykey(json_object[k],key,expectedValue)
+                result = self.getDictBykey(json_object[k],key,expectedValue)
+                if result != None:
+                    return result
 
     def getDictByList(self,dataList,value,sonValue,expectedValue):
         """
@@ -347,103 +367,26 @@ class Req(requests.Session):
             else:
                 print("return ")
 
+    def setValueByDict(self,json,keyList,value):
+        """
+        按传进来的keyList，修改key-value值
+        :param json:
+        :param keyList:
+        :param value:
+        :return:
+        """
+        jsonNew = json
+        for i in keyList:
+            for key in jsonNew.keys():
+                if i == key:
+                    if isinstance(jsonNew[i], dict):
+                        jsonNew = jsonNew[i]
+                    else:
+                        jsonNew[i] = value
+        return json
+
 if __name__ == "__main__":
-    aa =[{
-        'create_time': '2020/03/0312: 06: 09',
-        'msg_type': 1,
-        'msg_level': 1,
-        'content': {
-            'inMatch': '1',
-            'carSizeTypeInt': 1.0,
-            'traderCouponInfoList': [],
-            'enterVipName': '临时车',
-            'payVal': '5',
-            'adjust': False,
-            'billCode': '2020030312060790799498',
-            'enterTime': '2020/03/0310: 43: 55',
-            'abName': '临时车宽出需缴费',
-            'parkFee': '5',
-            'leaveCarNo': '桂AAAABC4',
-            'carSizeType': '小车',
-            'carInOutId': '8342',
-            'paidVal': '0',
-            'normal2Vip': False,
-            'favorVal': '0',
-            'abType': '9',
-            'leaveChannelName': '智泊云接口测试出口',
-            'leavePlateImg': 'http: //ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030312060536159550-AAAABC4.jpg',
-            'leaveChannelId': '2023',
-            'stoppingTime': '1小时22分钟10秒',
-            'leavePicTime': '2020/03/0312: 06: 05',
-            'topBillCode': '200303104352824254241224',
-            'leaveCarImg': 'http: //ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030312060536159550-AAAABC4.jpg'
-        },
-        'deal_status': 0,
-        'id': 28399
-    },{
-		"id": 28385,
-		"content": {
-			"favorVal": "0",
-			"paidVal": "0",
-			"traderCouponInfoList": [],
-			"parkFee": "5",
-			"leaveCarImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030311520272667260-AAAABC4.jpg",
-			"normal2Vip": False,
-			"abType": "9",
-			"billCode": "2020030311520521640065",
-			"leaveChannelName": "智泊云接口测试出口",
-			"topBillCode": "200303104352824254241224",
-			"enterVipName": "临时车",
-			"inMatch": "1",
-			"leaveChannelId": "2023",
-			"stoppingTime": "1小时8分钟7秒",
-			"leavePlateImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030311520272667260-AAAABC4.jpg",
-			"payVal": "5",
-			"carInOutId": "8335",
-			"adjust": False,
-			"leaveCarNo": "桂AAAABC4",
-			"carSizeType": "小车",
-			"abName": "临时车宽出需缴费",
-			"leavePicTime": "2020/03/03 11:52:02",
-			"enterTime": "2020/03/03 10:43:55",
-			"carSizeTypeInt": 1.0
-		},
-		"msg_type": 1,
-		"msg_level": 1,
-		"create_time": "2020/03/03 11:52:06",
-		"deal_status": 0
-	},{
-		"id": 21111,
-		"content": {
-			"favorVal": "0",
-			"paidVal": "0",
-			"traderCouponInfoList": [],
-			"parkFee": "5",
-			"leaveCarImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/CAR/2020030311520272667260-AAAABC4.jpg",
-			"normal2Vip": False,
-			"abType": "9",
-			"billCode": "2020030311520521640065",
-			"leaveChannelName": "智泊云接口测试出口",
-			"topBillCode": "200303104352824254241224",
-			"enterVipName": "临时车",
-			"inMatch": "1",
-			"leaveChannelId": "2023",
-			"stoppingTime": "1小时8分钟7秒",
-			"leavePlateImg": "http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/03/03/CAR_OUT/2023/PLATE/2020030311520272667260-AAAABC4.jpg",
-			"payVal": "5",
-			"carInOutId": "8335",
-			"adjust": False,
-			"leaveCarNo": "桂AAAABC6",
-			"carSizeType": "小车",
-			"abName": "临时车宽出需缴费",
-			"leavePicTime": "2020/03/03 11:52:02",
-			"enterTime": "2020/03/03 10:43:55",
-			"carSizeTypeInt": 1.0
-		},
-		"msg_type": 1,
-		"msg_level": 1,
-		"create_time": "2020/03/03 11:52:06",
-		"deal_status": 0
-	}]
-    # print(aa[1]['content']['enterTime'])
-    print(Req().getDictByList(aa,'content','leaveCarNo','桂AAAABC6'))
+    a=[
+        {"a":1},{"b":2}
+    ]
+    print(dict(zip(a,range(2))))

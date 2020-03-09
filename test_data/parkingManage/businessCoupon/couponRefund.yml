@@ -1,0 +1,13 @@
+- test:
+    name: 优惠劵退款
+    desc: 优惠劵退款
+    send_data:
+      parkName: ${usedParkName}
+      couponName: api退款劵${__create_randomNum()}
+      traderName: pytest勿动
+      couponType: 0
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      checkCouponOnTraderMsg: api退款劵${__create_randomNum()}
+      refundCouponMsg: 操作成功

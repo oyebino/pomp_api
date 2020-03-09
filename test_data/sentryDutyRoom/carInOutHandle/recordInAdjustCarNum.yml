@@ -7,6 +7,7 @@
       adjustCarNum: ${__create_carNum(carType=adjustCarNum)}
       lightRule_inClientID: ${wideInClientId}
       lightRule_outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
     except:
       mockCarInMessage: 欢迎光临
       adjustCarInWaterNumMsg: ${__create_carNum(carType=adjustCarNum)}

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2019/12/20 17:41
+# @Time    : 2020/3/5 12:07
 # @Author  : 叶永彬
-# @File    : test_fixedAmountCoupon.py
+# @File    : test_moreCoverCouponUsed.py
+
 
 import allure,pytest
 from common.utils import YmlUtils
@@ -15,34 +16,43 @@ from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/fixedAmountCoupon.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/moreCoverCouponUsed.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("优惠劵管理")
-class TestFixedAmountCoupon(BaseCase):
-    """固定劵创建并使用"""
-    def test_addCoupon(self,userLogin,send_data,expect):
-        """新增优惠劵"""
-        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["addCouponMessage"])
-
-    def test_addSell(self,userLogin,send_data,expect):
-        """售卖优惠劵"""
-        re = Coupon(userLogin).addSell(send_data["couponName"],send_data["parkName"],send_data["traderName"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["addSellMessage"])
-
-    def test_sendCoupon(self,weiXinLogin,send_data,expect):
-        """发放优惠劵"""
-        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponName"],send_data["carNum"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["sendCouponMessage"])
-
+class TestMoreCoverCouponUsed(BaseCase):
+    """多种（5种不一样的）可叠加扣减券，售卖，进出场使用，查看收费流水，券发放流水和使用记录"""
     def test_mockCarIn(self,send_data,expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
+
+    def test_sendCouponA(self,weiXinLogin,send_data,expect):
+        """发放优惠劵"""
+        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponNameA"],send_data["carNum"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["sendCouponMessage"])
+
+    def test_sendCouponB(self, weiXinLogin, send_data, expect):
+        """发放优惠劵"""
+        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponNameB"], send_data["carNum"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["sendCouponMessage"])
+    def test_sendCouponC(self, weiXinLogin, send_data, expect):
+        """发放优惠劵"""
+        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponNameC"], send_data["carNum"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["sendCouponMessage"])
+    def test_sendCouponD(self, weiXinLogin, send_data, expect):
+        """发放优惠劵"""
+        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponNameD"], send_data["carNum"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["sendCouponMessage"])
+    def test_sendCouponEE(self, weiXinLogin, send_data, expect):
+        """发放优惠劵"""
+        re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponNameE"], send_data["carNum"])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["sendCouponMessage"])
 
     def test_mockCarOut(self,send_data, expect):
         """模拟车辆出场"""

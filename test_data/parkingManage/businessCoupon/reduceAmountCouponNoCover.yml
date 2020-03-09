@@ -2,7 +2,7 @@
     name: 不可叠加的扣减券创建并使用-智泊云
     desc: 不可叠加的扣减券创建并使用-智泊云
     send_data:
-      parkName: ${lightRule_parkName}
+      parkName: ${usedParkName}
       couponName: api金额扣减可叠加${__create_randomNum()}
       traderName: pytest勿动
       carNum: ${__create_carNum()}
@@ -11,6 +11,7 @@
       isCover: 0
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功

@@ -47,7 +47,7 @@ class Assertions:
         """
         try:
             msg = body[body_msg]
-            assert msg == expected_msg
+            assert str(msg).lower() == expected_msg.lower()
             self.log.info("===验证结果值：{}=={}".format(msg,expected_msg))
             return True
 

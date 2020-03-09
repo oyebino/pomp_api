@@ -8,6 +8,7 @@ from common.Req import Req
 from common.db import Db as db
 from common.superAction import SuperAction as SA
 from urllib.parse import urlencode
+from Api.index_service.index import Index
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
@@ -24,15 +25,16 @@ class Coupon(Req):
         :param traderName:
         :param couponType:优惠劵类型
         :param faceValue: 各个优惠劵的优惠值(‘免费劵’和‘不同计价劵’不用填写)
-        :param chargeGroupName:
+        :param chargeGroupName: 不同计价劵填写收费组名
         :param couponRule:扣减类型,时间劵才要填写
         :param isCover: 是否叠加(‘金额扣减劵’‘时间劵’才可填写)
         :return:
         """
-        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
+        # parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(),'name',parkName)
         traderDict = self.getDictBykey(self.__getTrader2Sell(parkDict['value']).json(),'name',traderName)
         if str(couponType) == '5':
-            chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']), 'typeName',chargeGroupName)
+            chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']).json(), 'typeName',chargeGroupName)
             faceValue = chargeGroupDict['chargeTypeSeq']
         if str(couponType) == '2':
             faceValue = int(faceValue)/10
@@ -171,7 +173,7 @@ class Coupon(Req):
         :param carNum: 发放车牌
         :return:
         """
-        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponGrantList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&parkSysType=1&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re
@@ -185,7 +187,68 @@ class Coupon(Req):
         """
         from time import sleep
         sleep(5)
-        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re
+
+    def getCityCouponUseRecord(self,parkName,carNum):
+        """查看城市劵使用记录"""
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(),"name",parkName)
+        data = {
+            "page":1,
+            "rp":20,
+            "query_useTimeFrom": self.today + " 00:00:00",
+            "query_useTimeTo": self.today + " 23:59:59",
+            "query_carCode":carNum,
+            "parkIds": parkDict['value'],
+            "parkSysType":1
+        }
+        self.url = "/mgr/cityCoupon/useRecord/list.do?" + urlencode(data)
+        re = self.get(self.api, headers = json_headers)
+        return re
+
+class CityCoupon(Req):
+    """城市劵"""
+    def createCityCoupon(self, parkName, cityCouponName):
+        """创建城市劵"""
+        parkCodeSql = "select parkCode from tbl_device_parking where name ='"+ parkName +"'"
+        parkCode = db().select(parkCodeSql)
+        self.url = "/openydt/api/v2/createCityOperationCouponTemplate"
+        json_data = {
+            "parkCodeList": [
+                parkCode
+            ],
+            "couponTemplate": {
+                "wxAppid": "wxbc0f049b70707054",
+                "name": cityCouponName,
+                "totalNum": 10,
+                "couponType": 1,
+                "faceValue": 1.00,
+                "useRuleFrom": 0,
+                "useRuleTo": 1000,
+                "couponRule": "",
+                "useParkingFee": "",
+                "isCover": 1,
+                "maxCoverNum": 3,
+                "validFrom": SA().get_today_data() +" 00:00:00",
+                "validTo": SA().cal_get_day(strType = "%Y-%m-%d",days = 365)+" 23:59:59",
+                "validTime": 360,
+                "billUseType": 0,
+                "remark": "创建城市运营模板劵--金额扣减券_正常"
+            }
+        }
+        re = self.post(self.openYDT_api, json = json_data)
+        return re
+
+    def grantCityOperationCoupon(self,couponTemplateCode,carNum):
+        """发放城市劵"""
+        self.url = "/openydt/api/v2/grantCityOperationCoupon"
+        json_data = {
+            "couponTemplateCode" : couponTemplateCode,
+            "carNo" : carNum
+        }
+        re = self.post(self.openYDT_api, json = json_data)
+        return re
+
+

@@ -3,7 +3,7 @@
     desc: 商家售卖-在商家管理页面售卖券
     send_data:
       traderName: pytest${__create_randomNum()}
-      parkName: ${lightRule_parkName}
+      parkName: ${usedParkName}
       couponName: 时间扣减
       tel: 135${__create_randomNum(8)}
       carNum: ${__create_carNum()}

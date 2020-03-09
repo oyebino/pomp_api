@@ -27,14 +27,14 @@ class TestSentryMessage(BaseCase):
 
     def test_mockCarIn(self, send_data, expect):
         """模拟进场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
         result = re.json()
         self.save_data('carIn_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_checkMessageIn(self, sentryLogin, send_data, expect):
         """登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['carNum'], send_data['carIn_jobId'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'], send_data['carInHandleType'],send_data['carIn_jobId'])
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['screen'], expect["checkCarInScreen"])
         Assertions().assert_in_text(result['voice'], expect["checkCarInVoice"])
@@ -42,14 +42,14 @@ class TestSentryMessage(BaseCase):
 
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
-        re = cloudparking_service().mock_car_in_out(send_data["carNum"], 1, send_data["StrictRule_outClientID"])
+        re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["StrictRule_outClientID"])
         result = re.json()
         self.save_data('carOut_jobId', result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkMessageOut(self, sentryLogin, send_data, expect):
         """登记放行"""
-        re = CarInOutHandle(sentryLogin).check_car_in_out(send_data['carNum'], send_data['carOut_jobId'])
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'], send_data['carOutHandleType'], send_data['carOut_jobId'])
         result = re.json()['biz_content']['result']
         Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
         Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
@@ -57,7 +57,7 @@ class TestSentryMessage(BaseCase):
 
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["lightRule_parkID"], send_data["carNum"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result, expect["carLeaveHistoryMessage"])
 

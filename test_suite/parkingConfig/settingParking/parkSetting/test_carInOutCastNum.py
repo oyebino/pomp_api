@@ -10,14 +10,22 @@ from common.BaseCase import BaseCase
 from Api.information_service.information import Information
 from Api.cloudparking_service import cloudparking_service
 from Api.sentry_service.carInOutHandle import CarInOutHandle
+from Api.parkingConfig_service.parkingSetting import ParkingSetting
 from common.Assert import Assertions
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingConfig/useParking/lightRuleChannel/carInOutCastNum.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingConfig/settingParking/parkSetting/carInOutCastNum.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("车辆进出模块")
 class TestCarInOutCastNum(BaseCase):
     """临时车进出场识别错-车牌强制转换为正确车牌"""
+
+    def test_enableCastNum(self,userLogin,send_data,expect):
+        """开启车场配置强制识别功能"""
+        re = ParkingSetting(userLogin).updataOperatorParkCofigInfo(send_data['parkName'], send_data['settingName'],1)
+        result = re.json()
+        Assertions().assert_body(result, 'status', 1)
+
     def test_mockCarIn(self,send_data,expect):
         """模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data['carNumIn'],0,send_data['inClientID'])
@@ -53,3 +61,16 @@ class TestCarInOutCastNum(BaseCase):
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["actualCarNum"])
         result = re.json()["data"]["rows"]
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])
+
+    def test_disableCastNum(self, userLogin,send_data,expect):
+        """关闭强制识别功能"""
+        re = ParkingSetting(userLogin).updataOperatorParkCofigInfo(send_data['parkName'], send_data['settingName'], 0)
+        result = re.json()
+        Assertions().assert_body(result, 'status', 1)
+
+    def test_isCastNumConfig(self, userLogin,send_data,expect):
+        """查看强制识别功能配置信息是否关闭"""
+        re = ParkingSetting(userLogin).getOperatorParkConfigInfo(send_data['parkName'])
+        result = re.json()['data']['parkCloudDetailVo']
+        Assertions().assert_body(result, 'carNoForceCovertFlag', 'false')
+

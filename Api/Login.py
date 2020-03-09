@@ -200,6 +200,24 @@ class WeiXinLogin():
         re =self.S.post(loginUrl, data)
         return self.S
 
+class OpenYDTLogin():
+    """开放平台"""
+    def __init__(self):
+        self.S = requests.session()
+
+    def login(self):
+        import base64
+        import time
+        from Config.parameter import tempDataPath
+        time_tup = time.localtime(time.time())
+        format_time = '%Y%m%d%H%M%S'
+        cur_time = time.strftime(format_time, time_tup)
+        tempDataPath.cur_time = cur_time
+        authorization_str = b'test:' + cur_time.encode('utf-8')
+        authorization = base64.b64encode(authorization_str)
+        print(authorization)
+        self.S.headers.update({"Authorization":authorization})
+        return self.S
 
 if __name__ == "__main__":
 

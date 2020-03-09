@@ -52,7 +52,7 @@ class CarInOutHandle(Req):
             return re
 
     def adjustCarNum(self, carNum, adjustCarNum, carType = None):
-        """校正车牌与类型"""
+        """进场前校正车牌与类型"""
         carInOutHandle = self.__getCarInOutHandleIdList()
         try:
             carHandleInfo = self.getDictByList(carInOutHandle, 'content', 'carNo', carNum)
@@ -71,6 +71,20 @@ class CarInOutHandle(Req):
             return re
         else:
             return re
+
+    def patchRecord(self, carNum, parkName, adjustCarNum, carType = None):
+        """在场车辆校正"""
+        carInfoDict = self.getDictBykey(self.getCarInRecord(carNum, parkName).json(), 'carCode', carNum)
+        self.url = "/ydtp-backend-service/api/records/patch"
+        data = {
+            "car_code": adjustCarNum,
+            "topBillCode": carInfoDict['topBillCode'],
+            "modifyType":1,
+            "operateSource": 2,
+            "carType": carType
+        }
+        re = self.post(self.zby_api, data = data, headers = form_headers)
+        return re
 
     def matchCarNum(self,carNum,matchCarNum):
         """人工匹配车牌"""
@@ -101,7 +115,7 @@ class CarInOutHandle(Req):
         """
         获取进场记录
         """
-        parkDict = self.getDictBykey(self.__onDutyParks().json(), 'park_name', parkName)
+        parkDict = self.getDictBykey(self.__onDutyParks(), 'park_name', parkName)
         data ={
             "car_code":car_code,
             "park_id": parkDict['id'],
@@ -118,13 +132,13 @@ class CarInOutHandle(Req):
         """
         获取出场记录
         """
-        parkDict = self.getDictBykey(self.__onDutyParks().json(),'park_name',parkName)
+        parkDict = self.getDictBykey(self.__onDutyParks(),'park_name',parkName)
         data ={
             "pageSize": "40",
             "pageNumber": "1",
             "car_code": carNum,
             "mode": mode,
-            "park_id": parkDict[id],
+            "park_id": parkDict['id'],
             "record_type": "out"
         }
         self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
@@ -135,7 +149,8 @@ class CarInOutHandle(Req):
         """当前用户上班车场"""
         self.url = "/ydtp-backend-service/api/on_duty_parks"
         re = self.get(self.zby_api, headers = json_headers)
-        return re
+        parkList = {'parkList': re.json()}
+        return parkList
 
     def __getDutyChannelStatus(self):
         """获取当前用户上班通道"""

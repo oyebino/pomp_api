@@ -1,12 +1,14 @@
 
 - test:
-    name: 临时车异常进场(智泊云)
+    name: 临时车异常进场-智泊云
     desc: 临时车异常进场
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
+      carOutHandleType: 收费放行
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
+      carOut_jobId: ${mytest.carOut_jobId}
     except:
       message: OK
       mock_car_in: ok
@@ -17,9 +19,10 @@
       exceptionType: 同车场再次进场
       carNum: ${__create_carNum()}
       centralPayMessage: billid
-      mock_car_out: ok
-      outscreen: ${__create_carNum()}\\一路顺风
-      outvoice: $${__create_carNum()}$一路顺风
+      mock_car_out: $${__create_carNum()}$请扫码缴费5元
+      outscreen: 已收费5元\\一路顺风
+      outvoice: 已收费5元一路顺风
+      outOpen_gate: 1
 
 
 
