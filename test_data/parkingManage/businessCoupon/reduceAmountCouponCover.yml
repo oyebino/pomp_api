@@ -1,0 +1,24 @@
+- test:
+    name: 可叠加金额扣减券创建-智泊云
+    desc: 可叠加金额扣减券创建-智泊云
+    send_data:
+      parkName: ${usedParkName}
+      couponName: &couponName api金额扣减可叠加券${__create_randomNum()}
+      traderName: pytest勿动
+      carNum: &carNum ${__create_carNum()}
+      couponType: 金额扣减券
+      isCover: 1
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      faceValue: 2.3
+      carOutHandleType: 收费放行
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      sendCouponMessage: 发券成功
+      mockCarInMessage: $${__create_carNum()}$欢迎光临
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费2.7元
+      sentryPayMessage: 已收费2.7元\\一路顺风
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

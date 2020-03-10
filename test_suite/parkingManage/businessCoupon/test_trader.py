@@ -11,7 +11,6 @@ from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
-
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/trader.yml").getData
 @pytest.mark.parametrize(args_item, test_data)

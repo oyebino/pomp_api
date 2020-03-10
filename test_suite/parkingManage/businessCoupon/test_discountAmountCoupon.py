@@ -48,12 +48,11 @@ class TestDiscountAmountCoupon(BaseCase):
         """模拟车辆出场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
         result = re.json()
-        self.save_data('carOut_JobId',result['biz_content']['job_id'])
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭端缴费"""
-        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNum"],send_data['carOutHandleType'],'${mytest.carOut_JobId}')
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNum"],send_data['carOutHandleType'],'${mytest.carOut_jobId}')
         result = re.json()
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 

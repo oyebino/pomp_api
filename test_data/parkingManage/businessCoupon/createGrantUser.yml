@@ -1,0 +1,19 @@
+- test:
+    name: 发放员创建与使用流程
+    desc: 发放员创建与使用流程
+    send_data:
+      grantUserName: &grantUserName 发放员${__create_randomNum()}
+      account: 135${__create_randomNum(8)}
+      pwd: 123456
+      traderName: pytest勿动
+      parkName: ${usedParkName}
+      couponName: &couponName 发放员使用劵${__create_randomNum()}
+      carNum: ${__create_carNum()}
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      grantUserSendCouponToCarMsg: 发券成功
+      createGrantUserMsg: 新增发放员成功
+      checkCouponSendListMsg: *couponName
+      delGrantUserMsg: 修改发放员状态成功
+      isDelGrantUser: *grantUserName

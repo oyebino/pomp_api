@@ -5,7 +5,7 @@
       parkName: ${usedParkName}
       couponName: api退款劵${__create_randomNum()}
       traderName: pytest勿动
-      couponType: 0
+      couponType: 免费劵
     except:
       addCouponMessage: ok
       addSellMessage: 操作成功

@@ -22,7 +22,7 @@ class cloudparking_service(Req):
         "timestamp":SA().get_time(),
         "biz_content":{
             "car_plate":carNum,
-            "mock_type":mockType,
+            # "mock_type":mockType, # 取消进出类型
             "ytj_id":ytj_id,
             "confidence": confidence,
             "job_id":SA().get_uuid(),
@@ -55,7 +55,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mockCarInOut("粤Y98175",0,"20190507171500")
-    # a = cloudparking_service().get_car_msg_ytj("52dc11eab4f97427eac14803")
+    # a = cloudparking_service().mockCarInOut("粤Y98175",0,"20190507171500")
+    a = cloudparking_service().getCarMsgYtj("61b211ea89657427eac14803")
     re = a.json()
     # print(re['result']['voice'])

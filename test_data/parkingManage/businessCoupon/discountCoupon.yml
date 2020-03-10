@@ -8,7 +8,7 @@
       carNum: ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
-      couponType: 2
+      couponType: 金额折扣券
       faceValue: 5
       carOutHandleType: 收费放行
     except:

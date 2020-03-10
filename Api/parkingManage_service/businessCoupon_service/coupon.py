@@ -12,12 +12,21 @@ from Api.index_service.index import Index
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
+couponTypeDict = {
+    "免费劵":0,
+    "金额扣减券":1,
+    "金额折扣券":2,
+    "金额固定值券":3,
+    "时间券":4,
+    "不同计价券":5
+}
+
 
 class Coupon(Req):
     """优惠配置"""
     today = SA().get_today_data()
 
-    def addCoupon(self,couponName,parkName,traderName,couponType = 0,couponRule = 0,faceValue = 0,chargeGroupName=None,isCover=0):
+    def addCoupon(self,couponName,parkName,traderName,couponType = '免费劵',couponRule = 0,faceValue = 0,chargeGroupName=None,isCover=0):
         """
         创建优惠劵
         :param couponName:
@@ -33,10 +42,10 @@ class Coupon(Req):
         # parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
         parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(),'name',parkName)
         traderDict = self.getDictBykey(self.__getTrader2Sell(parkDict['value']).json(),'name',traderName)
-        if str(couponType) == '5':
+        if str(couponType) == '不同计价券':
             chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']).json(), 'typeName',chargeGroupName)
             faceValue = chargeGroupDict['chargeTypeSeq']
-        if str(couponType) == '2':
+        if str(couponType) == '金额折扣券':
             faceValue = int(faceValue)/10
         json_data = {
             "name":couponName,
@@ -44,7 +53,7 @@ class Coupon(Req):
             "inputParks[0]":parkDict['name'],
             "balanceType":"0",
             "validDay":"1440",
-            "couponType":couponType,    # 优惠劵类型
+            "couponType":couponTypeDict[couponType],    # 优惠劵类型
             "faceValue":faceValue,      # 各个优惠劵的优惠值(‘免费劵’默认0，不同计价劵会自动获取计费组的typeSeq)
             "originalPrice":"11",       #券原价
             "realPrice":"11",       # 折扣价
@@ -139,12 +148,11 @@ class Coupon(Req):
 
     def getCouponListByPage(self,parkName):
         """优惠配置-获取优惠劵列表"""
-        parkIdSql = "select id from tbl_device_parking where `NAME`='{}'".format(parkName)
-        parkId = db().select(parkIdSql)
+        parkDict = self.getDictBykey(Index(self.Session).getUnsignedParkList().json(), 'name', parkName)
         data = {
             "page":1,
             "rp":20,
-            "query_parkId":parkId,
+            "query_parkId":parkDict['id'],
             "parkSysType":1
         }
         self.url = "/mgr/coupon/getListByPage.do?" + urlencode(data)

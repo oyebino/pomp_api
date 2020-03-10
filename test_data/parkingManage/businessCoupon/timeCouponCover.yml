@@ -6,7 +6,7 @@
       couponName: api时间可叠加券${__create_randomNum()}
       traderName: pytest勿动
       carNum: ${__create_carNum()}
-      couponType: 4
+      couponType: 时间券
       isCover: 1
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}

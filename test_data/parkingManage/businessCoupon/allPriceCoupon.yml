@@ -8,7 +8,7 @@
       carNum: ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
-      couponType: 5
+      couponType: 不同计价券
       chargeGroupName: 接口测试专用计费组2
       carOutHandleType: 收费放行
     except:

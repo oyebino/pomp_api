@@ -6,7 +6,7 @@
       couponName: api金额扣减可叠加${__create_randomNum()}
       traderName: pytest勿动
       carNum: ${__create_carNum()}
-      couponType: 1
+      couponType: 金额扣减券
       faceValue: 2
       isCover: 0
       inClientID: ${wideInClientId}

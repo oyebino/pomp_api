@@ -50,3 +50,31 @@ class WeiXin(Req):
         }
         re = self.post(self.weiXin_api,json = data, headers = json_headers)
         return re
+
+    def getGrantUserList(self):
+        """发劵授权-获取发放员列表"""
+        self.url = '/mgr-weixin/user/getGrantCouponTraderUserList.do?t=12' + str(int(time.time()))
+        re = self.post(self.weiXin_api, headers = json_headers)
+        return re
+
+    def createGrantUser(self, name, account, pwd):
+        """发劵授权-创建劵发放员"""
+        self.url = '/mgr-weixin/user/addGrantTraderUser.do?t=12' + str(int(time.time()))
+        data = {
+            "name": name,
+            "account": account,
+            "password": pwd
+        }
+        re = self.post(self.weiXin_api, data = data, headers = form_headers)
+        return re
+
+    def delGrantUser(self, grantUserName):
+        """发劵授权-删除劵发放员"""
+        grantUserDict = self.getDictBykey(self.getGrantUserList().json(), 'name', grantUserName)
+        self.url = '/mgr-weixin/user/updateTraderUserStatus.do?t=12' + str(int(time.time()))
+        data = {
+            "id": grantUserDict['id'],
+            "status":3
+        }
+        re = self.post(self.weiXin_api, data = data, headers = form_headers)
+        return re
