@@ -5,6 +5,8 @@
 # @Desc  :
 from time import sleep
 
+from flask import jsonify
+
 from Config.Config import Config
 from urllib.parse import urljoin
 from common.logger import logger as log
@@ -45,6 +47,8 @@ class Login():
         }
         print("登录名：【"+data['username']+"】")
         re = self.Seesion.post(url,data,headers=headers)
+        print(re.text)
+        # self.Seesion.headers.update({"akeparking_grey_zone_name": "grey"})
         log.info(re.json()['message'])
         return self.Seesion
 
@@ -219,9 +223,39 @@ class OpenYDTLogin():
         self.S.headers.update({"Authorization":authorization})
         return self.S
 
+class CentralTollLogin():
+
+    """中央收费登陆"""
+    def __init__(self, zby_user=None, zby_pwd=None):
+        self.S = requests.Session()
+        self.host = Config().zby_host
+        if zby_user == None and zby_pwd == None:
+            self.user = Config().getValue("zby_user")
+            self.password = Config().getValue("zby_pwd")
+        else:
+            self.user = zby_user
+            self.password = zby_pwd
+
+    def login(self):
+
+        """登陆中央收费页面"""
+        url = self.host + "/ydtp-backend-service/api/open/central_duty"
+        print(url)
+        data = {
+                "user_id": "{}".format(self.user),
+                "password": "123456"
+                }
+        r = self.S.post(url=url, data=data, headers=form_headers)
+        if "token" in r.json().keys():
+            token = r.json()['token']
+            self.S.headers.update({"user": token, "type": "ydtp"})
+            return self.S
+        else:
+            return jsonify({"message":"账号或密码错误"})
+
 if __name__ == "__main__":
 
-    L = SentryLogin()
+    L = CentralTollLogin()
 
     L.login()
 

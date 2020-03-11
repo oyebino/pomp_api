@@ -1,0 +1,14 @@
+- test:
+    name: 中央值守操作日志
+    desc: 验证进出场消息处理
+    send_data:
+      carNum: ${__create_carNum()}
+      StrictRule_inClientID: ${strictInClientID}
+      carInHandleType: 登记放行
+      carIn_jobId: ${mytest.carIn_jobId}
+    except:
+      mockCarInMessage: 请稍候
+      carLeaveHistoryMessage: ${__create_carNum()}
+      checkCarInScreen: ${__create_carNum()}\\登记放行
+      checkCarInVoice: $${__create_carNum()}$登记放行
+      checkCarInOpenGate: 1
