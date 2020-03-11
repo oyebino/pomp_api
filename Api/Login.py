@@ -5,6 +5,8 @@
 # @Desc  :
 from time import sleep
 
+from flask import jsonify
+
 from Config.Config import Config
 from urllib.parse import urljoin
 from common.logger import logger as log
@@ -57,7 +59,6 @@ class Login():
             "isMockLogin": loginDict['isMockLogin'],
             "operatorIDList[]": loginDict['operatorIDList'][0],
             "topOperatorId": loginDict['topOperatorId']
-
         }
         executeUrl = self.host + '/mgr/zbcloud-grey/api/execute?'
         executeApi = executeUrl + urlencode(payload)
@@ -194,6 +195,7 @@ class AompLogin(object):
         return self.Session
 
 class WeiXinLogin():
+    """微信商户端"""
     def __init__(self,user = None, pwd = None):
         self.conf = Config()
         self.host = self.conf.weiXin_host
@@ -234,6 +236,36 @@ class OpenYDTLogin():
         print(authorization)
         self.S.headers.update({"Authorization":authorization})
         return self.S
+
+class CentralTollLogin():
+
+    """中央收费登陆"""
+    def __init__(self, zby_user=None, zby_pwd=None):
+        self.S = requests.Session()
+        self.host = Config().zby_host
+        if zby_user == None and zby_pwd == None:
+            self.user = Config().getValue("zby_user")
+            self.password = Config().getValue("zby_pwd")
+        else:
+            self.user = zby_user
+            self.password = zby_pwd
+
+    def login(self):
+
+        """登陆中央收费页面"""
+        url = self.host + "/ydtp-backend-service/api/open/central_duty"
+        print(url)
+        data = {
+                "user_id": "{}".format(self.user),
+                "password": "123456"
+                }
+        r = self.S.post(url=url, data=data, headers=form_headers)
+        if "token" in r.json().keys():
+            token = r.json()['token']
+            self.S.headers.update({"user": token, "type": "ydtp"})
+            return self.S
+        else:
+            return jsonify({"message":"账号或密码错误"})
 
 if __name__ == "__main__":
 

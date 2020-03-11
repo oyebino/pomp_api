@@ -6,7 +6,7 @@
 
 from common.Req import Req
 from common.parseTemplate import ParseTemplate
-from Api.Login import Login, SentryLogin, AompLogin, CenterMonitorLogin,WeiXinLogin, OpenYDTLogin
+from Api.Login import Login, SentryLogin, AompLogin, CenterMonitorLogin, WeiXinLogin, OpenYDTLogin, CentralTollLogin
 
 import pytest
 @pytest.fixture(scope="function")
@@ -68,6 +68,18 @@ def centerMonitorLogin(request):
 def openYDTLogin():
     """开放平台"""
     L = OpenYDTLogin()
+    Session = L.login()
+    return Req(Session)
+
+@pytest.fixture(scope="function")
+def centralTollLogin(request):
+    """中央收费"""
+    if hasattr(request, 'param'):
+        user = ParseTemplate().formatExpected(request.param['user'])
+        pwd = ParseTemplate().formatExpected(request.param['pwd'])
+        L = CentralTollLogin(user, pwd)
+    else:
+        L = CentralTollLogin()
     Session = L.login()
     return Req(Session)
 
