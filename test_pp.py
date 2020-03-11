@@ -5,10 +5,12 @@
 # @File    : test_pp.py
 
 from Api.parkingManage_service.carTypeManage_service.carTypeManage import CarTypeManage
+from Api.parkingManage_service.carTypeManage_service.carType import CarType
+import pytest
 
 
 class TestAAA():
-    # @pytest.mark.parametrize('weiXinLogin', [{'user':'13531412589','pwd':'123456'}], indirect=True)
+    # @pytest.mark.parametrize('userLogin', [{'user':'yeyongbin','pwd':'123456'}], indirect=True)
     def test_A(self,userLogin):
 
         # re = Coupon(userLogin).getParkingBaseTree('智泊云接口测试专用停车场')
@@ -20,7 +22,8 @@ class TestAAA():
         # re = SellManage(userLogin).couponRefund('智泊云接口测试专用停车场','api退款劵0328')
         # re = Information(userLogin).getPresentCar('智泊云接口测试专用停车场','桂AAAABC4')
         # re = Index(userLogin).getNewMeun()
-        re = CarTypeManage(userLogin).updateEmergencyCarNum('智泊云接口测试专用停车场','粤AAAAA4','粤AAAAA3')
+        re = CarType(userLogin).updataSpecialCarTypeConfig('kkk779','kkk889')
+        # re = CarType(userLogin).runTest()
         re.json()
 
 

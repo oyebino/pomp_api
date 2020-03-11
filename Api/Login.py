@@ -8,6 +8,7 @@ from time import sleep
 from Config.Config import Config
 from urllib.parse import urljoin
 from common.logger import logger as log
+from urllib.parse import urlencode
 import requests
 import json
 
@@ -33,9 +34,9 @@ class Login():
         verify_seccode = urljoin(self.host,"/mgr/normal/authz/verify_seccode.do")
         url = urljoin(self.host,"/mgr/normal/ajax/login.do")
         headers ={
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
         }
-        re = self.Seesion.get(seccode)
+        re = self.Seesion.get(seccode,headers = headers)
         data = {"seccode": 9999}
         re = self.Seesion.post(verify_seccode,data=data)
         data = {
@@ -43,12 +44,27 @@ class Login():
             "password": self.password,
             "seccode": 9999
         }
-        print("登录名：【"+data['username']+"】")
-        re = self.Seesion.post(url,data,headers=headers)
-        log.info(re.json()['message'])
-        return self.Seesion
+        login = self.Seesion.post(url,data).json()
+        loginDict = login['data']
+        payload = {
+            "id": loginDict['id'],
+            "loginid": loginDict['loginid'],
+            "nickname": loginDict['nickname'],
+            "mobile": loginDict['mobile'],
+            "email": loginDict['email'],
+            "operatorID": loginDict['operatorID'],
+            "address": loginDict['address'],
+            "isMockLogin": loginDict['isMockLogin'],
+            "operatorIDList[]": loginDict['operatorIDList'][0],
+            "topOperatorId": loginDict['topOperatorId']
 
-
+        }
+        executeUrl = self.host + '/mgr/zbcloud-grey/api/execute?'
+        executeApi = executeUrl + urlencode(payload)
+        re = self.Seesion.get(executeApi)
+        if re.text =='ok':
+            log.info("用户【" +data['username'] + "】" + login['message'])
+            return self.Seesion
 
 class SentryLogin():
     """岗亭端"""
@@ -72,7 +88,7 @@ class SentryLogin():
         }
         r = self.S.post(url=url, data=data, headers=form_headers).json()
         token = r['token']
-        self.S.headers.update({"user": token,"type": "ydtp-pc"})
+        self.S.headers.update({"user": token,"type": "ydtp-pc","akeparking_grey_zone_name": "grey"})
 
         if r['onDuty'] == 0:
             self.__selectChannel()
@@ -221,7 +237,7 @@ class OpenYDTLogin():
 
 if __name__ == "__main__":
 
-    L = SentryLogin()
+    L = Login()
 
     L.login()
 

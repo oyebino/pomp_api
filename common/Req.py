@@ -183,7 +183,7 @@ class Req(requests.Session):
         kwargs.setdefault('allow_redirects', False)
         return self.request('HEAD', url, **kwargs)
 
-    def post(self, url, data=None, json=None, **kwargs):
+    def post(self, url, data=None, json=None, headers=None):
         r"""Sends a POST request. Returns :class:`Response` object.
 
         :param url: URL for the new :class:`Request` object.
@@ -194,7 +194,10 @@ class Req(requests.Session):
         """
         data = self.__formatCaseParm(data)
         json = self.__formatCaseParm(json)
-        result = self.request('POST', url, data=data, json=json, **kwargs)
+        # result = self.request('POST', url, data=data, json=json, **kwargs)
+        result = self.request('POST', url, data=data, json=json, headers=headers)
+        logger.info("===请求头:{}".format(result.headers))
+        logger.info("===请求头:{}".format(result))
         self.__postLogFormat(url,data,json,result)
         time.sleep(5)
         tempDataPath.testName = inspect.stack()[2][3]
@@ -376,13 +379,23 @@ class Req(requests.Session):
         :return:
         """
         jsonNew = json
-        for i in keyList:
-            for key in jsonNew.keys():
-                if i == key:
-                    if isinstance(jsonNew[i], dict):
-                        jsonNew = jsonNew[i]
-                    else:
-                        jsonNew[i] = value
+        if isinstance(jsonNew, list):
+            for j in jsonNew:
+                for i in keyList:
+                    for key in j.keys():
+                        if i == key:
+                            if isinstance(j[i], dict):
+                                j = j[i]
+                            else:
+                                j[i] = value
+        else:
+            for i in keyList:
+                for key in jsonNew.keys():
+                    if i == key:
+                        if isinstance(jsonNew[i], dict):
+                            jsonNew = jsonNew[i]
+                        else:
+                            jsonNew[i] = value
         return json
 
 if __name__ == "__main__":

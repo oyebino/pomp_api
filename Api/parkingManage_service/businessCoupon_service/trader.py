@@ -7,12 +7,11 @@
 
 from common.Req import Req
 from common.db import Db as db
-from common.superAction import SuperAction as SA
 from common.logger import logger
 from urllib.parse import urlencode
 
-form_headers = {"content-type": "application/x-www-form-urlencoded"}
-json_headers = {"content-type": "application/json;charset=UTF-8"}
+form_headers = {"content-type": "application/x-www-form-urlencoded;akeparking_grey_zone_name=grey"}
+json_headers = {"content-type": "application/json;charset=UTF-8;akeparking_grey_zone_name=grey"}
 
 class Trader(Req):
     """商户管理"""
