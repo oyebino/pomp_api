@@ -25,11 +25,23 @@ class TestAddTollection(BaseCase):
         self.save_data('userId', send_data['userId'])
         self.save_data('pwd', send_data['pwd'])
         status = re.json()
-        Assertions.assert_in_text(status, expect['status'])
+        Assertions().assert_in_text(status, expect['status'])
 
     """收费员登陆中央收费页面"""
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_loginCentral(self, centralTollLogin, send_data, expect):
         re = CentralPersonalInfo(centralTollLogin).duty_info()
         onDutyTime = re.json()
-        Assertions.assert_in_text(onDutyTime, expect['onDutyTime'])
+        Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
+
+    """冻结收费员"""
+    def test_freezeToll(self, userLogin, send_data, expect):
+        re = TollCollection(userLogin).freeze_tollCollection()
+        status = re.json()
+        Assertions().assert_in_text(status, expect['status'])
+
+    """冻结收费员"""
+    def test_delToll(self, userLogin, send_data, expect):
+        re = TollCollection(userLogin).del_tollCollection()
+        status = re.json()
+        Assertions().assert_in_text(status, expect['status'])
