@@ -16,8 +16,8 @@ class SuperAction:
         src_uppercase = ascii_uppercase  # string_大写字母
         src_greenFlat = 'DF'
         # 生成字符串
-        carNum = random.sample(src_uppercase, uppercase_num) + random.sample(src_digits, digits_num)
-        greenSmallCarNum = random.sample(src_uppercase, uppercase_num) + random.sample(src_greenFlat,1) +random.sample(src_digits, digits_num)
+        carNum = random.sample(src_uppercase, int(uppercase_num)) + random.sample(src_digits, int(digits_num))
+        greenSmallCarNum = random.sample(src_uppercase, int(uppercase_num)) + random.sample(src_greenFlat,1) +random.sample(src_digits, int(digits_num))
         # 列表转字符串
         if carType == "民航":
             new_carNum = "民航" + ''.join(carNum)[1:]
@@ -152,7 +152,4 @@ class SuperAction:
         return timeperiodListStr
 
 if __name__ == "__main__":
-    import time
-
-
-    print(type(time.time()))
+    print(SuperAction().create_carNum(digits_num=0) + SuperAction().create_randomNum(val=5))

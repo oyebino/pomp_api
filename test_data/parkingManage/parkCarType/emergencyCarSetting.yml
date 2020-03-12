@@ -1,0 +1,22 @@
+- test:
+    name: 指定告警车牌新增-修改-使用流程
+    desc: 指定告警车牌新增-修改-使用流程
+    send_data:
+      parkName: ${usedParkName}
+      oldCarNum: ${__create_carNum(carType=oldCarNum)}
+      newCarNum: ${__create_carNum()}
+      tel: 135${__create_randomNum(val=8)}
+      carType: 指定车辆
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
+    except:
+      createEmergencyCarConfigMsg: 保存成功
+      openEmergencySettingMsg: 保存成功
+      updateEmergencyCarNumMsg: 保存成功
+      mockCarInMessage: $${__create_carNum()}$欢迎光临
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费5元
+      checkEmergencyCarInRecordMsg: 进入${usedParkName}
+      checkEmergencyCarOutRecordMsg: 离开${usedParkName}
+      sentryPayMessage: 已收费5元\\一路顺风
+      delEmergencyCarConfigMsg: 删除成功

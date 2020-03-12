@@ -14,7 +14,6 @@ class cloudparking_service(Req):
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
     host = "http://10.10.17.219:9002"
 
-    # def mock_car_in_out(self,carNum,mockType,ytj_id,confidence = 91,carType = 1):
     def mockCarInOut(self,carNum,mockType,ytj_id,confidence = 91,carType = 1):
         url = "http://mock.dev.yidianting.com.cn/mock_car_in_out"
         json_data = {
@@ -36,7 +35,6 @@ class cloudparking_service(Req):
             self.save('carIn_jobId', re.json()['biz_content']['job_id'])
         return re
 
-    # def get_car_msg_ytj(self,job_id):
     def getCarMsgYtj(self,job_id):
         """
         获取车场进出场一体机的返回的信息
@@ -55,7 +53,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mockCarInOut("粤Y98177",1,"20190507171502")
+    a = cloudparking_service().mockCarInOut("粤A12346",1,"20190507171500")
     # a = cloudparking_service().getCarMsgYtj("61b211ea89657427eac14803")
     re = a.json()
     # print(re['result']['voice'])

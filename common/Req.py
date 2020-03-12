@@ -183,7 +183,7 @@ class Req(requests.Session):
         kwargs.setdefault('allow_redirects', False)
         return self.request('HEAD', url, **kwargs)
 
-    def post(self, url, data=None, json=None, headers=None):
+    def post(self, url, data=None, json=None, **kwargs):
         r"""Sends a POST request. Returns :class:`Response` object.
 
         :param url: URL for the new :class:`Request` object.
@@ -194,10 +194,7 @@ class Req(requests.Session):
         """
         data = self.__formatCaseParm(data)
         json = self.__formatCaseParm(json)
-        # result = self.request('POST', url, data=data, json=json, **kwargs)
-        result = self.request('POST', url, data=data, json=json, headers=headers)
-        logger.info("===请求头:{}".format(result.headers))
-        logger.info("===请求头:{}".format(result))
+        result = self.request('POST', url, data=data, json=json, **kwargs)
         self.__postLogFormat(url,data,json,result)
         time.sleep(5)
         tempDataPath.testName = inspect.stack()[2][3]

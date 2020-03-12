@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/3/9 17:27
 # @Author  : 叶永彬
-# @File    : carType.py
+# @File    : carTypeConfig.py
 
 from common.Req import Req
 from urllib.parse import urlencode
 from Api.index_service.index import Index
+from common.superAction import SuperAction as SA
 from common import const
 import json
 
@@ -18,6 +19,7 @@ specialCarTypeDict = {
     "访客":1,
     "预定":3
 }
+today = SA().get_today_data()
 
 class CarType(Req):
     """车辆分类"""
@@ -190,98 +192,131 @@ class CarType(Req):
                     for i in json[key]:
                         self.__getDictChildList(i, key)
 
-if __name__ == "__main__":
-   aa = {
-            "chkDisabled": False,
-            "parkUuid": "54a33015-d405-499e-bce2-e569cd9dce6a",
-            "level": 0,
-            "hasChildren": True,
-            "name": "智泊云接口测试专用停车场",
-            "parkSysType": 1,
-            "checked": False,
-            "nocheck": False,
-            "type": 0,
-            "childrenList": [{
-                "chkDisabled": False,
-                "level": 1,
-                "hasChildren": True,
-                "name": "外场区域",
-                "parkSysType": 1,
-                "checked": False,
-                "id": 223,
-                "nocheck": False,
-                "type": 1,
-                "childrenList": [{
-                    "chkDisabled": False,
-                    "parkName": "智泊云接口测试专用停车场",
-                    "level": 2,
-                    "hasChildren": False,
-                    "parkSysType": 1,
-                    "type": 2,
-                    "parkId": 3751,
-                    "parkUuid": "54a33015-d405-499e-bce2-e569cd9dce6a",
-                    "areaId": 223,
-                    "channelSeq": 2022,
-                    "name": "智泊云接口测试入口",
-                    "checked": False,
-                    "nocheck": False,
-                    "open": True,
-                    "channelId": 2022
-                },
-                {
-                    "chkDisabled": False,
-                    "parkName": "智泊云接口测试专用停车场",
-                    "level": 2,
-                    "hasChildren": False,
-                    "parkSysType": 1,
-                    "type": 2,
-                    "parkId": 3751,
-                    "parkUuid": "54a33015-d405-499e-bce2-e569cd9dce6a",
-                    "areaId": 223,
-                    "channelSeq": 2023,
-                    "name": "智泊云接口测试出口",
-                    "checked": False,
-                    "nocheck": False,
-                    "open": True,
-                    "channelId": 2023
-                },
-                {
-                    "chkDisabled": False,
-                    "parkName": "智泊云接口测试专用停车场",
-                    "level": 2,
-                    "hasChildren": False,
-                    "parkSysType": 1,
-                    "type": 2,
-                    "parkId": 3751,
-                    "parkUuid": "54a33015-d405-499e-bce2-e569cd9dce6a",
-                    "areaId": 223,
-                    "channelSeq": 2063,
-                    "name": "智泊云接口测试入口-严进",
-                    "checked": False,
-                    "nocheck": False,
-                    "open": True,
-                    "channelId": 2063
-                },
-                {
-                    "chkDisabled": False,
-                    "parkName": "智泊云接口测试专用停车场",
-                    "level": 2,
-                    "hasChildren": False,
-                    "parkSysType": 1,
-                    "type": 2,
-                    "parkId": 3751,
-                    "parkUuid": "54a33015-d405-499e-bce2-e569cd9dce6a",
-                    "areaId": 223,
-                    "channelSeq": 2064,
-                    "name": "智泊云接口测试出口-严出",
-                    "checked": False,
-                    "nocheck": False,
-                    "open": True,
-                    "channelId": 2064
-                }],
-                "open": True
-            }],
-            "open": True
+from Api.index_service.index import Index
+class ParkVisitor(Req):
+    """访客车录入"""
+    def addVisitor(self, visitorType, carNum, owner):
+        """新建访客车辆"""
+        visitorTypeDict = self.getDictBykey(self.__getVisitorConfigList().json(), 'name', visitorType)
+        self.url = "/mgr/park/parkVisitorlist/save.do"
+        data = {
+            "specialCarTypeConfigId": visitorTypeDict['id'],
+            "carLicenseNumber": carNum,
+            "owner": owner,
+            "ownerPhone": '135' + SA().create_randomNum(val = 8),
+            "visitReason": 'apipytest',
+            "remark1": "apipytest",
+            "visitFrom": today +' 00:00:00',
+            "visitTo": today + ' 23:59:59'
         }
-   CarType().__getDictChildList(aa, 'childrenList')
-   print(Req().setValueByDict(CarType().aList,['checked'],'true'))
+        re = self.post(self.api, data = data, headers = form_headers)
+        return re
+
+    def delVisitor(self, parkName, carNum):
+        """删除访客车辆"""
+        visitorDict = self.getDictBykey(self.getParkVisitorList(parkName).json(), 'carLicenseNumber', carNum)
+        self.url = "/mgr/park/parkVisitorlist/del.do"
+        data = {
+            "parkVisitorlistId": visitorDict['id'],
+        }
+        re = self.post(self.api, data= data, headers = form_headers)
+        return re
+
+    def __getVisitorConfigList(self):
+        """查看访客配置列表"""
+        self.url = "/mgr/park/parkVisitorlist/getVisitorConfigList.do"
+        re = self.get(self.api, headers = form_headers)
+        return re
+
+    def getParkVisitorList(self, parkName):
+        """获取访客录入车辆"""
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        data = {
+            "page":1,
+            "rp": 1,
+            "startDate": today + ' 00:00:00',
+            "endDate": today + ' 23:59:59',
+            "parkIds": parkDict['value'],
+            "parkSysType": 1,
+        }
+        self.url = "/mgr/park/parkVisitorlist/getParkVisitorlist.do?" + urlencode(data)
+        re = self.get(self.api, headers = form_headers)
+        return re
+
+class ParkBlack(Req):
+    """黑名单录入"""
+    def addBlacklist(self, blackType, carNum, owner):
+        """新建黑名单车辆"""
+        blackTypeDict = self.getDictBykey(self.__getBlacklistConfig(), 'name', blackType)
+        self.url = "/mgr/park/parkBlacklist/save.do"
+        data = {
+            "specialCarTypeConfigId": blackTypeDict['id'],
+            "carLicenseNumber": carNum,
+            "owner": owner,
+            "reason": 'pytest',
+            "remark1": 'pytest',
+            "blacklistForeverFlag": 'CLOSE',
+            "availTimeFromTo": today + ' 00:00:00~' + today + ' 23:59:59',
+        }
+        re = self.post(self.api, data = data, headers = form_headers)
+        return re
+
+    def __getBlacklistConfig(self):
+        """获取黑名单配置"""
+        self.url = "/mgr/park/parkBlacklist/getBlacklistConfigList.do"
+        re = self.get(self.api, headers = form_headers)
+        return re
+
+    def delBlacklist(self, parkName, carNum):
+        """删除黑名单"""
+        blacklistDict = self.getDictBykey(self.__getBlacklist(parkName).json(), 'carLicenseNumber', carNum)
+        self.url = "/mgr/park/parkBlacklist/del.do"
+        data = {
+            "parkBlacklistId": blacklistDict['id']
+        }
+        re = self.post(self.api, data= data, headers= form_headers)
+        return re
+
+    def __getBlacklist(self, parkName):
+        """获取黑名单列表"""
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        data = {
+            "page":1,
+            "rp": 20,
+            "startDate": today + ' 00:00:00',
+            "endDate": today + ' 23:59:59',
+            "parkIds": parkDict['value'],
+            "parkSysType": 1,
+        }
+        self.url = '/mgr/park/parkBlacklist/getParkBlacklist.do?' + urlencode(data)
+        re = self.get(self.api)
+        return re
+
+class ParkWhitelist(Req):
+    """白名单"""
+    def addWhitelist(self, parkName, carNum):
+        """录入白名单"""
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        self.url = "/mgr/park/park_redlist/add.do"
+        data = {
+            "redlistParam":carNum,
+            "parkIds": parkDict['value']
+        }
+        re = self.post(self.api, data = data, headers = form_headers)
+        return re
+
+    def delWhilelist(self, carNum):
+        """删除白名单规则"""
+        WhilelistDict = self.getDictBykey(self.__getWhilelistRuleList().json(), 'redlistParam', carNum)
+        self.url = "/mgr/park/park_redlist/del.do"
+        data = {
+            "id": WhilelistDict['id']
+        }
+        re = self.post(self.api, data = data, headers = form_headers)
+        return re
+
+    def __getWhilelistRuleList(self):
+        """获取白名单规则列表"""
+        self.url = "/mgr/park/park_redlist/getRules.do"
+        re = self.get(self.api, headers = form_headers)
+        return re

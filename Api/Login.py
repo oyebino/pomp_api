@@ -87,13 +87,16 @@ class SentryLogin():
             "user_id": self.user,
             "password": self.password
         }
-        r = self.S.post(url=url, data=data, headers=form_headers).json()
-        token = r['token']
-        self.S.headers.update({"user": token,"type": "ydtp-pc","akeparking_grey_zone_name": "grey"})
-
-        if r['onDuty'] == 0:
-            self.__selectChannel()
-        return self.S
+        login = self.S.post(url=url, data=data, headers=form_headers).json()
+        token = login['token']
+        self.S.headers.update({"user": token,"type": "ydtp-pc"})
+        executeUrl = self.host + '/ydtp-backend-service/zbcloud-grey/api/execute?'
+        executeApi = executeUrl + urlencode({"topOperatorId": login['topOperatorId']})
+        re = self.S.get(executeApi,)
+        if re.text == 'ok':
+            if login['onDuty'] == 0:
+                self.__selectChannel()
+            return self.S
 
     def __getAllChannel(self):
         """获取当前用户的全部通道"""
@@ -269,7 +272,7 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = Login()
+    L = CentralTollLogin('apitest','123456')
 
     L.login()
 

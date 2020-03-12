@@ -40,7 +40,7 @@ class Coupon(Req):
         :return:
         """
         # parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
-        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(),'name',parkName)
+        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
         traderDict = self.getDictBykey(self.__getTrader2Sell(parkDict['value']).json(),'name',traderName)
         if str(couponType) == '不同计价券':
             chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']).json(), 'typeName',chargeGroupName)
@@ -181,7 +181,7 @@ class Coupon(Req):
         :param carNum: 发放车牌
         :return:
         """
-        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponGrantList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&parkSysType=1&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re
@@ -195,14 +195,14 @@ class Coupon(Req):
         """
         from time import sleep
         sleep(5)
-        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re
 
     def getCityCouponUseRecord(self,parkName,carNum):
         """查看城市劵使用记录"""
-        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(),"name",parkName)
+        parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),"name",parkName)
         data = {
             "page":1,
             "rp":20,

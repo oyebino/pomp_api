@@ -6,6 +6,7 @@
 
 from common.Req import Req
 from common.superAction import SuperAction as SA
+from Api.index_service.index import Index
 import time
 from urllib.parse import urlencode
 
@@ -138,6 +139,37 @@ class Information(Req):
         """获取当前用户车场树信息"""
         self.url = "/mgr/parkingBaseData/getParkingBaseDataTree.do"
         re = self.get(self.api,headers=self.api_headers)
+        return re
+
+    def getEmergencyCarRecord(self, parkName, carType, carNum):
+        """查询指定车牌告警记录"""
+        carTypeDict = {"指定车辆": 0, "黑名单": 4, "白名单": 8}
+        parkDict = self.getDictBykey(self.__getParkingBaseTree().json(), 'name', parkName)
+        data = {
+            "page":1,
+            "pageSize": 1,
+            "carType": carTypeDict[carType],
+            "carCode": carNum,
+            "createTimeFrom": self.data + " 00:00:00",
+            "createTimeTo": self.data +" 23:59:59",
+            "parkIds": parkDict['value'],
+            "parkSysType": 1,
+        }
+        self.url = "/mgr/park/emergency/record/list.do?" + urlencode(data)
+        re = self.get(self.api, headers = self.api_headers)
+        return re
+
+    def cleanCarNum(self, parkName, carNum):
+        """批量盘点"""
+        carNumDict = self.getDictBykey(self.getPresentCar(parkName, carNum).json(), 'carNo', carNum)
+        userDict = Index(self.Session).getNewMeun().json()['user']
+        data = {
+            "topBillCodeList": carNumDict['topBillCode'],
+            "operatorName": userDict['nickname'],
+            "comment": 'pytest'
+        }
+        self.url = '/mgr/park/presentCar/clearByTopBillCodeList?' + urlencode(data)
+        re = self.post(self.api, headers = self.api_headers)
         return re
 
 if __name__ == '__main__':

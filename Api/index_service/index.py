@@ -18,7 +18,7 @@ class Index(Req):
 
     def getParkingBaseDataTree(self):
         """获取当前用户停车场权限列表树"""
-        self.url = "/mgr/coupon/getParkingBaseDataTree.do"
+        self.url = "/mgr/parkingBaseData/getParkingBaseDataTree.do"
         re = self.get(self.api, headers = form_headers)
         return re
 
