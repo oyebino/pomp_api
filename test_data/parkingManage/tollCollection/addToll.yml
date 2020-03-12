@@ -1,4 +1,10 @@
-"""
- Created by lgc on 2020/3/12 10:11.
- 微信公众号：泉头活水
-"""
+
+- test:
+    name: 新增收费员
+    desc: 新增收费员
+    send_data:
+      userId: test${__get_time()}
+      pwd: 123456
+    except:
+      status: 1
+      onDutyTime: on_duty_time
