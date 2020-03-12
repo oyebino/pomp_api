@@ -74,6 +74,7 @@ class SentryLogin():
             "user_id": self.user,
             "password": self.password
         }
+        print("登录名：【"+data['user_id']+"】")
         r = self.S.post(url=url, data=data, headers=form_headers).json()
         token = r['token']
         self.S.headers.update({"user": token,"type": "ydtp-pc"})
@@ -131,6 +132,7 @@ class CenterMonitorLogin():
                 "validateCode": "9999",
                 "sessionId": "{}".format(sessionId)
                 }
+        print("登录名：【"+data['userid']+"】")
         r = self.S.post(url=url, data=json.dumps(data), headers=json_headers)
         token = r.json()['message'].split(";")[0]
 
@@ -243,8 +245,10 @@ class CentralTollLogin():
         print(url)
         data = {
                 "user_id": "{}".format(self.user),
-                "password": "123456"
+                "password": "{}".format(self.password)
                 }
+        print("登录名：【"+data['user_id']+"】")
+        print("密码：【" + data['password'] + "】")
         r = self.S.post(url=url, data=data, headers=form_headers)
         if "token" in r.json().keys():
             token = r.json()['token']
