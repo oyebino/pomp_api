@@ -4,14 +4,12 @@
 # @Author  : 叶永彬
 # @File    : test_traderSell.py
 
-
 import allure,pytest
 from common.utils import YmlUtils
 from Api.parkingManage_service.businessCoupon_service.trader import Trader
 from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
-
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/traderSell.yml").getData

@@ -1,0 +1,14 @@
+- test:
+    name: 按时间智能盘点
+    desc: 按时间智能盘点-记录在异常进场
+    send_data:
+      carNum: &carNum ${__create_carNum()}
+      parkName: ${usedParkName}
+      inClientID: ${wideInClientId}
+    except:
+      mockCarInMessage: *carNum
+      cleanCarCheckOutMsg: 1
+      checkPresentCarMsg: *carNum
+      checkAbnormalInCar: *carNum
+
+

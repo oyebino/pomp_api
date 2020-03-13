@@ -1,0 +1,14 @@
+- test:
+    name: 车辆批量盘点
+    desc: 批量盘点-记录在异常进场
+    send_data:
+      carNum: &carNum ${__create_carNum()}
+      parkName: ${usedParkName}
+      inClientID: ${wideInClientId}
+    except:
+      mockCarInMessage: *carNum
+      cleanCarCheckOutMsg: 1
+      checkPresentCarMsg: *carNum
+      checkAbnormalInCar: *carNum
+
+

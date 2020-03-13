@@ -94,9 +94,19 @@ class SentryLogin():
         executeApi = executeUrl + urlencode({"topOperatorId": login['topOperatorId']})
         re = self.S.get(executeApi,)
         if re.text == 'ok':
+            log.info("登录名：【"+data['user_id']+"】")
             if login['onDuty'] == 0:
                 self.__selectChannel()
             return self.S
+
+        # print("登录名：【"+data['user_id']+"】")
+        # r = self.S.post(url=url, data=data, headers=form_headers).json()
+        # token = r['token']
+        # self.S.headers.update({"user": token,"type": "ydtp-pc","akeparking_grey_zone_name": "grey"})
+        #
+        # if r['onDuty'] == 0:
+        #     self.__selectChannel()
+        # return self.S
 
     def __getAllChannel(self):
         """获取当前用户的全部通道"""
@@ -147,6 +157,7 @@ class CenterMonitorLogin():
                 "validateCode": "9999",
                 "sessionId": "{}".format(sessionId)
                 }
+        print("登录名：【"+data['userid']+"】")
         r = self.S.post(url=url, data=json.dumps(data), headers=json_headers)
         token = r.json()['message'].split(";")[0]
 
@@ -260,8 +271,10 @@ class CentralTollLogin():
         print(url)
         data = {
                 "user_id": "{}".format(self.user),
-                "password": "123456"
+                "password": "{}".format(self.password)
                 }
+        print("登录名：【"+data['user_id']+"】")
+        print("密码：【" + data['password'] + "】")
         r = self.S.post(url=url, data=data, headers=form_headers)
         if "token" in r.json().keys():
             token = r.json()['token']
@@ -272,7 +285,7 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = CentralTollLogin('apitest','123456')
+    L = CenterMonitorLogin('apitest','123456')
 
     L.login()
 

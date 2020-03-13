@@ -6,7 +6,6 @@
 
 from common.Req import Req
 from urllib.parse import urlencode
-from Api.index_service.index import Index
 from common.superAction import SuperAction as SA
 from common import const
 import json
@@ -117,12 +116,17 @@ class CarType(Req):
         """编辑车辆基础配置"""
         typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig().json(), 'name', oldTypeName)
         typeConfigDetailDict = self.getSpecialCarTypeDetail(typeConfigDict['id']).json()['data']
-        visitorConfigParkDict = self.getDictBykey(typeConfigDetailDict['visitorlistConfigParkList'][0], 'parkId', typeConfigDetailDict['financialParkId'])
         optionArrList = self.__selectChargeGrooupList(typeConfigDict['financialParkId']).json()['data'][typeConfigDict['financialParkId']]
-        optionArrDict = {'optionArr':optionArrList}
-        visitorConfigParkDict.update(optionArrDict)
+        optionArrDict = {'optionArr': optionArrList}
         parkJsonList = []
-        parkJsonList.append(visitorConfigParkDict)
+        if typeConfigDetailDict['vipGroupType'] == specialCarTypeDict['黑名单']:
+            blacklistConfigDict = self.getDictBykey(typeConfigDetailDict['blacklistConfigParkList'][0], 'parkId', typeConfigDetailDict['financialParkId'])
+            blacklistConfigDict.update(optionArrDict)
+            parkJsonList.append(blacklistConfigDict)
+        elif typeConfigDetailDict['vipGroupType'] == specialCarTypeDict['访客']:
+            visitorConfigParkDict = self.getDictBykey(typeConfigDetailDict['visitorlistConfigParkList'][0], 'parkId', typeConfigDetailDict['financialParkId'])
+            visitorConfigParkDict.update(optionArrDict)
+            parkJsonList.append(visitorConfigParkDict)
 
         channelAuthTree = typeConfigDetailDict['channelAuthTree']
         parkVipTypeDict = typeConfigDetailDict['parkVipType']
@@ -195,14 +199,14 @@ class CarType(Req):
 from Api.index_service.index import Index
 class ParkVisitor(Req):
     """访客车录入"""
-    def addVisitor(self, visitorType, carNum, owner):
+    def addVisitor(self, visitorType, carNum):
         """新建访客车辆"""
         visitorTypeDict = self.getDictBykey(self.__getVisitorConfigList().json(), 'name', visitorType)
         self.url = "/mgr/park/parkVisitorlist/save.do"
         data = {
             "specialCarTypeConfigId": visitorTypeDict['id'],
             "carLicenseNumber": carNum,
-            "owner": owner,
+            "owner": 'apipytest',
             "ownerPhone": '135' + SA().create_randomNum(val = 8),
             "visitReason": 'apipytest',
             "remark1": "apipytest",
@@ -233,7 +237,7 @@ class ParkVisitor(Req):
         parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         data = {
             "page":1,
-            "rp": 1,
+            "rp": 20,
             "startDate": today + ' 00:00:00',
             "endDate": today + ' 23:59:59',
             "parkIds": parkDict['value'],
@@ -243,16 +247,16 @@ class ParkVisitor(Req):
         re = self.get(self.api, headers = form_headers)
         return re
 
-class ParkBlack(Req):
+class ParkBlacklist(Req):
     """黑名单录入"""
-    def addBlacklist(self, blackType, carNum, owner):
+    def addBlacklist(self, blackType, carNum):
         """新建黑名单车辆"""
-        blackTypeDict = self.getDictBykey(self.__getBlacklistConfig(), 'name', blackType)
+        blackTypeDict = self.getDictBykey(self.__getBlacklistConfig().json(), 'name', blackType)
         self.url = "/mgr/park/parkBlacklist/save.do"
         data = {
             "specialCarTypeConfigId": blackTypeDict['id'],
             "carLicenseNumber": carNum,
-            "owner": owner,
+            "owner": 'apipytest',
             "reason": 'pytest',
             "remark1": 'pytest',
             "blacklistForeverFlag": 'CLOSE',
@@ -269,7 +273,7 @@ class ParkBlack(Req):
 
     def delBlacklist(self, parkName, carNum):
         """删除黑名单"""
-        blacklistDict = self.getDictBykey(self.__getBlacklist(parkName).json(), 'carLicenseNumber', carNum)
+        blacklistDict = self.getDictBykey(self.getBlacklist(parkName).json(), 'carLicenseNumber', carNum)
         self.url = "/mgr/park/parkBlacklist/del.do"
         data = {
             "parkBlacklistId": blacklistDict['id']
@@ -277,7 +281,7 @@ class ParkBlack(Req):
         re = self.post(self.api, data= data, headers= form_headers)
         return re
 
-    def __getBlacklist(self, parkName):
+    def getBlacklist(self, parkName):
         """获取黑名单列表"""
         parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         data = {
@@ -307,7 +311,7 @@ class ParkWhitelist(Req):
 
     def delWhilelist(self, carNum):
         """删除白名单规则"""
-        WhilelistDict = self.getDictBykey(self.__getWhilelistRuleList().json(), 'redlistParam', carNum)
+        WhilelistDict = self.getDictBykey(self.getWhilelistRuleList().json(), 'redlistParam', carNum)
         self.url = "/mgr/park/park_redlist/del.do"
         data = {
             "id": WhilelistDict['id']
@@ -315,7 +319,7 @@ class ParkWhitelist(Req):
         re = self.post(self.api, data = data, headers = form_headers)
         return re
 
-    def __getWhilelistRuleList(self):
+    def getWhilelistRuleList(self):
         """获取白名单规则列表"""
         self.url = "/mgr/park/park_redlist/getRules.do"
         re = self.get(self.api, headers = form_headers)

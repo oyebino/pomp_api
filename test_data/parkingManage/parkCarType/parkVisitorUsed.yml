@@ -1,0 +1,24 @@
+- test:
+    name: 访客车辆新增-修改-使用流程
+    desc: 访客车辆新增-修改-使用流程
+    send_data:
+      parkName: ${usedParkName}
+      specialCarType: 访客
+      typeName: api访客${__create_randomNum(val=4)}
+      newTypeName: &newTypeName api访客${__create_randomNum(val=5)}
+      carNum: &carNum ${__create_carNum()}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOutHandleType: 确认放行
+    except:
+      addVisitorSpecialTypeMsg: 1
+      editVisitorSpecialTypeMsg: 1
+      createVisitorCarNumMsg: 操作成功
+      mockCarInMessage: ${__create_carNum()}\\api访客${__create_randomNum(val=5)}
+      checkPresentCarTypeMsg: *newTypeName
+      mockCarOutMessage: $${__create_carNum()}$api访客${__create_randomNum(val=5)}请稍候
+      sentryPayMessage: 一路顺风
+      checkCarleaveVipTypeStrMsg: 访客
+      checkenterVipTypeStrMsg: 访客
+      delVisitorCarNumMsg: 操作成功
+      checkDelVisitorCarNumMsg: *carNum

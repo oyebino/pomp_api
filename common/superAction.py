@@ -152,4 +152,4 @@ class SuperAction:
         return timeperiodListStr
 
 if __name__ == "__main__":
-    print(SuperAction().create_carNum(digits_num=0) + SuperAction().create_randomNum(val=5))
+    print(SuperAction().get_time('%Y-%m-%d %H:%M:%S'))

@@ -3,9 +3,9 @@
     desc: 指定告警粤Y类车牌新增-修改-使用流程
     send_data:
       parkName: ${usedParkName}
-      oldEmergencyCarNum: ${__create_carNum(digits_num=0,carType=new)}*
-      newEmergencyCarNum: ${__create_carNum(digits_num=0)}*
-      carNum: &carNum ${__create_carNum(digits_num=0)}${__create_randomNum(val=5)}
+      oldEmergencyCarNum: 粤Y*
+      newEmergencyCarNum: 湘A*
+      carNum: &carNum 湘A${__create_randomNum(val=5)}
       tel: 135${__create_randomNum(val=8)}
       carType: 指定车辆
       inClientID: ${wideInClientId}

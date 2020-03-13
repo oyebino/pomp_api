@@ -1,0 +1,18 @@
+- test:
+    name: 白名单车辆新增-修改-使用流程
+    desc: 白名单车辆新增-修改-使用流程
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOutHandleType: 确认放行
+    except:
+      createWhitelistCarMsg: 1
+      mockCarInMessage: ${__create_carNum()}\\白名单
+      checkPresentCarTypeMsg: 白名单
+      mockCarOutMessage: $${__create_carNum()}$白名单
+      checkCarleaveVipTypeStrMsg: 白名单
+      checkenterVipTypeStrMsg: 白名单
+      delWhitelistCarMsg: 1
+      checkDelWhitelistCar: *carNum

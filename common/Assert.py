@@ -126,8 +126,9 @@ class Assertions:
         :return:
         """
         try:
-            assert body == self.__formatExpected(expected_msg)
-            self.log.error("===响应结果与预期值一致, 预期值是： {}, 响应结果是： {}".format(expected_msg, body))
+            expected_msg = self.__formatExpected(expected_msg)
+            assert body == expected_msg
+            self.log.info("===响应结果与预期值一致, 预期值是： {}, 响应结果是： {}".format(expected_msg, body))
             return True
 
         except:
@@ -158,7 +159,7 @@ class Assertions:
         """解析代码串"""
         rule = r'{{(.*?)}}'
         lc = locals()
-        textList = re.findall(rule, template)
+        textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
             # findStr = key[2: -2]
@@ -170,6 +171,9 @@ class Assertions:
             template = template.replace(strKey, str(text_dic[key]))
         return template
 
+    def runTest(self,num):
+        re = self.__formatExpected(num)
+        return re
 
     def __formatExpected(self,template):
         """
@@ -177,7 +181,7 @@ class Assertions:
         :return:
         """
         rule = r'\${(.*?)}'
-        textList = re.findall(rule, template)
+        textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
             caseName = str(key).split('.')[0]
@@ -210,3 +214,6 @@ class Assertions:
         """获取最后的文件名"""
         path = str(path).replace("\\","/")
         return path.split('/')[-1]
+
+if __name__ == "__main__":
+    print(Assertions().runTest(1))

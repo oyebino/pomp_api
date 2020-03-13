@@ -15,7 +15,7 @@ class cloudparking_service(Req):
     host = "http://10.10.17.219:9002"
 
     def mockCarInOut(self,carNum,mockType,ytj_id,confidence = 91,carType = 1):
-        url = "http://mock.dev.yidianting.com.cn/mock_car_in_out"
+        url = "http://10.10.17.219:9002/mock_car_in_out"
         json_data = {
         "message_id":SA().get_uuid(),
         "timestamp":SA().get_time(),
@@ -41,7 +41,7 @@ class cloudparking_service(Req):
         :param job_id:
         :return:
         """
-        url = "http://mock.dev.yidianting.com.cn/get_open_gate_msg"
+        url = "http://10.10.17.219:9002/get_open_gate_msg"
         json_data = {
             "message_id": SA().get_uuid(),
             "timestamp": SA().get_time(),
@@ -53,7 +53,7 @@ class cloudparking_service(Req):
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mockCarInOut("粤A12346",1,"20190507171500")
+    a = cloudparking_service().mockCarInOut("粤W83246",1,"20190507171500")
     # a = cloudparking_service().getCarMsgYtj("61b211ea89657427eac14803")
     re = a.json()
     # print(re['result']['voice'])

@@ -159,7 +159,7 @@ class Information(Req):
         re = self.get(self.api, headers = self.api_headers)
         return re
 
-    def cleanCarNum(self, parkName, carNum):
+    def cleanCarCheckOut(self, parkName, carNum):
         """批量盘点"""
         carNumDict = self.getDictBykey(self.getPresentCar(parkName, carNum).json(), 'carNo', carNum)
         userDict = Index(self.Session).getNewMeun().json()['user']
@@ -170,6 +170,32 @@ class Information(Req):
         }
         self.url = '/mgr/park/presentCar/clearByTopBillCodeList?' + urlencode(data)
         re = self.post(self.api, headers = self.api_headers)
+        return re
+
+    def intelligenceCheckCarOut(self, parkName):
+        """智能盘点"""
+        nowTime = SA().get_time('%Y-%m-%d %H:%M:%S')
+        parkDict = self.getDictBykey(self.__getParkingBaseTree().json(), 'name', parkName)
+        userDict = Index(self.Session).getNewMeun().json()['user']
+        data = {
+            "clearTime": nowTime,
+            "parkUUID": parkDict['parkId'],
+            "comment": 'pytest智能盘点',
+            "operatorName": userDict['nickname']
+        }
+        if self.__getPresentCarByTime(nowTime, parkDict['parkId']).json()['message'] == "OK":
+            self.url = "/mgr/park/presentCar/clearByTime?" + urlencode(data)
+            re = self.post(self.api, headers = self.api_headers)
+            return re
+
+    def __getPresentCarByTime(self, clearTime, parkUUID):
+        """按时间获取在场车辆数量"""
+        data = {
+            "clearTime": clearTime,
+            "parkUUID": parkUUID
+        }
+        self.url = "/mgr/park/presentCar/clearByTimeCheck?" + urlencode(data)
+        re = self.post(self.api, headers=self.api_headers)
         return re
 
 if __name__ == '__main__':
