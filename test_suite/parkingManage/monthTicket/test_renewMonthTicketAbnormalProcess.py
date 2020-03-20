@@ -9,11 +9,10 @@ import allure
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 from common.utils import YmlUtils
-from Api.parkingManage_service.monthTicket import MonthTicket
+from Api.parkingManage_service.monthTicket_service.monthTicketBill import MonthTicket
 from Api.information_service.information import Information
 from common.Assert import Assertions
 from Api.cloudparking_service import cloudparking_service
-import time
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/renewMonthTicketAbnormalProcess.yml").getData

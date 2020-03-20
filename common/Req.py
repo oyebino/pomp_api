@@ -5,11 +5,12 @@
 # @Desc  :
 import requests
 import inspect
-import time,os,hashlib
+import time,os,hashlib,pytest
+from common import Consts
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
-from Config.parameter import tempDataPath
+from Config.parameter import tempDataPath,LoginReponse
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
@@ -155,12 +156,34 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
-        kwargs.setdefault('allow_redirects', True)
-        url = self.__formatRule(r'%24%7B(.*?)%7D',url)
-        # print(url)
-        result = self.request('GET', url, **kwargs)
-        self.__getLogFormat(url,kwargs,result)
-        return result
+        if self.__checkLoginStatus(LoginReponse.loginRe):
+            kwargs.setdefault('allow_redirects', True)
+            url = self.__formatRule(r'%24%7B(.*?)%7D',url)
+            result = self.request('GET', url, **kwargs)
+            self.__getLogFormat(url,kwargs,result)
+            return result
+        else:
+            return LoginReponse.loginRe
+
+    def __checkLoginStatus(self,obj):
+        """验证登录状态"""
+        if not isinstance(obj, dict):
+            objDict = obj.json()
+        else:
+            objDict = obj
+        if 'token' not in objDict.keys():
+            if 'status' in objDict.keys():
+                if objDict['status'] == 2 or objDict['status'] == 400:
+                    return False
+                else:
+                    return True
+            if 'error' in objDict.keys():
+                if objDict['error'] != 'success':
+                    return False
+                else:
+                    return True
+        else:
+            return True
 
     def options(self, url, **kwargs):
         r"""Sends a OPTIONS request. Returns :class:`Response` object.
@@ -192,13 +215,16 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
-        data = self.__formatCaseParm(data)
-        json = self.__formatCaseParm(json)
-        result = self.request('POST', url, data=data, json=json, **kwargs)
-        self.__postLogFormat(url,data,json,result)
-        time.sleep(5)
-        tempDataPath.testName = inspect.stack()[2][3]
-        return result
+        if self.__checkLoginStatus(LoginReponse.loginRe):
+            data = self.__formatCaseParm(data)
+            json = self.__formatCaseParm(json)
+            result = self.request('POST', url, data=data, json=json, **kwargs)
+            self.__postLogFormat(url,data,json,result)
+            time.sleep(5)
+            tempDataPath.testName = inspect.stack()[2][3]
+            return result
+        else:
+            return LoginReponse.loginRe
 
     def __formatCaseParm(self,template):
         """

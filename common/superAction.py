@@ -5,7 +5,9 @@
 # @File    : superAction.py
 import random,string
 import datetime,time
+from datetime import timedelta
 import uuid
+import calendar
 
 class SuperAction:
 
@@ -53,18 +55,18 @@ class SuperAction:
     def cal_get_time(self,strType ="%Y%m%d%H%M%S", seconds = 1, style ="+"):
         now = datetime.datetime.now()
         if style=="+":
-            date = now + datetime.timedelta(seconds = seconds)
+            date = now + datetime.timedelta(seconds = int(seconds))
         else:
-            date = now - datetime.timedelta(seconds=seconds)
+            date = now - datetime.timedelta(seconds= int(seconds))
         return date.strftime(strType)
 
     def cal_get_day(self,strType ="%Y%m%d", days = 1, style ="+"):
         now = datetime.date.today()
         if style=="+":
-            date = now + datetime.timedelta(days = days)
+            date = (now + datetime.timedelta(days = int(days))).strftime(strType)
         else:
-            date = now - datetime.timedelta(days = days)
-        return date.strftime(strType)
+            date = (now - datetime.timedelta(days = int(days))).strftime(strType)
+        return date
 
     def get_uuid(self):
         uuidlist = str(uuid.uuid1()).split("-")
@@ -101,7 +103,61 @@ class SuperAction:
                 json.get(key).encode()
         return json
 
-    # 获取当前时间的自然月
+    def timestamp_to_format(self, timestamp=None, format='%Y-%m-%d %H:%M:%S'):
+        """时间缀转日期格式，timestamp为空即当前时间"""
+        if timestamp:
+            timestamp = timestamp/1000
+            time_tuple = time.localtime(timestamp)
+            res = time.strftime(format, time_tuple)
+        else:
+            res = time.strftime(format)
+        return res
+
+    def cal_getTheMonth(self,date = None, n = 0, style='+'):
+        """
+        获取前N个月或后N个月日期
+        :param date: '2020-01-09';
+        :param n: 0是当前月份
+        :param str: +， -
+        :return: 默认返回当月‘2020-01-01 00：00：00 - 2020-01-31 00：00：00‘
+        """
+        if date == None:
+            date = datetime.datetime.today()
+            first_date = datetime.date(date.year, date.month, 1)
+        else:
+            if isinstance(date, str):
+                date = datetime.datetime.strptime(date, '%Y-%m-%d')
+            first_date = datetime.date(date.year, date.month, 1)
+        month = date.month
+        year = date.year
+        if style == '+':
+            for i in range(int(n)):
+                if month == 12:
+                    year += 1
+                    month = 1
+                else:
+                    month += 1
+        else:
+            for i in range(int(n)):
+                if month == 1:
+                    year -= 1
+                    month = 12
+                else:
+                    month -= 1
+        _, days_in_month = calendar.monthrange(year, month)
+        nMonth_date = datetime.date(year,month,day=1)
+        if first_date > nMonth_date:
+            tempDate = nMonth_date
+            nMonth_date = first_date
+            first_date = tempDate
+        first_date = (datetime.datetime(first_date.year,first_date.month,day=1)).strftime('%Y-%m-%d %H:%M:%S')
+        nMonth_date = datetime.datetime(nMonth_date.year,nMonth_date.month,day=1)
+        end_date = (nMonth_date + timedelta(days = days_in_month) - timedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S')
+
+        return first_date +" - "+ end_date
+
+
+        # 获取当前时间的自然月
     def get_now_natural_month(self):
         import calendar
         import datetime
@@ -152,4 +208,8 @@ class SuperAction:
         return timeperiodListStr
 
 if __name__ == "__main__":
-    print(SuperAction().get_time('%Y-%m-%d %H:%M:%S'))
+    SA = SuperAction()
+    openMonthNum = 2
+    # date = SA.cal_getTheMonth(n=openMonthNum -1)
+    date = SA.cal_get_day(strType='%Y-%m-%d',days=60)
+    print(date)

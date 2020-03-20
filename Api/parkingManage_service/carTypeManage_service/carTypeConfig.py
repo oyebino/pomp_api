@@ -26,7 +26,7 @@ class CarType(Req):
     def createSpecialType(self, parkName, specialCarType, typeName):
         """创建特殊类型"""
         parkInfoDict = self.getDictBykey(Index(self.Session).getUnsignedParkList().json(), 'name', parkName)
-        optionArrList = self.__selectChargeGrooupList(parkInfoDict['parkUUID']).json()['data'][parkInfoDict['parkUUID']]
+        optionArrList = self.__selectChargeGroupList(parkInfoDict['parkUUID']).json()['data'][parkInfoDict['parkUUID']]
         parkJson = [{
             "parkSysType": 1,
             "parkVipTypeId": "",
@@ -77,7 +77,7 @@ class CarType(Req):
             "showMessage": const.showMessage
         }
         self.url = "/mgr/park/specialCarTypeConfig/add.do"
-        print(data['parkVipTypeJson'])
+        # print(data['parkVipTypeJson'])
         re = self.post(self.api, data = data, headers = form_headers)
         return re
 
@@ -93,7 +93,7 @@ class CarType(Req):
         re = self.post(self.api, data = data, headers = form_headers)
         return re
 
-    def __selectChargeGrooupList(self,parkId):
+    def __selectChargeGroupList(self,parkId):
         """列出车场全部计费组"""
         data = {
             "parkIdList": parkId
@@ -116,7 +116,7 @@ class CarType(Req):
         """编辑车辆基础配置"""
         typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig().json(), 'name', oldTypeName)
         typeConfigDetailDict = self.getSpecialCarTypeDetail(typeConfigDict['id']).json()['data']
-        optionArrList = self.__selectChargeGrooupList(typeConfigDict['financialParkId']).json()['data'][typeConfigDict['financialParkId']]
+        optionArrList = self.__selectChargeGroupList(typeConfigDict['financialParkId']).json()['data'][typeConfigDict['financialParkId']]
         optionArrDict = {'optionArr': optionArrList}
         parkJsonList = []
         if typeConfigDetailDict['vipGroupType'] == specialCarTypeDict['黑名单']:
@@ -187,7 +187,6 @@ class CarType(Req):
         return re
 
     def __getDictChildList(self, json, key):
-
         """查找json的key把对应的value对象递归存放在list"""
         self.aList.append(json)
         for item in json:

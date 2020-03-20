@@ -58,17 +58,17 @@ class TestReduceAmountCouponCover():
     def test_checkParkingBillDetail(self,userLogin,send_data,expect):
         """查看收费流水"""
         re = Information(userLogin).getParkingBillDetail(send_data["parkName"],send_data["carNum"])
-        result = re.json()
+        result = re.json()['rows']
         Assertions().assert_in_text(result, expect["checkParkingBillDetailMessage"])
 
     def test_checkCouponSendList(self,userLogin,send_data,expect):
         """查看发放流水"""
         re = Coupon(userLogin).getCouponGrantList(send_data["parkName"],send_data["carNum"])
-        result = re.json()
+        result = re.json()['rows']
         Assertions().assert_in_text(result, expect["checkCouponGrantListMessage"])
 
     def test_checkCouponUsedList(self,userLogin,send_data,expect):
         """查看使用流水"""
         re = Coupon(userLogin).getCouponSerialList(send_data["parkName"],send_data["carNum"])
-        result = re.json()
+        result = re.json()['rows']
         Assertions().assert_in_text(result, expect["checkSerialListMessage"])

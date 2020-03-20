@@ -7,8 +7,10 @@
 
 from common.Req import Req
 from common.db import Db as db
+from Api.index_service.index import Index
 from common.logger import logger
 from urllib.parse import urlencode
+from common.superAction import SuperAction as SA
 
 form_headers = {"content-type": "application/x-www-form-urlencoded;akeparking_grey_zone_name=grey"}
 json_headers = {"content-type": "application/json;charset=UTF-8;akeparking_grey_zone_name=grey"}
@@ -16,7 +18,7 @@ json_headers = {"content-type": "application/json;charset=UTF-8;akeparking_grey_
 class Trader(Req):
     """商户管理"""
 
-    def addTrader(self,name,parkName,tel,couponName,pwd = '123456'):
+    def addTrader(self,name,parkName,account,couponName,pwd = '123456'):
         """
         新增商家
         :return:
@@ -30,7 +32,8 @@ class Trader(Req):
             "type":"美食",
             "defaultType":"美食",
             "contact":"auto-zbyun",
-            "tel":tel,
+            "account": account,
+            "tel":"135{}".format(SA().create_randomNum(val= 8)),
             "password":pwd,
             "confirmPassword":pwd,
             "isLimitBuy":0,
@@ -38,7 +41,7 @@ class Trader(Req):
             "couponIdListStr":couponDict['id'],
             "telIsEdit":"true"
         }
-        if self.__isUniqueName(json_data['name']) and self.__isExistOtherTrader(json_data['tel']):
+        if self.__isUniqueName(json_data['name']) and self.__isExistOtherTrader(json_data['account']):
             self.url = "/mgr/trader/addTrader.do"
             re = self.post(self.api,data=json_data,headers=form_headers)
             return re
@@ -61,29 +64,28 @@ class Trader(Req):
         return re
 
 
-    def editTrader(self,name,editName,tel,parkName,pwd):
+    def editTrader(self,name,editName,parkName,pwd = ""):
         """编辑商家"""
-        traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(name)
-        traderId = db().select(traderIdSql)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
         parkNameDict = self.getDictBykey(self.__queryAllPark().json(), 'name', parkName)
 
         form_data = {
-            "id":traderId,
+            "id": traderDict['id'],
             "name": editName,
             "parkName": parkNameDict['name'],
             "parkId": parkNameDict['pkGlobalid'],
             "type": "美食",
             "defaultType": "美食",
             "contact": "auto-zbyun",
-            "tel": tel,
+            "account": traderDict['account'],
+            "tel": traderDict['tel'],
             "password": pwd,
             "confirmPassword": pwd,
             "isLimitBuy": 0,
             "userCount": 2,
-            "couponIdListStr": "4392",
             "telIsEdit": "true"
         }
-        if self.__isUniqueName(form_data['name'],id=form_data['id']) and self.__isExistOtherTrader(form_data['tel'],id=form_data['id']):
+        if self.__isUniqueName(form_data['name'],id=form_data['id']) and self.__isExistOtherTrader(form_data['account'],id=form_data['id']):
             self.url = "/mgr/trader/editTrader.do"
             re = self.post(self.api,data=form_data,headers=form_headers)
             return re
@@ -92,12 +94,11 @@ class Trader(Req):
 
     def getTraderListData(self,parkName,name=''):
         """获取商户列表"""
-        parkIdSql = "select id from tbl_device_parking where `NAME`='{}'".format(parkName)
-        parkId = db().select(parkIdSql)
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         data = {
             "page":1,
             "rp":20,
-            "query_parkId":parkId,
+            "query_parkId":parkDict['value'],
             "parkSysType":1,
             "name":name
         }
@@ -105,7 +106,7 @@ class Trader(Req):
         re = self.get(self.api,headers=form_headers)
         return re
 
-    def addSell(self,traderName,couponName,sellNum='1',sellMoney='9'):
+    def addSell(self,parkName, traderName,couponName,sellNum='1',sellMoney='9'):
         """
         销售商家劵
         :param name: 商家劵名称
@@ -113,17 +114,18 @@ class Trader(Req):
         :param sellMoney: 商家折扣价
         :return:
         """
-        traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(traderName)
-        traderId = db().select(traderIdSql)
+        # traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(traderName)
+        # traderId = db().select(traderIdSql)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', traderName)
 
-        re = self.__getCoupon2BugByTraderId(traderId)
+        re = self.__getCoupon2BugByTraderId(traderDict['id'])
         couponIndex,couponDict = self.__findRowData(re.json()['data'],'name',couponName)
         form_data = {
             "coupon":couponIndex,
             "realPrice":couponDict['realPrice'],
             "originalPrice":couponDict['originalPrice'],
             "traderName":couponDict['name'],
-            "traderId":traderId,
+            "traderId":traderDict['id'],
             "totalAvilableToBuy":couponDict['totalAvilableToBuy'],
             "maxBuyNum":couponDict['totalAvilableToBuy'],
             "sellNum":sellNum,
@@ -162,33 +164,35 @@ class Trader(Req):
         re = self.post(self.api,data=form_data,headers=form_headers)
         return re.json()['valid']
 
-    def __isExistOtherTrader(self,tel,id=None):
+    def __isExistOtherTrader(self,account,id=None):
         """判断是否存在已注册号码"""
         self.url = "/mgr/trader/isExistOtherTrader.do"
         form_data = {
-            "tel":tel,
+            "account":account,
             "id":id
         }
         re = self.post(self.api,data=form_data,headers=form_headers)
         return re.json()['valid']
 
-    def enableTrader(self,name):
+    def enableTrader(self,parkName,name):
         """启用商家"""
-        traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
-        traderId = db().select(traderIdSql)
+        # traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
+        # traderId = db().select(traderIdSql)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
         form_data = {
-            "traderIds":traderId
+            "traderIds":traderDict['id']
         }
         self.url = "/mgr/trader/enableTraderList.do?" + urlencode(form_data)
         re = self.get(self.api,headers=json_headers)
         return re
 
-    def disAbleTrader(self,name):
+    def disAbleTrader(self,parkName,name):
         """冻结商家"""
-        traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
-        traderId = db().select(traderIdSql)
+        # traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
+        # traderId = db().select(traderIdSql)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
         form_data = {
-            "traderIds": traderId
+            "traderIds": traderDict['id']
         }
         self.url = "/mgr/trader/disableTraderList.do?" + urlencode(form_data)
         re = self.get(self.api, headers=json_headers)

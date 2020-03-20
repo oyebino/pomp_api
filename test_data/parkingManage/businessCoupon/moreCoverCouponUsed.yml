@@ -3,11 +3,11 @@
     desc: 多种可叠加扣减券使用
     send_data:
       parkName: ${usedParkName}
-      couponNameA: 金额扣减0.3元
-      couponNameB: 金额扣减0.5元
-      couponNameC: 金额扣减0.6元
-      couponNameD: 金额扣减0.8元
-      couponNameE: 金额扣减0.7元
+      couponNameA: &couponNameA 金额扣减0.3元
+      couponNameB: &couponNameB 金额扣减0.5元
+      couponNameC: &couponNameC 金额扣减0.6元
+      couponNameD: &couponNameD 金额扣减0.8元
+      couponNameE: &couponNameE 金额扣减0.7元
       carNum: ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
@@ -17,6 +17,11 @@
       mockCarInMessage: $${__create_carNum()}$欢迎光临
       mockCarOutMessage: ${__create_carNum()}\\扫码缴费2.1元
       checkParkingBillDetailMessage: ${__create_carNum()}
-      checkCouponGrantListMessage: ${__create_carNum()}
-      checkSerialListMessage: ${__create_carNum()}
+      checkCouponGrantListMessage: *couponNameE
+      checkCouponGrantListCount: 5
+      checkSerialListAMessage: *couponNameA
+      checkSerialListBMessage: *couponNameB
+      checkSerialListCMessage: *couponNameC
+      checkSerialListDMessage: *couponNameD
+      checkSerialListEMessage: *couponNameE
       sentryPayMessage: 已收费2.1元\\一路顺风

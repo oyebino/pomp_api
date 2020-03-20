@@ -1,0 +1,24 @@
+
+- test:
+    name: 智泊云自定义月票续约
+    desc: 智泊云自定义月票创建-开通-续费-车辆进出是月票
+    send_data:
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: 自定义pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
+      timeperiodListStr: ${__cal_getTheMonth(2020-02-05)}
+      refundValue: 30
+      status: 不在有效期
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      renewMonthTicketBillMsg: 操作成功
+      mockCarInScreenMsg: ${__create_carNum()}\\自定义pytest${__create_randomNum()}
+      mockCarInVoiceMsg: $${__create_carNum()}$自定义pytest${__create_randomNum()}
+      mockCarOutScreenMsg: ${__create_carNum()}\\自定义pytest${__create_randomNum()}
+      mockCarOutVoiceMsg: $${__create_carNum()}$自定义pytest${__create_randomNum()}
+      checkCarInOutHistoryVIPTypeMsg: 自定义pytest${__create_randomNum()}

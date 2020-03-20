@@ -158,6 +158,8 @@ class YmlCommon(object):
             argsList = list()
             if parm == "":
                 return funName, argsList, kwargsList
+            elif parm==1:
+                pass
             else:
                 parmList = parm.split(',')
                 if len(parmList) ==0:
@@ -243,9 +245,8 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/parkingManage/parkCarType/emergencyCarY.yml").getData
+    test_data, case_desc =YmlUtils("/test_data/parkingManage/monthTicket/editTicketConfigStatus.yml").getData
     # print(test_data)
-    # print(case_desc)
     print(test_data)
 
 

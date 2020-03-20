@@ -24,5 +24,9 @@ class tempDataPath():
 
     cur_time = None
 
+class LoginReponse():
+
+    loginRe = None
+
 if __name__ == "__main__":
     print(root_path)

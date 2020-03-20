@@ -1,0 +1,29 @@
+- test:
+    name: 多种可叠加时间券使用
+    desc: 多种可叠加时间券使用
+    send_data:
+      parkName: ${usedParkName}
+      couponNameA: &couponNameA 时间扣减1分钟
+      couponNameB: &couponNameB 时间扣减2分钟
+      couponNameC: &couponNameC 时间扣减3分钟
+      couponNameD: &couponNameD 时间扣减4分钟
+      couponNameE: &couponNameE 时间扣减5分钟
+      carNum: &carNum ${__create_carNum()}
+      enterTime: ${__cal_get_time('%Y-%m-%d %H:%M:%S',seconds=1800,style='-')}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
+      carNumA: ${__create_carNum()},${__create_carNum(carType=1)}
+    except:
+      additionalRecordingMsg: 0
+      sendCouponMessage: 发券成功
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费8元
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *carNum
+      checkCouponGrantListCount: 5
+      checkSerialListAMessage: *couponNameA
+      checkSerialListBMessage: *couponNameB
+      checkSerialListCMessage: *couponNameC
+      checkSerialListDMessage: *couponNameD
+      checkSerialListEMessage: *couponNameE
+      sentryPayMessage: 已收费8元\\一路顺风

@@ -6,6 +6,7 @@
 
 from common.Req import Req
 from common.superAction import SuperAction as SA
+from Config.parameter import LoginReponse
 
 class cloudparking_service(Req):
     """
@@ -21,13 +22,14 @@ class cloudparking_service(Req):
         "timestamp":SA().get_time(),
         "biz_content":{
             "car_plate":carNum,
-            # "mock_type":mockType, # 取消进出类型
+            "mock_type":mockType, # 取消进出类型
             "ytj_id":ytj_id,
             "confidence": confidence,
             "job_id":SA().get_uuid(),
             "car_size": carType
             }
         }
+        LoginReponse.loginRe = {"status":1}
         re = self.post(url, json=json_data, headers=self.api_headers)
         if str(mockType) == '1':
             self.save('carOut_jobId',re.json()['biz_content']['job_id'])
@@ -49,11 +51,12 @@ class cloudparking_service(Req):
                 "job_id": job_id
             }
         }
+        LoginReponse.loginRe = {"status": 1}
         re = self.post(url, json=json_data, headers=self.api_headers)
         return re
 
 if __name__ == "__main__":
-    a = cloudparking_service().mockCarInOut("粤W83246",1,"20190507171500")
+    a = cloudparking_service().mockCarInOut("粤S27318",1,"20190507171501")
     # a = cloudparking_service().getCarMsgYtj("61b211ea89657427eac14803")
     re = a.json()
     # print(re['result']['voice'])

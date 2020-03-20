@@ -13,6 +13,7 @@ from common.logger import logger as log
 from urllib.parse import urlencode
 import requests
 import json
+from Config.parameter import LoginReponse
 
 from common.superAction import SuperAction
 
@@ -46,25 +47,29 @@ class Login():
             "password": self.password,
             "seccode": 9999
         }
-        login = self.Seesion.post(url,data).json()
-        loginDict = login['data']
-        payload = {
-            "id": loginDict['id'],
-            "loginid": loginDict['loginid'],
-            "nickname": loginDict['nickname'],
-            "mobile": loginDict['mobile'],
-            "email": loginDict['email'],
-            "operatorID": loginDict['operatorID'],
-            "address": loginDict['address'],
-            "isMockLogin": loginDict['isMockLogin'],
-            "operatorIDList[]": loginDict['operatorIDList'][0],
-            "topOperatorId": loginDict['topOperatorId']
-        }
-        executeUrl = self.host + '/mgr/zbcloud-grey/api/execute?'
-        executeApi = executeUrl + urlencode(payload)
-        re = self.Seesion.get(executeApi)
-        if re.text =='ok':
-            log.info("用户【" +data['username'] + "】" + login['message'])
+        login = self.Seesion.post(url,data)
+        LoginReponse.loginRe = login
+        loginDict = login.json()['data']
+        try:
+            payload = {
+                "id": loginDict['id'],
+                "loginid": loginDict['loginid'],
+                "nickname": loginDict['nickname'],
+                "mobile": loginDict['mobile'],
+                "email": loginDict['email'],
+                "operatorID": loginDict['operatorID'],
+                "address": loginDict['address'],
+                "isMockLogin": loginDict['isMockLogin'],
+                "operatorIDList[]": loginDict['operatorIDList'][0],
+                "topOperatorId": loginDict['topOperatorId']
+            }
+            executeUrl = self.host + '/mgr/zbcloud-grey/api/execute?'
+            executeApi = executeUrl + urlencode(payload)
+            re = self.Seesion.get(executeApi)
+            if re.text =='ok':
+                log.info("用户【" +data['username'] + "】" + login.json()['message'])
+                return self.Seesion
+        except TypeError:
             return self.Seesion
 
 class SentryLogin():
@@ -87,26 +92,23 @@ class SentryLogin():
             "user_id": self.user,
             "password": self.password
         }
-        login = self.S.post(url=url, data=data, headers=form_headers).json()
-        token = login['token']
-        self.S.headers.update({"user": token,"type": "ydtp-pc"})
-        executeUrl = self.host + '/ydtp-backend-service/zbcloud-grey/api/execute?'
-        executeApi = executeUrl + urlencode({"topOperatorId": login['topOperatorId']})
-        re = self.S.get(executeApi,)
-        if re.text == 'ok':
-            log.info("登录名：【"+data['user_id']+"】")
-            if login['onDuty'] == 0:
-                self.__selectChannel()
+        loginRe = self.S.post(url=url, data=data, headers=form_headers)
+        LoginReponse.loginRe = loginRe
+        try:
+            login = loginRe.json()
+            token = login['token']
+            self.S.headers.update({"user": token,"type": "ydtp-pc"})
+            executeUrl = self.host + '/ydtp-backend-service/zbcloud-grey/api/execute?'
+            executeApi = executeUrl + urlencode({"topOperatorId": login['topOperatorId']})
+            re = self.S.get(executeApi,)
+            if re.text == 'ok':
+                log.info("登录名：【"+data['user_id']+"】")
+                if login['onDuty'] == 0:
+                    self.__selectChannel()
+                return self.S
+        except KeyError:
             return self.S
 
-        # print("登录名：【"+data['user_id']+"】")
-        # r = self.S.post(url=url, data=data, headers=form_headers).json()
-        # token = r['token']
-        # self.S.headers.update({"user": token,"type": "ydtp-pc","akeparking_grey_zone_name": "grey"})
-        #
-        # if r['onDuty'] == 0:
-        #     self.__selectChannel()
-        # return self.S
 
     def __getAllChannel(self):
         """获取当前用户的全部通道"""
@@ -126,13 +128,10 @@ class SentryLogin():
             "channel_ids": channelCodeList
         }
         r = self.S.post(url=url, data=data)
-        # print("***********",r.text)  # 登录成功后返回内容为空
-        # if not r.json()['status'] == 200:
-        #     log.info(r.json()['message'])
 
 class CenterMonitorLogin():
 
-    """中央值守"""
+    """远程值班"""
     def __init__(self,user = None, pwd = None):
         self.S = requests.Session()
         self.host = Config().host
@@ -148,28 +147,39 @@ class CenterMonitorLogin():
         """校验图片验证码-登陆中央值守"""
         sessionId = SuperAction().get_time()
         url = self.host + "/zbcloud/user-service/cenduty/seat/getVerificationCode?sessionId={}".format(sessionId)
-        print(url)
+        # print(url)
         self.S.get(url=url)
         url = self.host + "/zbcloud/user-service/cenduty/seat/login"
         data = {
                 "userid": "{}".format(self.user),
-                "password": "e10adc3949ba59abbe56e057f20f883e",
+                "password": self.__setPwd(self.password),
                 "validateCode": "9999",
                 "sessionId": "{}".format(sessionId)
                 }
-        print("登录名：【"+data['userid']+"】")
-        r = self.S.post(url=url, data=json.dumps(data), headers=json_headers)
-        token = r.json()['message'].split(";")[0]
+        log.info("登录名：【"+data['userid']+"】")
+        r = self.S.post(url=url, json=data, headers=json_headers)
+        LoginReponse.loginRe = r
+        if r.json()['status'] == 0:
+            token = r.json()['message'].split(";")[0]
+            topOperatorId = r.json()['message'].split(";")[-1]
+            self.S.headers.update({"token": token})
+            # log.info(r.json()['message'])
 
-        self.S.headers.update({"token": token})
-        log.info(r.json()['message'])
-
-        status = r.json()['status']
-        if status == 0:
-            return self.S
+            executeUrl = self.host + '/zbcloud/center-monitor-service/zbcloud-grey/api/execute?topOperatorId={}'.format(topOperatorId)
+            re = self.S.get(executeUrl, headers = form_headers)
+            if re.text == 'ok':
+                return self.S
         else:
-            return ""
+            return self.S
 
+    def __setPwd(self,pwd):
+        """md5密码加密"""
+        import hashlib
+        m = hashlib.md5()
+        b = str(pwd).encode(encoding='utf-8')
+        m.update(b)
+        str_md5 = m.hexdigest()
+        return str_md5
 
 class AompLogin(object):
 
@@ -185,7 +195,6 @@ class AompLogin(object):
             self.password = pwd
 
     def checkCode(self):
-
         """"校验验证码"""
         loginUrl = self.host + "/checkLogin.do"
         data = {
@@ -228,8 +237,8 @@ class WeiXinLogin():
             "password": self.password
         }
         print(data['username'])
-        sleep(5)
-        re =self.S.post(loginUrl, data)
+        loginRe =self.S.post(loginUrl, data)
+        LoginReponse.loginRe = loginRe
         return self.S
 
 class OpenYDTLogin():
@@ -268,7 +277,6 @@ class CentralTollLogin():
 
         """登陆中央收费页面"""
         url = self.host + "/ydtp-backend-service/api/open/central_duty"
-        print(url)
         data = {
                 "user_id": "{}".format(self.user),
                 "password": "{}".format(self.password)
@@ -276,16 +284,22 @@ class CentralTollLogin():
         print("登录名：【"+data['user_id']+"】")
         print("密码：【" + data['password'] + "】")
         r = self.S.post(url=url, data=data, headers=form_headers)
-        if "token" in r.json().keys():
+        LoginReponse.loginRe = r
+        try:
             token = r.json()['token']
+            topOperatorId = r.json()['topOperatorId']
             self.S.headers.update({"user": token, "type": "ydtp"})
+            executeUrl = self.host + "/ydtp-backend-service/zbcloud-grey/api/execute?topOperatorId={}".format(topOperatorId)
+            re = self.S.get(executeUrl, headers = form_headers)
+            if re.text == 'ok':
+                return self.S
+        except KeyError:
             return self.S
-        else:
-            return jsonify({"message":"账号或密码错误"})
+
 
 if __name__ == "__main__":
 
-    L = CenterMonitorLogin('apitest','123456')
+    L = CentralTollLogin('apitest','123457')
 
     L.login()
 

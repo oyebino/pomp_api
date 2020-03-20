@@ -1,0 +1,26 @@
+
+- test:
+    name: 智泊云月票类型上架下架
+    desc: 月票创建-操作下架-售卖-无法售卖-执行上架-售卖
+    send_data:
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: &ticketTypeName 月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
+      upTicketStatus: 上架
+      downTicketStatus: 下架
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
+      editUser: editPytest
+      newTicketTypeName: &newTicketTypeName edit月票pytest${__create_randomNum()}
+      menuLevel: 月票管理-月票管理-强制修改已销售
+    except:
+      createMonthTicketConfigMsg: ok
+      setMonthTicketConfigInvalidMsg: 操作成功
+      openMonthTicketBillMsg: *ticketTypeName
+      setMonthTicketConfigValidMsg: 操作成功
+      openMonthTicketBillAgainMsg: 操作成功
+      editMonthTicketBillMsg: 1
+      checkTicketBillUpdateRecordMsg: editPytest
+      editMonthTicketConfigMsg: 1
+      checkSystemLogMsg: *newTicketTypeName

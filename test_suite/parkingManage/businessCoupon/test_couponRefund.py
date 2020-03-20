@@ -42,7 +42,6 @@ class TestCouponRefund(BaseCase):
         result = re.json()
         Assertions().assert_in_text(result, expect["refundCouponMsg"])
 
-
     def test_checkCouponAgain(self,weiXinLogin,send_data,expect):
         """商户端再次查看优惠劵"""
         re = WeiXin(weiXinLogin).findCouponList()

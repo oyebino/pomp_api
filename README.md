@@ -64,16 +64,27 @@ class TestCarStrictRuleInOutNoPay(BaseCase):
 	self.save_data('carIn_jobId',result['biz_content']['job_id'])
 
 ```
-- 在用例数据yml中，提取保存的值，${用例类名.变量}
+- 在用例数据yml中，提取保存的值，${用例名.变量},如引用当前案例储存的值可${mytest.变量}
 ```
 - test:
     name: 异常放行
     desc: 验证异常收费放行
     send_data:
-      carNo: ${TestCarInOutDetail.carNum}
+      carNo: ${异常放行.carNum}
       leaveType: 3
     except:
       status_code: 200
+```
+- 在用例数据yml中，可以运行基本的运行代码块，用{{}}表示，如
+```
+- test:
+    name: 异常放行
+    desc: 验证异常收费放行
+    send_data:
+      carNo: ${异常放行.carNum}
+      leaveType: 3
+    except:
+      num: {{1+1}}
 ```
 
 **3.test_suit文件保存按模块的执行用例，用例文件，类名及用例方法必须以test为前缀**

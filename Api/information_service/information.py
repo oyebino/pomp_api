@@ -15,6 +15,7 @@ class Information(Req):
     信息查询
     """
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
+    form_headers = {"content-type": "application/x-www-form-urlencoded"}
     data = SA().get_today_data()
 
     def getPresentCar(self,parkName,carNum):
@@ -197,6 +198,21 @@ class Information(Req):
         self.url = "/mgr/park/presentCar/clearByTimeCheck?" + urlencode(data)
         re = self.post(self.api, headers=self.api_headers)
         return re
+
+    def getSystemLog(self, menuLevel = None, operationObject = None):
+        """查看系统日志"""
+        data = {
+            "page": 1,
+            "rp": 1,
+            "query_startTime": self.data + " 00:00:00",
+            "query_endTime": self.data +" 23:59:59",
+            "query_menuLevel": menuLevel,
+            "query_operationObject": operationObject
+        }
+        self.url = "/mgr/pomplog/list.do"
+        re = self.post(self.api, data = data, headers = self.form_headers)
+        return re
+
 
 if __name__ == '__main__':
     # central("https://zbcloud.k8s.yidianting.com.cn").centralGetCharge()

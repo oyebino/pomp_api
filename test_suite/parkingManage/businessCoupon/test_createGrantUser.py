@@ -49,7 +49,7 @@ class TestCreateGrantUser(BaseCase):
     def test_checkCouponSendList(self,userLogin,send_data,expect):
         """查看发放流水"""
         re = Coupon(userLogin).getCouponGrantList(send_data["parkName"],send_data["carNum"])
-        result = re.json()
+        result = re.json()['rows']
         Assertions().assert_in_text(result, expect["checkCouponSendListMsg"])
 
     def test_delGrantUser(self, weiXinLogin, send_data, expect):

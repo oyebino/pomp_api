@@ -6,7 +6,7 @@
 
 import pytest,allure
 from common.utils import YmlUtils
-from Api.parkingManage_service.monthTicket import MonthTicket
+from Api.parkingManage_service.monthTicket_service.monthTicketBill import MonthTicket
 from Api.information_service.information import Information
 from common.Assert import Assertions
 from Api.cloudparking_service import cloudparking_service

@@ -19,19 +19,19 @@ class TestTrader(BaseCase):
     """新增商户流程"""
     def test_addTrader(self,userLogin,send_data,expect):
         """商户新增"""
-        re = Trader(userLogin).addTrader(send_data["name"],send_data["parkName"],send_data['tel'],send_data['couponName'],send_data['pwd'])
+        re = Trader(userLogin).addTrader(send_data["name"],send_data["parkName"],send_data['account'],send_data['couponName'],send_data['pwd'])
         result = re.json()
-        self.save_data('tel', send_data['tel'])
+        self.save_data('account', send_data['account'])
         self.save_data('pwd', send_data['pwd'])
         Assertions().assert_in_text(result,expect["addTraderMessage"])
 
     def test_disAbleTrader(self,userLogin,send_data,expect):
         """商户冻结"""
-        re = Trader(userLogin).disAbleTrader(send_data["name"])
+        re = Trader(userLogin).disAbleTrader(send_data['parkName'], send_data["name"])
         result = re.json()
         Assertions().assert_in_text(result, expect["disAbleTraderMessage"])
 
-    @pytest.mark.parametrize('weiXinLogin',[{'user':'${mytest.tel}','pwd':'${mytest.pwd}'}], indirect=True)
+    @pytest.mark.parametrize('weiXinLogin',[{'user':'${mytest.account}','pwd':'${mytest.pwd}'}], indirect=True)
     def test_disAbleLoginWeiXin(self,weiXinLogin,send_data,expect):
         """商户不能操作微信客户端"""
         re = WeiXin(weiXinLogin).getMyCoupons()
@@ -40,12 +40,11 @@ class TestTrader(BaseCase):
 
     def test_enableTrader(self,userLogin,send_data,expect):
         """商户启用"""
-        re = Trader(userLogin).enableTrader(send_data["name"])
+        re = Trader(userLogin).enableTrader(send_data['parkName'],send_data["name"])
         result = re.json()
         Assertions().assert_in_text(result, expect["enableTraderMessage"])
 
-    # @pytest.mark.parametrize('weiXinLogin', [{'user': '${mytest.tel}', 'pwd': '${mytest.pwd}'}], indirect=True)
-    @pytest.mark.parametrize('weiXinLogin', [{'user': '13531412547', 'pwd': '123456'}], indirect=True)
+    @pytest.mark.parametrize('weiXinLogin', [{'user': '${mytest.account}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_enableLoginWeiXin(self,weiXinLogin,send_data,expect):
         """商户可以操作微信客户端"""
         re = WeiXin(weiXinLogin).getMyCoupons()
@@ -54,7 +53,7 @@ class TestTrader(BaseCase):
 
     def test_editTrader(self,userLogin,send_data,expect):
         """商户编辑"""
-        re = Trader(userLogin).editTrader(send_data['name'],send_data["editName"],send_data["tel"],send_data['parkName'],send_data['pwd'])
+        re = Trader(userLogin).editTrader(send_data['name'],send_data["editName"],send_data['parkName'])
         result = re.json()
         self.save_data('editName',send_data["editName"])
         Assertions().assert_in_text(result, expect["editTraderMessage"])
@@ -62,7 +61,7 @@ class TestTrader(BaseCase):
     def test_checkEditTrader(self,userLogin,send_data,expect):
         """查看修改后商户"""
         re = Trader(userLogin).getTraderListData(send_data["parkName"],send_data["editName"])
-        result = re.json()
+        result = re.json()['data']['rows']
         Assertions().assert_in_text(result, expect["checkEditTraderMessage"])
 
     def test_deleteTrader(self,userLogin,send_data,expect):
@@ -70,3 +69,9 @@ class TestTrader(BaseCase):
         re = Trader(userLogin).deleteTrader(send_data['parkName'],send_data["editName"])
         result = re.json()
         Assertions().assert_in_text(result, expect["deleteTraderMessage"])
+
+    def test_checkDeleteTrader(self,userLogin,send_data,expect):
+        """查看已删除商户是否存在"""
+        re = Trader(userLogin).getTraderListData(send_data['parkName'],send_data["editName"])
+        result = re.json()['data']['rows']
+        Assertions().assert_not_in_text(result, expect["checkDeleteTraderMsg"])
