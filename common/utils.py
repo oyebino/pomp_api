@@ -245,7 +245,7 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/parkingManage/monthTicket/editTicketConfigStatus.yml").getData
+    test_data, case_desc =YmlUtils("/test_data/parkingManage/monthTicket/renewMonthTicketAbnormalProcess.yml").getData
     # print(test_data)
     print(test_data)
 

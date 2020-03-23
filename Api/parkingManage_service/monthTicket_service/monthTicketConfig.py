@@ -82,7 +82,7 @@ class MonthTicketConfig(Req):
             "financialParkId": parkInfoDict['id'],
             "parkJson": str(parkJson),
             "remark": 'pytest',
-            "renewFormerDays": 0,
+            "renewFormerDays": 60, # 允许向前续费天数
             "inviteCarTotal": 0,
             "continueBuyFlag":1,
             "supportVirtualCarcode": 0,

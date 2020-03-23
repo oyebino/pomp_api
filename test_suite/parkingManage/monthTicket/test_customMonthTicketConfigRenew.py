@@ -32,7 +32,7 @@ class TestCustomMonthTicketConfig():
 
     def test_renewMonthTicketBill(self, userLogin, send_data, expect):
         """月票续约"""
-        re = MonthTicketBill(userLogin).renewMonthTicketBill(send_data['parkName'], send_data['carNum'], send_data['refundValue'], send_data['status'])
+        re = MonthTicketBill(userLogin).renewMonthTicketBill(send_data['parkName'], send_data['carNum'], send_data['status'])
         result = re.json()
         Assertions().assert_in_text(result, expect["renewMonthTicketBillMsg"])
 

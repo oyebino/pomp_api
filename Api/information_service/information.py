@@ -173,21 +173,37 @@ class Information(Req):
         re = self.post(self.api, headers = self.api_headers)
         return re
 
-    def intelligenceCheckCarOut(self, parkName):
-        """智能盘点"""
+    def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件', file = None):
+        """
+        智能盘点
+        :param parkName:
+        :param cleanType: '按时间条件','按在场车辆'
+        :param file: 按上传模板
+        :return:
+        """
         nowTime = SA().get_time('%Y-%m-%d %H:%M:%S')
         parkDict = self.getDictBykey(self.__getParkingBaseTree().json(), 'name', parkName)
         userDict = Index(self.Session).getNewMeun().json()['user']
+        if cleanType == '按时间条件':
+            re = self.clearCarByTime(nowTime, parkDict['parkId'], userDict['nickname'])
+        else:
+            re = self.autoClearCar(nowTime, parkDict['parkId'], userDict['nickname'],file)
+        return re
+
+
+    def clearCarByTime(self, clearTime, parkUUID, operatorName):
+        """按时间盘点方式"""
         data = {
-            "clearTime": nowTime,
-            "parkUUID": parkDict['parkId'],
+            "clearTime": clearTime,
+            "parkUUID": parkUUID,
             "comment": 'pytest智能盘点',
-            "operatorName": userDict['nickname']
+            "operatorName": operatorName
         }
-        if self.__getPresentCarByTime(nowTime, parkDict['parkId']).json()['message'] == "OK":
+        if self.__getPresentCarByTime(clearTime, parkUUID).json()['message'] == "OK":
             self.url = "/mgr/park/presentCar/clearByTime?" + urlencode(data)
-            re = self.post(self.api, headers = self.api_headers)
+            re = self.post(self.api, headers=self.api_headers)
             return re
+
 
     def __getPresentCarByTime(self, clearTime, parkUUID):
         """按时间获取在场车辆数量"""
@@ -196,6 +212,33 @@ class Information(Req):
             "parkUUID": parkUUID
         }
         self.url = "/mgr/park/presentCar/clearByTimeCheck?" + urlencode(data)
+        re = self.post(self.api, headers=self.api_headers)
+        return re
+
+    def __autoClearCarCheck(self, clearTime, operatorName, parkUUID, file):
+        """按模板获取在场车场信息记录"""
+        files = {
+            "autoClearFile": open(file, 'rb')
+        }
+        data = {
+            "clearTime": clearTime,
+            "operatorName": operatorName,
+            "parkUUID": parkUUID
+        }
+        self.url = "/mgr/park/presentCar/autoClearCarCheck?" + urlencode(data)
+        re = self.post(self.api, files=files, headers={'content-type':'multipart/form-data; boundary=----WebKitFormBoundaryWfNCcsRQgwpPWvvN'})
+        return re
+
+    def autoClearCar(self,clearTime, parkUUID, operatorName, file):
+        """按模板盘点在场车场信息记录"""
+        clearCarCheck = self.__autoClearCarCheck(clearTime, operatorName, parkUUID, file).json()
+        data = {
+            "clearCode":clearCarCheck['data']['clearCode'],
+            "comment":'pytest智能盘点按模板',
+            "additionRecord":0,
+            "operatorName":operatorName
+        }
+        self.url = "/mgr/park/presentCar/autoClearCar?" + urlencode(data)
         re = self.post(self.api, headers=self.api_headers)
         return re
 

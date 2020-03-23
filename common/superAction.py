@@ -3,9 +3,8 @@
 # @Time    : 2019/1/26 15:41
 # @Author  : 叶永彬
 # @File    : superAction.py
-import random,string
-import datetime,time
-from datetime import timedelta
+import random,string,time
+import datetime
 import uuid
 import calendar
 
@@ -60,8 +59,13 @@ class SuperAction:
             date = now - datetime.timedelta(seconds= int(seconds))
         return date.strftime(strType)
 
-    def cal_get_day(self,strType ="%Y%m%d", days = 1, style ="+"):
-        now = datetime.date.today()
+    def cal_get_day(self,strType ="%Y%m%d", days = 1, style ="+", date = None):
+        if date == None:
+            now = datetime.date.today()
+        else:
+            now = date
+            if isinstance(now, str):
+                now = datetime.datetime.strptime(now, '%Y-%m-%d')
         if style=="+":
             date = (now + datetime.timedelta(days = int(days))).strftime(strType)
         else:
@@ -152,6 +156,7 @@ class SuperAction:
             first_date = tempDate
         first_date = (datetime.datetime(first_date.year,first_date.month,day=1)).strftime('%Y-%m-%d %H:%M:%S')
         nMonth_date = datetime.datetime(nMonth_date.year,nMonth_date.month,day=1)
+        from datetime import timedelta
         end_date = (nMonth_date + timedelta(days = days_in_month) - timedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S')
 
         return first_date +" - "+ end_date
@@ -209,7 +214,15 @@ class SuperAction:
 
 if __name__ == "__main__":
     SA = SuperAction()
-    openMonthNum = 2
-    # date = SA.cal_getTheMonth(n=openMonthNum -1)
-    date = SA.cal_get_day(strType='%Y-%m-%d',days=60)
+    # openMonthNum = 2
+    # date1 = '2020-04-05'
+    date = SA.cal_getTheMonth(n=1)
+    # date = SA.cal_get_day()
+    # date = SA.cal_get_day(strType='%Y-%m-%d',days=60)
+    # str = '2012-11-19'
+    #
+    # date = datetime.datetime.strptime(str, '%Y-%m-%d')
+
+    # first_date = datetime.date(date.year,date.month,date.day).strftime()
+
     print(date)

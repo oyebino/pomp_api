@@ -9,7 +9,6 @@
       renewMethod: 自定义
       validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
       timeperiodListStr: ${__cal_getTheMonth(2020-02-05)}
-      refundValue: 30
       status: 不在有效期
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}

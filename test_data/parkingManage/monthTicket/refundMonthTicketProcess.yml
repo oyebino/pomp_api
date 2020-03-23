@@ -1,29 +1,30 @@
 
 - test:
-    name: 车辆开通月票，车辆进出，是月票，然后执行月票退款，车辆进出，不是月票(POMP)
-    desc: 车辆开通月票，车辆进出，是月票，然后执行月票退款，车辆进出，不是月票
+    name: 月票车退款进出场提示非月票车
+    desc: 车辆开通月票-车辆进出是月票-月票退款-车辆进出-非月票
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
-      ticketName: 月票${__get_time()}
+      ticketTypeName: 月票${__get_time()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
-      refundValue: 30
+      refundValue: 9
+      carOutHandleType: 收费放行
     except:
-      message: OK
-      message2: 操作成功
-      mock_car_in: ok
-      inscreen: ${__create_carNum()}\\月票
-      invoice: $${__create_carNum()}$月票
-      presentCarMessage: 查询在场车辆成功
-      carNum: ${__create_carNum()}
-      ticketName: 月票${__get_time()}
-      mock_car_out: ok
+      createMonthTicketConfigMsg: OK
+      openMonthTicketBillMsg: 操作成功
+      inScreenMsg: ${__create_carNum()}\\月票${__get_time()}
+      inVoiceMsg: $${__create_carNum()}$月票${__get_time()}
+      OutScreenMsg: ${__create_carNum()}\\月票${__get_time()}
+      OutVoiceMsg: $${__create_carNum()}$月票${__get_time()}
+      carLeaveHistoryMessage: ${__create_carNum()}
+      refundMonthTicketMsg: 操作成功
       inscreen2: ${__create_carNum()}\\欢迎光临
       invoice2: $${__create_carNum()}$欢迎光临
-      carType: 临时车
-      centralPayMessage: billCode
-      outscreen: ${__create_carNum()}\\一路顺风
-      outvoice: $${__create_carNum()}$一路顺风
-      CarLeaveHistoryMessage: OK
-      message3: 操作成功
+      outscreen2: ${__create_carNum()}\\扫码缴费5元
+      outvoice2: $${__create_carNum()}$请扫码缴费5元
+      sentryPayMsg: 已收费5元\\一路顺风
+      checkCarInOutHistoryVIPTypeMsg: 临时车

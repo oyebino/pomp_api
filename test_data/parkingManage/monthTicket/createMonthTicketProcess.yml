@@ -1,27 +1,24 @@
-
 - test:
-    name: 智泊云月票类型创建，月票开通，车辆进出，是月票(POMP)
-    desc: 智泊云月票类型创建，月票开通，车辆进出，是月票
+    name: 智泊云月票类型创建-月票开通-车辆进出-显示月票
+    desc: 智泊云月票类型创建-月票开通-车辆进出-显示月票
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
-      ticketName: 月票${__get_time()}
+      ticketTypeName: 月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
     except:
-      message: OK
-      message2: 操作成功
-      mock_car_in: ok
-      inscreen: ${__create_carNum()}\\月票
-      invoice: $${__create_carNum()}$月票
-      presentCarMessage: 查询在场车辆成功
-      carNum: ${__create_carNum()}
-      carType: 临时车
-      centralPayMessage: billCode
-      mock_car_out: ok
-      outscreen: ${__create_carNum()}\\月票
-      outvoice: $${__create_carNum()}$月票
-      CarLeaveHistoryMessage: OK
-      message3: 操作成功
-      ticketName1: 月票${__get_time()}
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      mockCarInScreenMsg: ${__create_carNum()}\\月票pytest${__create_randomNum()}
+      mockCarInVoiceMsg: $${__create_carNum()}$月票pytest${__create_randomNum()}
+      presentCarVipTypeMsg: 月票pytest${__create_randomNum()}
+      presentCarMsg: ${__create_carNum()}
+      mockCarOutScreenMsg: ${__create_carNum()}\\月票pytest${__create_randomNum()}
+      mockCarOutVoiceMsg: $${__create_carNum()}$月票pytest${__create_randomNum()}
+      checkCarInOutHistoryVIPTypeMsg: 月票pytest${__create_randomNum()}
+
 

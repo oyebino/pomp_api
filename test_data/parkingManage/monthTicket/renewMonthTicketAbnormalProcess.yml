@@ -1,28 +1,31 @@
 
 - test:
-    name: 月票过期，车辆进出，不是月票，然后执行月票续费（续费日期不包含当前时间），车辆进出，不是月票(POMP)
-    desc: 月票过期，车辆进出，不是月票，然后执行月票续费（续费日期不包含当前时间），车辆进出，不是月票
+    name: 续费过期日期进出不显示月票(POMP)
+    desc: 月票过期-车辆进出-不是月票车-月票续费(续费日期不包含当前时间)-车辆进出-显示月票
     send_data:
-      parkId: ${lightRule_parkID}
+      parkName: ${usedParkName}
       carNum: ${__create_carNum()}
-      ticketName: 月票${__get_time()}
+      ticketTypeName: 月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(2020-01-01)}
+      status: 不在有效期
+      renewDate: ${__cal_get_day(strType="%Y-%m-%d",days=2)}
+      carOutHandleType: 收费放行
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
     except:
-      message: OK
-      message2: 操作成功
-      mock_car_in: ok
-      inscreen: ${__create_carNum()}\\欢迎光临
-      invoice: $${__create_carNum()}$欢迎光临
-      presentCarMessage: 查询在场车辆成功
-      carNum: ${__create_carNum()}
-      carType: 临时车
-      centralPayMessage: billCode
-      mock_car_out: ok
-      outscreen: ${__create_carNum()}\\一路顺风
-      outvoice: $${__create_carNum()}$一路顺风
-      CarLeaveHistoryMessage: OK
-      message3: 操作成功
-      ticketName1: 月票${__get_time()}
-      inscreen2: ${__create_carNum()}\\月票
-      invoice2: $${__create_carNum()}$月票
+      createMonthTicketConfigMsg: OK
+      openMonthTicketBillMsg: 操作成功
+      mockCarInScreenMsg: ${__create_carNum()}\\欢迎光临
+      mockCarInVoiceMsg: $${__create_carNum()}$欢迎光临
+      mockCarOutScreenMsg: ${__create_carNum()}\\扫码缴费5元
+      mockCarOutVoiceMsg: $${__create_carNum()}$请扫码缴费5元
+      sentryPayMsg: 已收费5元\\一路顺风
+      renewMonthTicketBillMsg: 操作成功
+      mockTicketCarInScreenMsg: ${__create_carNum()}\\欢迎光临
+      mockTicketCarInVoiceMsg: $${__create_carNum()}$欢迎光临
+      mockTicketCarOutScreenMsg: ${__create_carNum()}\\扫码缴费5元
+      mockTicketCarOutVoiceMsg: $${__create_carNum()}$请扫码缴费5元
+      sentryPayAgain: 已收费5元\\一路顺风
+      checkCarInOutHistoryVIPTypeMsg: 临时车
