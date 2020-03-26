@@ -1,27 +1,38 @@
 
 - test:
-    name: 一位两车VIP进出场流程，第一辆VIP车比第二辆车先离场（开启在场转VIP）(智泊云)
-    desc: 一位两车VIP进出场流程，第一辆VIP车比第二辆车先离场（开启在场转VIP）
+    name: 一位两车VIP进出场流程A车比B车先走-开启在场转VIP
+    desc: 一位两车VIP进出场流程A车比B车先走-开启在场转VIP
     send_data:
-      parkId: ${lightRule_parkID}
-      carNum: 新Z20001
-      carNum2: 新Z20002
-      ticketName: 一位多车在场转月票
+      parkName: ${usedParkName}
+      carNumList: 粤Y98765,粤Y98777
+      carNumA: 粤Y98765
+      carNumB: 粤Y98777
+      ticketTypeName: &ticketType 一位多车在场转8777
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
+      isDynamicMode: 1
+      autoSwitchVip: 1
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
     except:
-      mock_car_in: ok
-      inscreen: 新Z20001\\一位多车在场转月票
-      invoice: $新Z20001$一位多车在场转月票
-      presentCarMessage: 查询在场车辆成功
-      carNum: 新Z20001
-      ticketName: 一位多车在场转月票
-      carNum2: 新Z20002
-      inscreen2: 新Z20002\\超出可用车位转临时车
-      invoice2: $新Z20002$超出可用车位转临时车
-      carType: 临时车
-      mock_car_out: ok
-      centralPayMessage: billid
-      outscreen2: 新Z20002\\一位多车在场转月票
-      outvoice2: $新Z20002$一位多车在场转月票
-      CarLeaveHistoryMessage: OK
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      inscreenAMsg: &screenMsg 粤Y98765\\一位多车在场转8777
+      invoiceAMsg: &voiceMsg $粤Y98765$一位多车在场转8777
+      presentCarAMsg: 粤Y98765
+      presentCarAvipTypeMsg: 一位多车在场转8777
+      inscreenB: 粤Y98777\\超出可用车位转临时车
+      invoiceB: $粤Y98777$超出可用车位转临时车
+      presentCarBMsg: 粤Y98777
+      presentCarBvipTypeBMsg: 临时车
+      outScreenA: *screenMsg
+      outVoiceA: *voiceMsg
+      carAInOutVipTypeMsg: *ticketType
+      outscreenB: 粤Y98777\\请扫码缴费5元
+      outvoiceB: $粤Y98777$请扫码缴费5元
+      sentryPayMsg: 已收费5元\\一路顺风
+      parkingBillDetailMsg: 粤Y98777
+      carBEnterVipTypeStrMsg: 临时车
+      carBLeaveVipTypeStrMsg: 一位多车在场转8777

@@ -32,10 +32,6 @@ class Config(object):
     VALUE_ENT_WEIXIN_PWD = "weixin_pwd"
     VALUE_ENT_OPENYDT_HOST = "openYDT_host"
 
-
-
-
-
     def __init__(self,env="SIT"):
 
         self.CATEGORY = env

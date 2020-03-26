@@ -1,19 +1,27 @@
 
 - test:
-    name: 绑定计费组月票车宽进，需缴费宽出(智泊云)
-    desc: 绑定计费组月票车宽进，需缴费宽出
+    name: 绑定计费组月票车宽进-需缴费宽出(智泊云)
+    desc: 绑定计费组月票车宽进-需缴费宽出
     send_data:
-      parkId: ${lightRule_parkID}
-      carNum: 新Z99001
-      ticketName: 绑定计费月票
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: 计费组月票${__get_time()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      isChargeGroupRelated: 1
+      vipGroupName: 接口测试专用计费组2
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
+      carOutHandleType: 收费放行
     except:
-      mock_car_in: ok
-      screen: 新Z99001\\绑定计费月票
-      voice: $新Z99001$绑定计费月票
-      presentCarMessage: 查询在场车辆成功
-      centralPayMessage: billid
-      carNum: 新Z99001
-      mock_car_out: ok
+      createMonthTicketConfigMsg: OK
+      openMonthTicketBillMsg: 操作成功
+      inScreenMsg: ${__create_carNum()}\\计费组月票${__get_time()}
+      inVoiceMsg: $${__create_carNum()}$计费组月票${__get_time()}
+      OutScreenMsg: ${__create_carNum()}\\扫码缴费1元
+      OutVoiceMsg: $${__create_carNum()}$请扫码缴费1元
+      sentryPayMsg: 已收费1元\\一路顺风
+      checkParkingBillDetailMsg: 本地VIP
+      checkCarInOutHistoryVIPTypeMsg: 计费组月票${__get_time()}
 

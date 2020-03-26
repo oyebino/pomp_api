@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/3/13 17:13
 # @Author  : 叶永彬
-# @File    : test_intelligenceCheckCarOut.py
+# @File    : test_intelligenceCleanCarByTime.py
 
 import allure,pytest
 from common.utils import YmlUtils
@@ -15,10 +15,10 @@ from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/intelligenceCheckCarOut.yml").getData
+test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/intelligenceCleanCarByTime.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("信息查询")
-class TestIntelligenceCheckCarOut(BaseCase):
+class TestIntelligenceCleanCarByTime(BaseCase):
     """按时间智能盘点,在在场车辆中查看不到该盘点车辆，在异常进场中可以查看到该车辆"""
     def test_mockCarIn(self,send_data,expect):
         """模拟车辆进场"""

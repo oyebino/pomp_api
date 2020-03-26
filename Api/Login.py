@@ -3,19 +3,14 @@
 # @Author: 叶永彬
 # @Date  : 2019/11/16
 # @Desc  :
-from time import sleep
-
-from flask import jsonify
 
 from Config.Config import Config
 from urllib.parse import urljoin
 from common.logger import logger as log
 from urllib.parse import urlencode
 import requests
-import json
 from Config.parameter import LoginReponse
-
-from common.superAction import SuperAction
+from common.superAction import SuperAction as SA
 
 json_headers = {"Content-Type": "application/json;charset=UTF-8"}
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
@@ -145,9 +140,8 @@ class CenterMonitorLogin():
     def login(self):
 
         """校验图片验证码-登陆中央值守"""
-        sessionId = SuperAction().get_time()
+        sessionId = SA().get_time()
         url = self.host + "/zbcloud/user-service/cenduty/seat/getVerificationCode?sessionId={}".format(sessionId)
-        # print(url)
         self.S.get(url=url)
         url = self.host + "/zbcloud/user-service/cenduty/seat/login"
         data = {
@@ -163,14 +157,28 @@ class CenterMonitorLogin():
             token = r.json()['message'].split(";")[0]
             topOperatorId = r.json()['message'].split(";")[-1]
             self.S.headers.update({"token": token})
-            # log.info(r.json()['message'])
-
+            websocketUrl = "wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
+            self.createUserSocket(websocketUrl,token)
             executeUrl = self.host + '/zbcloud/center-monitor-service/zbcloud-grey/api/execute?topOperatorId={}'.format(topOperatorId)
             re = self.S.get(executeUrl, headers = form_headers)
             if re.text == 'ok':
                 return self.S
         else:
             return self.S
+
+    def createUserSocket(self, ip ,token):
+        """请求创建用户的socket"""
+        data = {
+            "message_id": SA().get_uuid(),
+            "timestamp": SA().get_time(),
+            "biz_content":{
+                "login_url": ip,
+                "login_token": token
+            }
+        }
+        url = "http://10.10.17.219:9002/mock_login_center_monitor"
+        self.S.post(url, json=data, headers = json_headers)
+
 
     def __setPwd(self,pwd):
         """md5密码加密"""
@@ -299,7 +307,7 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = CentralTollLogin('apitest','123457')
+    L = CenterMonitorLogin('apitest','123456')
 
     L.login()
 

@@ -1,33 +1,36 @@
 
 - test:
-    name: VIP类型满位限行（系统有空位自动放行，无空位手动放行按VIP计费）
-    desc: VIP类型满位限行（系统有空位自动放行，无空位手动放行按VIP计费）
+    name: VIP类型满位限行-系统有空位自动放行-无空位手动放行按VIP计费
+    desc: VIP类型满位限行-系统有空位自动放行-无空位手动放行按VIP计费
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
-      carNum: 新ZVIP98
-      carNum2: 新ZVIP99
-      ticketName: 满位月票auto
+      parkName: ${usedParkName}
+      carNumList: ${__create_carNum()},${__create_carNum(carType=1)}
+      carNumA: &carNumA ${__create_carNum()}
+      carNumB: &carNumB ${__create_carNum(carType=1)}
+      ticketTypeName: &ticketType 满位控制${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
+      openVipFullLimit: 1
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
+      carInHandleType: 登记放行
     except:
-      mock_car_in: ok
-      inscreen: 新ZVIP98\\满位月票auto
-      invoice: $新ZVIP98$满位月票auto
-      presentCarMessage: 查询在场车辆成功
-      carNum: 新ZVIP98
-      ticketName: 满位月票auto
-      mockCarInMessage2: ok
-      carNum2: 新ZVIP99
-      inscreen2: 满位月票auto\\车位已满
-      invoice2: 满位月票auto车位已满
-      checkMessageInMsg: ok
-      presentCarMessage2: 查询在场车辆成功
-      carType2: 满位月票auto
-      mock_car_out: ok
-      CarLeaveHistoryMessage: OK
-      mockCarOut2Msg: ok
-      outscreen2: 新ZVIP99\\满位月票auto
-      outvoice2: $新ZVIP99$满位月票auto
-      CarLeaveHistoryMessage2: OK
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      inscreenAMsg: &screenMsg ${__create_carNum()}\\满位控制${__create_randomNum()}
+      invoiceAMsg: &voiceMsg $${__create_carNum()}$满位控制${__create_randomNum()}
+      presentCarAMsg: *carNumA
+      presentCarAvipTypeMsg: *ticketType
+      inscreenB: 满位控制${__create_randomNum()}\\车位已满
+      invoiceB: 满位控制${__create_randomNum()}车位已满
+      sentryCheckInMsg: ${__create_carNum(carType=1)}\\登记放行
+      presentCarBMsg: *carNumB
+      presentCarBvipTypeBMsg: *ticketType
+      outScreenA: *screenMsg
+      outVoiceA: *voiceMsg
+      carAInOutVipTypeMsg: *ticketType
+      outscreenB: ${__create_carNum(carType=1)}\\满位控制${__create_randomNum()}
+      outvoiceB: $${__create_carNum(carType=1)}$满位控制${__create_randomNum()}
+      carInOutVipTypeStrMsg: *ticketType
 

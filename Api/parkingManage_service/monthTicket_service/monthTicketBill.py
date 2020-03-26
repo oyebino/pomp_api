@@ -8,7 +8,11 @@ from common.Req import Req
 from common.superAction import SuperAction as SA
 from Api.index_service.index import Index
 from urllib.parse import urlencode
-import datetime
+from common.excelUnitl import ExcelUnitl
+from Api.parkingManage_service.monthTicket_service.monthTicketConfig import MonthTicketConfig
+import os
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, "../../.."))
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
@@ -166,8 +170,6 @@ class MonthTicketBill(Req):
         re = self.get(self.api, headers = form_headers)
         return re
 
-
-
     def renewMonthTicketBill(self, parkName, carNum, status , date = None):
         """
         月票续费，默认续费10天
@@ -242,5 +244,92 @@ class MonthTicketBill(Req):
         re =self.get(self.api, headers = form_headers)
         return re
 
+    def batchOpenMonthTicketBill(self,parkName, typeName, carNum, fileName = '批量开通月票.xls'):
+        """批量开通月票"""
+        file = root_path + '/upload/' + fileName
+        ticketConfigDict = self.getDictBykey(MonthTicketConfig(self.Session).getMonthTicketList(parkName,typeName).json(),'ticketName',typeName)
+        self.__editOpenBillFile(file, ticketConfigDict['ticketCode'], carNum)
+        file = {
+            "importFile": open(file, 'rb'),
+            "im12portFile": "self.importFile.importFile"
+        }
+        self.url = "/mgr/monthTicketBill/importBills.do"
+        re = self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
+        if re.json()['status'] == 1:
+            re = self.__getImportBillResut()
+        return re
+
+    def __getImportBillResut(self):
+        """获取导入结果"""
+        self.url = "/mgr/monthTicketBill/getImportBillResult.do"
+        re = self.get(self.api, headers = form_headers)
+        return re
+
+    def __editOpenBillFile(self,file,ticketCode,carNum):
+        """修改批量开通月票excel文件"""
+        excel = ExcelUnitl(file)
+        excel.editCell(1, 0, ticketCode)
+        excel.editCell(1, 1, SA().create_name())
+        excel.editCell(1, 2, "135{}".format(SA().create_randomNum(val=8)))
+        excel.editCell(1, 3, carNum)
+        excel.editCell(1, 4, "{} 00:00:00".format(SA().get_today_data()))
+        excel.editCell(1, 5, "{} 23:59:59".format(SA().cal_get_day(strType ="%Y-%m-%d", days=15)))
+        excel.editCell(1, 7, 30)
+
+    def batchRefundMonthTicketBill(self, parkName, carNum, fileName = '批量退费月票.xls'):
+        """批量退费月票"""
+        file = root_path + '/upload/' + fileName
+        billDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中').json(), 'carCode',carNum)
+        excel = ExcelUnitl(file)
+        excel.editCell(1, 0, billDict['ticketCode'])
+        excel.editCell(1, 3, carNum)
+        excel.editCell(1, 7, '1')
+        file = {
+            "refundFile": open(file,'rb'),
+            "im12portFile": "self.importFile.importFile"
+        }
+        self.url = "/mgr/monthTicketBill/batchRefund.do"
+        re =self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
+        if re.json()['status'] == 1 :
+            re = self.__getBatchRefundResult()
+        return re
+
+    def __getBatchRefundResult(self):
+        """获取批量退费结果"""
+        self.url = "/mgr/monthTicketBill/getBatchRefundResult.do"
+        re = self.get(self.api, headers = form_headers)
+        return re
+
+    def batchRenewMonthTicketBill(self, parkName, carNum, fileName = "批量续费月票.xls"):
+        """批量续费月票"""
+        file = root_path + '/upload/' + fileName
+        ticketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '不在有效期').json(),'carCode',carNum)
+        self.__editBatchRenewBillFile(file, ticketBillDict['ticketCode'], carNum)
+        file = {
+            "renewFile": open(file,'rb')
+        }
+        self.url = "/mgr/monthTicketBill/renewBills.do"
+        re = self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
+        if re.json()['status'] == 1:
+            re = self.__getRenewBillResult()
+        return re
+
+    def __editBatchRenewBillFile(self, file, ticketCode, carNum):
+        """修改批量续费excel文件"""
+        excel = ExcelUnitl(file)
+        excel.editCell(1, 0, ticketCode)
+        excel.editCell(1, 3, carNum)
+        excel.editCell(1, 4, "{} 00:00:00".format(SA().get_today_data()))
+        excel.editCell(1, 5, "{} 23:59:59".format(SA().cal_get_day(strType="%Y-%m-%d", days=15)))
+        excel.editCell(1, 7, 30)
+
+    def __getRenewBillResult(self):
+        """获取续费导入结果"""
+        self.url = "/mgr/monthTicketBill/getRenewBillsResult.do"
+        re =self.get(self.api, headers = form_headers)
+        return re
+
+
+
 if __name__ == "__main__":
-    pass
+    MonthTicketBill().editOpenBillFile('E:/POMP_API/upload/批量开通月票.xls','123','456')

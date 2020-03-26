@@ -4,15 +4,14 @@
 # @Author  : 何涌
 # @File    : test_noPresenceVipStrictOutProcess.py
 
-import pytest,os
-import allure
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
+import allure,pytest
 from common.utils import YmlUtils
+from Api.parkingManage_service.monthTicket_service.monthTicketBill import MonthTicketBill
+from Api.parkingManage_service.monthTicket_service.monthTicketConfig import MonthTicketConfig
 from Api.information_service.information import Information
+from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.Assert import Assertions
 from Api.cloudparking_service import cloudparking_service
-from Api.sentry_service.carInOutHandle import CarInOutHandle
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/noPresenceVipStrictOutProcess.yml").getData
@@ -20,26 +19,37 @@ test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/noPresenceV
 @allure.feature("智泊云")
 class TestNoPresenceVipStrictOutProcess():
     """VIP车无在场严出"""
+    def test_createMonthTicketConfig(self, userLogin, send_data, expect):
+        """创建自定义月票类型"""
+        re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
+
+    def test_openMonthTicketBill(self, userLogin, send_data, expect):
+        """用自定义月票类型开通月票"""
+        re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNum'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
+        result = re.json()
+        Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     def test_mockCarOut(self, send_data, expect):
-        """模拟月票车辆离场"""
+        """模拟月票车无在场辆离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_out"])
-        Assertions().assert_in_text(result, expect["screen"])
-        Assertions().assert_in_text(result, expect["voice"])
+        result = re.json()['biz_content']['result']
+        Assertions().assert_in_text(result['open_gate'], expect["outOpenGateMsg"])
+        Assertions().assert_in_text(result['screen'], expect["outScreenMsg"])
+        Assertions().assert_in_text(result['voice'], expect["outVoiceMsg"])
 
     def test_checkMessageOut(self, sentryLogin, send_data, expect):
-        """登记放行"""
-        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'])
+        """岗亭端登记放行"""
+        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],'${mytest.carOut_jobId}')
         result = re.json()
         Assertions().assert_in_text(result, expect["checkMessageOutMsg"])
 
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkId"], send_data["carNum"])
-        result = re.json()["data"]["rows"]
-        Assertions().assert_in_text(result, expect["carLeaveHistoryMessage"])
+        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
+        result = re.json()["data"]["rows"][0]
+        Assertions().assert_in_text(result, expect["carLeaveHistoryMsg"])
 
 
 

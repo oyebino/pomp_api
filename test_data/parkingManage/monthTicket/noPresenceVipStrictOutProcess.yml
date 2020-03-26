@@ -1,18 +1,20 @@
-
 - test:
     name: VIP车无在场严出(智泊云)
     desc: VIP车无在场严出
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
-      carNum: 新Z89001
-      ticketName: 纯时间月票
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: 月票${__get_time()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       outClientID: ${strictOutClientID}
+      carOutHandleType: 异常放行
     except:
-      screen: 纯时间月票\\无在场记录
-      voice: 纯时间月票无在场记录请稍候
-      carNum: 新Z89001
-      mock_car_out: ok
-      checkMessageOutMsg: ok
-      carLeaveHistoryMessage: 新Z89001
-
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      outOpenGateMsg: 0
+      outScreenMsg: 月票${__get_time()}\\无在场记录
+      outVoiceMsg: 月票${__get_time()}无在场记录请稍候
+      checkMessageOutMsg: 已收费1元一路顺风
+      carLeaveHistoryMsg: ${__create_carNum()}

@@ -80,10 +80,12 @@ class SuperAction:
         return newstr
 
 
-    def create_random_name(self):
-        src_digits = string.digits
-        name= "月票"+"".join(random.sample(src_digits, 4))
-        return name
+    def create_name(self):
+        xing = '赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜'
+        ming = '豫章故郡洪都新府星分翼轸地接衡庐襟三江而带五湖'
+        X = random.choice(xing)
+        M = "".join(random.choice(ming) for i in range(2))
+        return X+M
 
     def create_randomNum(self,val= 4):
         src_digits = string.digits
@@ -216,13 +218,6 @@ if __name__ == "__main__":
     SA = SuperAction()
     # openMonthNum = 2
     # date1 = '2020-04-05'
-    date = SA.cal_getTheMonth(n=1)
-    # date = SA.cal_get_day()
-    # date = SA.cal_get_day(strType='%Y-%m-%d',days=60)
-    # str = '2012-11-19'
-    #
-    # date = datetime.datetime.strptime(str, '%Y-%m-%d')
-
-    # first_date = datetime.date(date.year,date.month,date.day).strftime()
+    date = SA.get_today_data()
 
     print(date)

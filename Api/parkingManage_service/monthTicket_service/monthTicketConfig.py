@@ -17,13 +17,16 @@ json_headers = {"content-type": "application/json;charset=UTF-8"}
 class MonthTicketConfig(Req):
     """月票类型"""
     aList = []
-    def createMonthTicketConfig(self,parkName, ticketTypeName,renewMethod,validTo):
+    def createMonthTicketConfig(self,parkName, ticketTypeName,renewMethod,validTo,isChargeGroupRelated=0,vipGroupName=None,isDynamicMode=0,autoSwitchVip=0,openVipFullLimit=0,vipFullLimitValue=1,vipFullOpenModel=0):
         """
         创建月票类型
         :param parkName:
         :param ticketName:
         :param renewMethod: '自然月','自定义'
         :param validTo: '2020-5-19'
+        :param isDynamicMode=0 开启多车多车,autoSwitchVip=0 开启场内转vip
+        :param isChargeGroupRelated 是否支持收费 ，vipGroupName 月票组名
+        :param openVipFullLimit 开启满位控制，vipFullLimitValue 最多可进车辆，vipFullOpenModel 满位放行模式
         :return:
         """
         renewMethodDict = {
@@ -31,14 +34,19 @@ class MonthTicketConfig(Req):
             "自定义": "CUSTOM"
         }
         parkInfoDict = self.getDictBykey(Index(self.Session).getUnsignedParkList().json(), 'name', parkName)
-        optionArrList = self.__selectChargeGroupList(parkInfoDict['parkUUID']).json()['data'][parkInfoDict['parkUUID']]
+        optionArrListDict = self.__selectChargeGroupList(parkInfoDict['parkUUID']).json()
+        optionArrList = optionArrListDict['data'][parkInfoDict['parkUUID']]
+
+        vipGroupType = 0
+        if str(isChargeGroupRelated) == '1':
+            vipGroupType = self.getDictBykey(optionArrListDict, 'typeName', vipGroupName)['chargeTypeSeq']
         parkJson = [{
             "parkSysType": 1,
             "parkVipTypeId": "",
             "parkId": parkInfoDict['id'],
             "parkUuid": parkInfoDict['parkUUID'],
             "parkName": parkName,
-            "chargeGroupCode": "0",
+            "chargeGroupCode": vipGroupType,
             "optionArr": optionArrList
         }]
 
@@ -49,18 +57,18 @@ class MonthTicketConfig(Req):
         parkVipTypeJson = {
             "customVipName": "",
             "settlementType": 0,
-            "isDynamicMode": 0,
+            "isDynamicMode": isDynamicMode,
             "isDatePrivilege": 0,
             "isTimePrivilege": 0,
             "privilegeTimePeriod": "",
-            "isChargeGroupRelated": 0,
-            "vipGroupType": 0,
+            "isChargeGroupRelated": isChargeGroupRelated,
+            "vipGroupType": vipGroupType,
             "dynamicFullLimit": 0,
             "vipNearExpiredDayThreshold": 10,
             "vipDeleteExpiredDayThreshold": 0,
-            "openVipFullLimit": 0,
-            "vipFullLimitValue": "",
-            "vipFullOpenModel": 0,
+            "openVipFullLimit": openVipFullLimit,
+            "vipFullLimitValue": vipFullLimitValue,
+            "vipFullOpenModel": vipFullOpenModel,
             "priTimeArrFrom": "",
             "priTimeArrTo": "",
             "priDateArrStr": "",
@@ -68,7 +76,7 @@ class MonthTicketConfig(Req):
             "parkName": "",
             "channelAuthTree": str(newChannelAuthTree),
             "channelSeqList": [],
-            "autoSwitchVip": 0,
+            "autoSwitchVip": autoSwitchVip,
             "offLine": 1
         }
 

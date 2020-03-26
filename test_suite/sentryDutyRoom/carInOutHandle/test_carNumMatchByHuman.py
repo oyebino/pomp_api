@@ -19,6 +19,11 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/carNumM
 @allure.feature("车辆进出模块")
 class TestCarNumMatchByHuman(BaseCase):
     """临时车离场人工匹配，场内已有'京BBBBB2'"""
+    def test_mockCarInA(self,send_data,expect):
+        re = cloudparking_service().mockCarInOut(send_data['carNumA'], 0, send_data['inClientID'])
+        result = re.json()['biz_content']['result']
+        Assertions().assert_in_text(result['voice'], expect["carInVoiceA"])
+
     def test_mockCarIn(self,send_data,expect):
         re = cloudparking_service().mockCarInOut(send_data['matchCarNum'],0,send_data['inClientID'])
         result = re.json()['biz_content']['result']

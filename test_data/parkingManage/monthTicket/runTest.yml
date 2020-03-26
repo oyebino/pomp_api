@@ -1,0 +1,7 @@
+- test:
+    name: 批量退费月票-成功后车辆进出不是月票
+    desc: 批量退费月票-成功后车辆进出不是月票
+    send_data:
+      time: ${__create_carNum( 2, 5, carType = '民航')}
+    except:
+      createMonthTicketConfigMsg: ok

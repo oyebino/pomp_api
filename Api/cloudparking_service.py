@@ -55,8 +55,21 @@ class cloudparking_service(Req):
         re = self.post(url, json=json_data, headers=self.api_headers)
         return re
 
+    def getMonitorHandleCarMsg(self):
+        """获取车场进出场远程值班处理车辆信息"""
+        data = {
+           "message_id": SA().get_uuid(),
+           "timestamp": SA().get_time(),
+           "biz_content":{
+              }
+        }
+        LoginReponse.loginRe = {"status": 1}
+        url = "http://10.10.17.219:9002/get_center_monitor_msg"
+        re = self.post(url, json=data, headers=self.api_headers)
+        return re
+
 if __name__ == "__main__":
-    a = cloudparking_service().mockCarInOut("粤W45678",1,"20190507171501")
-    # a = cloudparking_service().getCarMsgYtj("61b211ea89657427eac14803")
+    a = cloudparking_service().mockCarInOut("京DDDDD4",0,"20190507171503")
+    # a = cloudparking_service().getMonitorHandleCarMsg()
     re = a.json()
-    # print(re['result']['voice'])
+    print(re)

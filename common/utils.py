@@ -89,13 +89,6 @@ class YmlCommon(object):
         template = self.formatYmlFun(template)
         return template
 
-    def getFunData(self,template):
-        rule = r'\${__(.*?)}'
-        if re.search(rule,template) != None:
-            re.search(rule, template).group(0)
-        template = re.sub(rule,)
-        pass
-
     def formatYmlFun(self,template):
         """
         对函数进行解析
@@ -130,6 +123,9 @@ class YmlCommon(object):
     def listToDict(self,parmList):
         s = ",".join(parmList).replace("'",'"').replace('"','')
         kwargsdict = dict((l.split('=') for l in s.split(',')))
+        for i in kwargsdict.keys():
+            kwargsdict[i] = kwargsdict[i].strip()
+            kwargsdict[i.strip()] = kwargsdict.pop(i)
         return kwargsdict
 
     def __index_str(self,s1,s2):
@@ -169,6 +165,7 @@ class YmlCommon(object):
                         if key.rfind('=') >= 0:
                             kwargsList.append(key)
                         else:
+                            key = ((str(key).strip()).replace('"',"'")).replace("'",'')
                             argsList.append(key)
                     return funName,argsList,kwargsList
 
@@ -245,7 +242,7 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/parkingManage/monthTicket/renewMonthTicketAbnormalProcess.yml").getData
+    test_data, case_desc =YmlUtils("/test_data/parkingManage/monthTicket/runTest.yml").getData
     # print(test_data)
     print(test_data)
 

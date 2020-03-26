@@ -1,0 +1,22 @@
+- test:
+    name: 批量开通月票-车辆进出是月票
+    desc: 批量开通月票-在页面有导入的月票-车辆进出是月票
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      ticketTypeName: 批量月票${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      combinedStatus: 生效中
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      createMonthTicketConfigMsg: ok
+      batchOpenMonthTicketBillMsg: true
+      checkMonthTicketBillListMsg: *carNum
+      mockCarInScreenMsg: &carScreen ${__create_carNum()}\\批量月票${__create_randomNum()}
+      mockCarInVoiceMsg: &carVoice $${__create_carNum()}$批量月票${__create_randomNum()}
+      mockCarOutScreenMsg: *carScreen
+      mockCarOutVoiceMsg: *carVoice
+
+

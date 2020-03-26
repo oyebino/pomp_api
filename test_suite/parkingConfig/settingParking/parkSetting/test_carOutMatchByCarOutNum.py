@@ -4,8 +4,7 @@
 # @Author  : 叶永彬
 # @File    : test_carOutMatchByCarOutNum.py
 
-import pytest
-import allure
+import allure,pytest
 from common.utils import YmlUtils
 from common.BaseCase import BaseCase
 from Api.information_service.information import Information

@@ -1,27 +1,26 @@
-
 - test:
-    name: 纯月票车严进，不需缴费严出(智泊云)
-    desc: 纯月票车严进，不需缴费严出
+    name: 纯月票车严进-不需缴费严出
+    desc: 纯月票车严进-不需缴费严出
     send_data:
-      parkId: ${lightRule_parkID}
-      parkUUID: ${lightRule_parkUUID}
-      carNum: 新ZVIP02
-      ticketName: 纯时间月票
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: 月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       inClientID: ${strictInClientID}
       outClientID: ${strictOutClientID}
+      carInHandleType: 登记放行
+      carOutHandleType: 确认放行
     except:
-      message: OK
-      mock_car_in: ok
-      screen: 新ZVIP02\\纯时间月票请稍候
-      voice: $新ZVIP02$纯时间月票请稍候
-      checkMessageInMsg: ok
-      presentCarMessage: 查询在场车辆成功
-      carNum: 新ZVIP02
-      mock_car_out: ok
-      outscreen: 新ZVIP02\\纯时间月票请稍候
-      outvoice: $新ZVIP02$纯时间月票请稍候
-      checkMessageOutMsg: ok
-
-
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      mockCarInScreenMsg: ${__create_carNum()}\\月票pytest${__create_randomNum()}请稍候
+      mockCarInVoiceMsg: $${__create_carNum()}$月票pytest${__create_randomNum()}请稍候
+      sentryCheckInMsg: $${__create_carNum()}$登记放行
+      mockCarOutScreenMsg: ${__create_carNum()}\\月票pytest${__create_randomNum()}
+      mockCarOutVoiceMsg: $${__create_carNum()}$月票pytest${__create_randomNum()}
+      sentryCheckOutMsg: ${__create_carNum()}\\一路顺风
+      checkCarInOutHistoryVIPTypeMsg: 月票pytest${__create_randomNum()}
 
 

@@ -3,15 +3,19 @@
     name: VIP车无在场宽出(智泊云)
     desc: VIP车无在场宽出
     send_data:
-      parkId: ${lightRule_parkID}
-      carNum: 新Z89001
-      ticketName: 纯时间月票
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      ticketTypeName: 月票${__get_time()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
       outClientID: ${wideOutClientId}
     except:
-      mock_car_out: ok
-      screen: 纯时间月票\\一路顺风
-      voice: 纯时间月票一路顺风
-      carNum: 新Z89001
-      mock_car_out: ok
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      outOpenGateMsg: 1
+      outScreenMsg: 月票${__get_time()}\\一路顺风
+      outVoiceMsg: 月票${__get_time()}一路顺风
+      carLeaveHistoryMsg: ${__create_carNum()}
 
 

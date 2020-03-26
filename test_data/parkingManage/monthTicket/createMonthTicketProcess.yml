@@ -6,7 +6,7 @@
       carNum: ${__create_carNum()}
       ticketTypeName: 月票pytest${__create_randomNum()}
       renewMethod: 自定义
-      validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
       timeperiodListStr: ${__cal_getTheMonth(n=1)}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}

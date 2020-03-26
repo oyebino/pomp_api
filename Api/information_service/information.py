@@ -7,8 +7,10 @@
 from common.Req import Req
 from common.superAction import SuperAction as SA
 from Api.index_service.index import Index
-import time
+import time,os
 from urllib.parse import urlencode
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 
 class Information(Req):
     """
@@ -18,7 +20,7 @@ class Information(Req):
     form_headers = {"content-type": "application/x-www-form-urlencoded"}
     data = SA().get_today_data()
 
-    def getPresentCar(self,parkName,carNum):
+    def getPresentCar(self,parkName,carNum = ""):
         """
         获取在场车场
         :param parkId:
@@ -27,7 +29,7 @@ class Information(Req):
         parkDict = self.getDictBykey(self.__getParkingBaseTree().json(),'name',parkName)
         data = {
             "page":1,
-            "rp":1,
+            "rp":5,
             "approchTimeFrom":self.data +" 00:00:00",
             "approchTimeTo":self.data +" 23:59:59",
             "parkIds":parkDict['value'],
@@ -173,7 +175,7 @@ class Information(Req):
         re = self.post(self.api, headers = self.api_headers)
         return re
 
-    def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件', file = None):
+    def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件',carNum = None , file = 'auto_clear_car.xls'):
         """
         智能盘点
         :param parkName:
@@ -185,14 +187,14 @@ class Information(Req):
         parkDict = self.getDictBykey(self.__getParkingBaseTree().json(), 'name', parkName)
         userDict = Index(self.Session).getNewMeun().json()['user']
         if cleanType == '按时间条件':
-            re = self.clearCarByTime(nowTime, parkDict['parkId'], userDict['nickname'])
+            re = self.__autoClearCarByTime(nowTime, parkDict['parkId'], userDict['nickname'])
         else:
-            re = self.autoClearCar(nowTime, parkDict['parkId'], userDict['nickname'],file)
+            re = self.__autoClearCarByFile(nowTime, parkDict['parkId'], userDict['nickname'], carNum, file)
         return re
 
 
-    def clearCarByTime(self, clearTime, parkUUID, operatorName):
-        """按时间盘点方式"""
+    def __autoClearCarByTime(self, clearTime, parkUUID, operatorName):
+        """智能盘点-按时间盘点方式"""
         data = {
             "clearTime": clearTime,
             "parkUUID": parkUUID,
@@ -220,27 +222,57 @@ class Information(Req):
         files = {
             "autoClearFile": open(file, 'rb')
         }
+
         data = {
             "clearTime": clearTime,
             "operatorName": operatorName,
             "parkUUID": parkUUID
         }
         self.url = "/mgr/park/presentCar/autoClearCarCheck?" + urlencode(data)
-        re = self.post(self.api, files=files, headers={'content-type':'multipart/form-data; boundary=----WebKitFormBoundaryWfNCcsRQgwpPWvvN'})
+        re = self.post(self.api, files=files, headers={'User-Agent':'Chrome/71.0.3578.98 Safari/537.36'})
         return re
 
-    def autoClearCar(self,clearTime, parkUUID, operatorName, file):
-        """按模板盘点在场车场信息记录"""
+    def __autoClearCarByFile(self,clearTime, parkUUID, operatorName, carNum, fileName):
+        """
+        智能盘点-按在场车场，按模板盘点在场车场信息记录
+        :param clearTime:
+        :param parkUUID:
+        :param operatorName:
+        :param carNum: 可以输入多个车牌，用','隔开
+        :param fileName:
+        :return:
+        """
+        file = root_path + '/upload/' + str(fileName)
+        self.__setCarNumInClearCarFile(file, carNum)
         clearCarCheck = self.__autoClearCarCheck(clearTime, operatorName, parkUUID, file).json()
         data = {
             "clearCode":clearCarCheck['data']['clearCode'],
             "comment":'pytest智能盘点按模板',
-            "additionRecord":0,
+            "additionRecord": 1,
             "operatorName":operatorName
         }
         self.url = "/mgr/park/presentCar/autoClearCar?" + urlencode(data)
         re = self.post(self.api, headers=self.api_headers)
         return re
+
+    def runTest(self, file, presentCarNum):
+        self.__setCarNumInClearCarFile(file, presentCarNum)
+
+    def __setCarNumInClearCarFile(self, file, presentCarNum):
+        """往盘点车辆文件设置在场车牌"""
+        import xlrd
+        from xlutils.copy import copy
+        old_excel = xlrd.open_workbook(file, formatting_info=True)
+        new_excel = copy(old_excel)
+        ws = new_excel.get_sheet(0)
+        presentCarNum = presentCarNum.replace('，',',')
+        if ',' in presentCarNum:
+            carNum = presentCarNum.split(',')
+            for index, v in enumerate(carNum):
+                ws.write(2 + index, 0, v)
+        else:
+            ws.write(2, 0, presentCarNum)
+        new_excel.save(file)
 
     def getSystemLog(self, menuLevel = None, operationObject = None):
         """查看系统日志"""
@@ -258,9 +290,7 @@ class Information(Req):
 
 
 if __name__ == '__main__':
-    # central("https://zbcloud.k8s.yidianting.com.cn").centralGetCharge()
-    # re =Information_controller().centralPay("粤Q12347")
-    re = Information()
-    print(re.json())
-
+    Information().runTest('E:/POMP_API/upload/auto_clear_car.xls','粤Q12344,粤B12344')
+    # carNum =['1','2']
+    # print(len(carNum))
 

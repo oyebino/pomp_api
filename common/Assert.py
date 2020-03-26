@@ -137,6 +137,20 @@ class Assertions:
 
             raise
 
+    def assert_in_time(self, timestr,second):
+        """检查时间是否在一分钟内"""
+        import datetime
+        try:
+            timeEnd = datetime.datetime.now()
+            timeStart = datetime.datetime.now() - datetime.timedelta(seconds = second)
+            time = datetime.datetime.strptime(timestr, '%Y-%m-%d %H:%M:%S')
+            assert timeStart < time < timeEnd
+            self.log.info("===验证时间在{}秒内,当前时间{}，验证时间{}".format(second,timeEnd,time))
+        except:
+            self.log.error("===验证时间不在在{}秒内,当前时间:{}，验证时间:{}".format(second,timeEnd,time))
+            Consts.RESULT_LIST.append('fail')
+            raise
+
     def assert_time(self, time, expected_time):
         """
         验证response body响应时间小于预期最大响应时间,单位：毫秒
@@ -216,4 +230,4 @@ class Assertions:
         return path.split('/')[-1]
 
 if __name__ == "__main__":
-    print(Assertions().runTest(1))
+    Assertions().assert_in_time('2020-03-24 17:05:50')

@@ -5,8 +5,7 @@
 # @Desc  :
 import requests
 import inspect
-import time,os,hashlib,pytest
-from common import Consts
+import time,os,hashlib
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
 from common.XmlHander import XmlHander
@@ -231,7 +230,7 @@ class Req(requests.Session):
         解析案例保存的储存值
         :return:
         """
-        if not template == None:
+        if not template == None :
             template = eval(self.__formatRule(r'\${(.*?)}', str(template)))
             return template
         else:

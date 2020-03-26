@@ -3,6 +3,7 @@
     desc: 临时车离场人工匹配
     send_data:
       parkName: ${usedParkName}
+      carNumA: 京BBBBB2
       carNum: 京BBBBB3
       matchCarNum: 京BBBBB4
       carOutHandleType: 收费放行
@@ -10,6 +11,7 @@
       outClientID: ${wideOutClientId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
+      carInVoiceA: 京BBBBB2
       carInScreen: 京BBBBB4\\欢迎光临
       carInVoice: $京BBBBB4$欢迎光临
       carInOpenGate: 1
