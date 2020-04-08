@@ -110,9 +110,10 @@ class SentryLogin():
         url = self.host + "/ydtp-backend-service/api/sentry_user_parking"
         re = self.S.get(url=url)
         channelList = []
-        channelInfoList = re.json()[0]['channels']
-        for channelDict in channelInfoList:
-            channelList.append(channelDict['id'])
+        parkList = re.json()
+        for park in parkList:
+            for channelDict in park['channels']:
+                channelList.append(channelDict['id'])
         return channelList
 
     def __selectChannel(self):
@@ -130,6 +131,7 @@ class CenterMonitorLogin():
     def __init__(self,user = None, pwd = None):
         self.S = requests.Session()
         self.host = Config().host
+        self.mock_host = Config().mock_host
         if user == None and pwd == None:
             self.user = Config().getValue("user")
             self.password = Config().getValue("password")
@@ -158,7 +160,7 @@ class CenterMonitorLogin():
             topOperatorId = r.json()['message'].split(";")[-1]
             self.S.headers.update({"token": token})
             websocketUrl = "wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
-            self.createUserSocket(websocketUrl,token)
+            print((self.__createUserSocket(websocketUrl,token)).json())
             executeUrl = self.host + '/zbcloud/center-monitor-service/zbcloud-grey/api/execute?topOperatorId={}'.format(topOperatorId)
             re = self.S.get(executeUrl, headers = form_headers)
             if re.text == 'ok':
@@ -166,7 +168,7 @@ class CenterMonitorLogin():
         else:
             return self.S
 
-    def createUserSocket(self, ip ,token):
+    def __createUserSocket(self, ip ,token):
         """请求创建用户的socket"""
         data = {
             "message_id": SA().get_uuid(),
@@ -176,8 +178,9 @@ class CenterMonitorLogin():
                 "login_token": token
             }
         }
-        url = "http://10.10.17.219:9002/mock_login_center_monitor"
-        self.S.post(url, json=data, headers = json_headers)
+        url = self.mock_host + "/mock_login_center_monitor"
+        re = self.S.post(url, json=data, headers = json_headers)
+        return re
 
 
     def __setPwd(self,pwd):
@@ -190,7 +193,7 @@ class CenterMonitorLogin():
         return str_md5
 
 class AompLogin(object):
-
+    """Aomp,不需要灰度用户，只在ip连接加个grey就可以"""
     def __init__(self, user = None, pwd = None):
         self.conf = Config()
         self.host = self.conf.aomp_host
@@ -202,7 +205,7 @@ class AompLogin(object):
             self.user = user
             self.password = pwd
 
-    def checkCode(self):
+    def login(self):
         """"校验验证码"""
         loginUrl = self.host + "/checkLogin.do"
         data = {
@@ -212,18 +215,10 @@ class AompLogin(object):
             "isOnLine": "isOnLine",
             "flag": "-1"
         }
-        self.Session.post(loginUrl, data)
-
-    def login(self):
-
-        """登陆aomp"""
-        self.checkCode()
-        path = self.host + "/admin/loginTomanage.do?flag=admin&flag=admin"
-        data = {
-            "flag": "admin"
-        }
-        self.Session.post(path, data)
+        loginRe = self.Session.post(loginUrl, data)
+        LoginReponse.loginRe = loginRe
         return self.Session
+
 
 class WeiXinLogin():
     """微信商户端"""
@@ -307,8 +302,10 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = CenterMonitorLogin('apitest','123456')
-
+    L = SentryLogin('apitest','123456')
+    # ip ="wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
     L.login()
+    # re =L.createUserSocket(ip,'123456')
+    # print(re.json())
 
 

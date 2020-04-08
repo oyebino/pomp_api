@@ -1,6 +1,6 @@
 - test:
-    name: 临时车严进后，不进场，再来一台临时车严进，有异常拍照上报
-    desc: 临时车严进后，不进场，再来一台临时车严进，有异常拍照上报
+    name: 临时车严进后-不进场-再来一台临时车严进-有异常拍照上报
+    desc: 临时车严进后-不进场-再来一台临时车严进-有异常拍照上报
     send_data:
       carNum: ${__create_carNum()}
       carNum2: ${__create_carNum(carType=1)}

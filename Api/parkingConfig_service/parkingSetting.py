@@ -34,15 +34,15 @@ class ParkingSetting(Req):
         :return:
         """
         parkDict = self.getDictBykey(self.__getOperatorParkConfigListView().json(), 'parkName', parkName)
-        OldParkConfigDict = self.getOperatorParkConfigInfo(parkName).json()
+        OldParkConfigDict = self.getOperatorParkConfigInfo(parkName)
 
-        parkConfigDict = self.__setValueByAllkey(OldParkConfigDict['data'],"parkId",parkDict['parkId'])
+        parkConfigDict = self.__setValueByAllkey(OldParkConfigDict,"parkId",parkDict['parkId'])
         parkConfigDict = self.__setValueByAllkey(parkConfigDict, "parkCloudChargeCustomCarTypeVoList", [])
         updataParkConfigDict = self.__setValueByAllkey(parkConfigDict,configName[key],openFlat[str(setValue)])
         self.url = "/mgr/operatorPark/updateOperatorParkConfigInfo"
         data = updataParkConfigDict
         re = self.post(self.api, json = data, headers = json_headers)
-        return re
+        return re.json()
 
     def getOperatorParkConfigInfo(self,parkName):
         """获取车场配置信息"""
@@ -52,7 +52,7 @@ class ParkingSetting(Req):
         }
         self.url = "/mgr/operatorPark/getOperatorParkConfigInfo?" + urlencode(data)
         re = self.get(self.api, headers = json_headers)
-        return re
+        return re.json()['data']
 
     def __getOperatorParkConfigListView(self):
         """获取当前用户车场列表"""

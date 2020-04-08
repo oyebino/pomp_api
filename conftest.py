@@ -53,8 +53,9 @@ def weiXinLogin(request):
     Session = L.login()
     return Req(Session)
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def centerMonitorLogin(request):
+    """远程值班"""
     if hasattr(request, 'param'):
         user = ParseTemplate().formatExpected(request.param['user'])
         pwd = ParseTemplate().formatExpected(request.param['pwd'])
@@ -82,8 +83,3 @@ def centralTollLogin(request):
         L = CentralTollLogin()
     Session = L.login()
     return Req(Session)
-
-#
-# if __name__ == "__main__":
-#
-#     SYS()

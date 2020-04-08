@@ -1,0 +1,17 @@
+- test:
+    name: 中央查费-缴费-离场
+    desc: 查费-缴费-开票-查明细-离场
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      mockCarInMessage: 欢迎光临
+      centryPayMsg: 5.00
+      checkChargeMsg: 0
+      centralChargeRecordMsg: 5
+      centralInvoiceTypeMsg: paper
+      parkingBillDetailMessage: 5
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: *carNum

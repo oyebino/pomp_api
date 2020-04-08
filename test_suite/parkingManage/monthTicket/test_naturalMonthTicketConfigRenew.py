@@ -15,25 +15,26 @@ from Api.cloudparking_service import cloudparking_service
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/naturalMonthTicketConfigRenew.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("智泊云-月票管理模块")
+@allure.story('智泊云自然月票创建并使用')
 class TestNaturalMonthTicketConfig():
     """智泊云自然月票创建，开通，续费。车辆进出是月票（在进出场记录中查看到VIP类型为售卖的月票类型）"""
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建自然月月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
 
     def test_openMonthTicketBill(self, userLogin, send_data, expect):
         """用自然月月票类型开通月票"""
         re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNum'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     def test_renewMonthTicketBill(self, userLogin, send_data, expect):
         """月票续约"""
         re = MonthTicketBill(userLogin).renewMonthTicketBill(send_data['parkName'], send_data['carNum'], send_data['status'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["renewMonthTicketBillMsg"])
 
     def test_mockCarIn(self,send_data,expect):
@@ -53,6 +54,6 @@ class TestNaturalMonthTicketConfig():
     def test_checkCarInOutHistoryVIPType(self,userLogin,send_data,expect):
         """查看进出场记录中查看到VIP类型"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])

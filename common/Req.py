@@ -34,6 +34,7 @@ class Req(requests.Session):
         self.aomp_host = self.conf.aomp_host
         self.weiXin_host = self.conf.weiXin_host
         self.openYDT_host = self.conf.openYDT_host
+        self.mock_host = self.conf.mock_host
         if Session == None:
             self.Session = requests.Session()
         else:
@@ -87,6 +88,11 @@ class Req(requests.Session):
         """微信商家端调用地址"""
         return self._weiXin_host(self.url)
 
+    @property
+    def mock_api(self):
+        """微信商家端调用地址"""
+        return self._mock_host(self.url)
+
     def _zby_host(self,url):
         full_url = urljoin(self.zby_host, url)
         return full_url
@@ -101,6 +107,10 @@ class Req(requests.Session):
 
     def _weiXin_host(self,url):
         full_url = urljoin(self.weiXin_host, url)
+        return full_url
+
+    def _mock_host(self,url):
+        full_url = urljoin(self.mock_host, url)
         return full_url
 
     @property
@@ -176,6 +186,10 @@ class Req(requests.Session):
                     return False
                 else:
                     return True
+            if 'state' in objDict.keys():
+                if objDict['state'] == True:
+                    return True
+                else: return False
             if 'error' in objDict.keys():
                 if objDict['error'] != 'success':
                     return False
@@ -315,10 +329,11 @@ class Req(requests.Session):
         textList = re.findall(rule, template)
         text_dic = {}
         for key in textList:
-            caseName = str(key).split('.')[0]
-            keyProperty = str(key).split('.')[1]
-            value = self.__get_caseData(keyProperty,caseName)
-            text_dic[key] = value
+            if '.' in key:
+                caseName = str(key).split('.')[0]
+                keyProperty = str(key).split('.')[1]
+                value = self.__get_caseData(keyProperty,caseName)
+                text_dic[key] = value
         for key in list(text_dic.keys()):
             strKey = rule.split("(.*?)")[0] + key + rule.split("(.*?)")[1]
             template = re.sub(strKey,text_dic[key],template)
@@ -356,7 +371,14 @@ class Req(requests.Session):
         filePath = tempDataPath.temporaryDataPath + "/" + tempDataPath.runingCaseName + ".xml"
         XmlHander(filePath).addTag(name, value)
 
-    def getDictBykey(self,json_object,key,expectedValue):
+    def getDictBykey(self, json_object,key,expectedValue):
+        if isinstance(json_object, list):
+            json_object = {'data':json_object}
+
+        return self.getDictBykeySon(json_object,key,expectedValue)
+
+
+    def getDictBykeySon(self,json_object,key,expectedValue):
         """
         深度查找json的value值，返回具有value属性的dict
         :param json_object:  传入的json值
@@ -421,7 +443,40 @@ class Req(requests.Session):
         return json
 
 if __name__ == "__main__":
-    a=[
-        {"a":1},{"b":2}
-    ]
-    print(dict(zip(a,range(2))))
+    a=[{
+            'content': {
+                'stoppingTime': '15秒',
+                'normal2Vip': False,
+                'traderCouponInfoList': [],
+                'parkFee': '5',
+                'enterVipName': '临时车',
+                'favorVal': '0',
+                'adjust': True,
+                'enterTime': '2020/04/07 11:05:48',
+                'paidVal': '0',
+                'leaveCarImg': 'http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/04/07/CAR_OUT/2064/CAR/2020040711060357713046-BCV906.jpg',
+                'abName': '临时车严出需缴费',
+                'carInOutId': '12631',
+                'leavePlateImg': 'http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/04/07/CAR_OUT/2064/PLATE/2020040711060357713046-BCV906.jpg',
+                'carSizeType': '小车',
+                'billCode': '2020040711064780847515',
+                'carSizeTypeInt': 1.0,
+                'leaveCarNo': '粤CCCDB9',
+                'leavePicTime': '2020/04/07 11:06:03',
+                'topBillCode': '200407110530835739004419',
+                'leaveChannelId': '2064',
+                'leaveChannelName': '智泊云接口测试出口-严出',
+                'abType': '10',
+                'inMatch': '1',
+                'payVal': '5'
+            },
+            'deal_status': 0,
+            'id': 33096,
+            'msg_type': 1,
+            'msg_level': 1,
+            'create_time': '2020/04/07 11:06:49'
+        }]
+    try:
+        b = Req().getDictByList(a,'content','leaveCarNo','粤CCCDB9')
+    except KeyError:
+        print('123')

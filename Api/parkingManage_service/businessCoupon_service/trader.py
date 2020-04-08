@@ -44,7 +44,7 @@ class Trader(Req):
         if self.__isUniqueName(json_data['name']) and self.__isExistOtherTrader(json_data['account']):
             self.url = "/mgr/trader/addTrader.do"
             re = self.post(self.api,data=json_data,headers=form_headers)
-            return re
+            return re.json()
         else:
             logger.error('商家名或电话已被注册')
 
@@ -66,7 +66,7 @@ class Trader(Req):
 
     def editTrader(self,name,editName,parkName,pwd = ""):
         """编辑商家"""
-        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName), 'name', name)
         parkNameDict = self.getDictBykey(self.__queryAllPark().json(), 'name', parkName)
 
         form_data = {
@@ -88,7 +88,7 @@ class Trader(Req):
         if self.__isUniqueName(form_data['name'],id=form_data['id']) and self.__isExistOtherTrader(form_data['account'],id=form_data['id']):
             self.url = "/mgr/trader/editTrader.do"
             re = self.post(self.api,data=form_data,headers=form_headers)
-            return re
+            return re.json()
         else:
             logger.error('商家名或电话已被注册')
 
@@ -104,7 +104,7 @@ class Trader(Req):
         }
         self.url = '/mgr/trader/getTraderListData.do?' + urlencode(data)
         re = self.get(self.api,headers=form_headers)
-        return re
+        return re.json()['data']['rows']
 
     def addSell(self,parkName, traderName,couponName,sellNum='1',sellMoney='9'):
         """
@@ -114,9 +114,7 @@ class Trader(Req):
         :param sellMoney: 商家折扣价
         :return:
         """
-        # traderIdSql = "select TRADER_ID from park_trader_user where name='{}'".format(traderName)
-        # traderId = db().select(traderIdSql)
-        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', traderName)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName), 'name', traderName)
 
         re = self.__getCoupon2BugByTraderId(traderDict['id'])
         couponIndex,couponDict = self.__findRowData(re.json()['data'],'name',couponName)
@@ -136,7 +134,7 @@ class Trader(Req):
         }
         self.url = "/mgr/coupon/sell/add.do"
         re = self.post(self.api,data=form_data,headers = form_headers)
-        return re
+        return re.json()
 
 
     def __findRowData(self,dataList,findKey,expectedValue):
@@ -178,33 +176,33 @@ class Trader(Req):
         """启用商家"""
         # traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
         # traderId = db().select(traderIdSql)
-        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName), 'name', name)
         form_data = {
             "traderIds":traderDict['id']
         }
         self.url = "/mgr/trader/enableTraderList.do?" + urlencode(form_data)
         re = self.get(self.api,headers=json_headers)
-        return re
+        return re.json()
 
     def disAbleTrader(self,parkName,name):
         """冻结商家"""
         # traderIdSql = "SELECT TRADER_ID from park_trader_user where name='" + name + "'"
         # traderId = db().select(traderIdSql)
-        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(), 'name', name)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName), 'name', name)
         form_data = {
             "traderIds": traderDict['id']
         }
         self.url = "/mgr/trader/disableTraderList.do?" + urlencode(form_data)
         re = self.get(self.api, headers=json_headers)
-        return re
+        return re.json()
 
 
     def deleteTrader(self,parkName,name):
         """删除商户"""
-        traderDict = self.getDictBykey(self.getTraderListData(parkName).json(),'name',name)
+        traderDict = self.getDictBykey(self.getTraderListData(parkName),'name',name)
         self.url = "/mgr/trader/deleteTrader.do"
         json_data = {
             "id": traderDict['id']
         }
         re = self.post(self.api, data=json_data, headers=form_headers)
-        return re
+        return re.json()

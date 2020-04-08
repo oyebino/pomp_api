@@ -1,0 +1,6 @@
+- test:
+    name: 中央收费处下班
+    desc: 中央收费处下班
+    send_data:
+    except:
+      status_code: 200

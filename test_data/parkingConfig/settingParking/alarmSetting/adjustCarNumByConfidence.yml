@@ -1,0 +1,17 @@
+- test:
+    name: 远程值班室收到置信度提醒-并校正车牌
+    desc: 远程值班室收到置信度提醒-并校正车牌
+    send_data:
+      parkName: ${usedParkName}
+      enterConfidence: 85
+      carInConfidence: 70
+      carNum: ${__create_carNum()}
+      correctCarNum: &correctCarNum ${__create_carNum(carType = adjustCarNum)}
+      inClientID: ${wideInClientId}
+    except:
+      enableConfidenceAlarm: 1
+      mockCarInMessage: 欢迎光临
+      adjustCarNumByConfidenceAlarmMsg: 0
+      checkCarInRecordMsg: *correctCarNum
+      presentCarMessage: *correctCarNum
+      disableConfidenceAlarm: 1

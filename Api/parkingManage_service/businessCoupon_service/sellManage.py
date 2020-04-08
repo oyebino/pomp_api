@@ -14,7 +14,7 @@ class SellManage(Req):
     """售卖管理"""
     def couponRefund(self, parkName, refundCouponName):
         """优惠劵退款"""
-        couponInfoDict = self.getDictBykey(self.getSellListByPage(parkName).json(),'tmpName',refundCouponName)
+        couponInfoDict = self.getDictBykey(self.getSellListByPage(parkName),'tmpName',refundCouponName)
         self.url = "/mgr/coupon/sell/refund.do"
         data = {
             "id": couponInfoDict['id'],
@@ -25,7 +25,7 @@ class SellManage(Req):
             "refundRemark": ""
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def __getParkingBaseDataTree(self):
         """获取当前用户车场"""
@@ -44,4 +44,4 @@ class SellManage(Req):
         }
         self.url = "/mgr/coupon/sell/getSellListByPage.do?" + urlencode(data)
         re = self.get(self.api, headers = json_headers)
-        return re
+        return re.json()

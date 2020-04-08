@@ -3,27 +3,24 @@
     desc: 黑名单严进-岗亭收费放行严出
     send_data:
       parkName: ${usedParkName}
-      carNum: 新ZHMD01
-      carInHandleType: 登记放行
-      carOutHandleType: 收费放行
-      ticketName: 黑名单auto
+      specialCarType: 黑名单
+      typeName: api黑名单${__create_randomNum(val=4)}
+      carNum: ${__create_carNum()}
       inClientID: ${strictInClientID}
       outClientID: ${strictOutClientID}
-      carIn_jobId: ${mytest.carIn_jobId}
-      carOut_jobId: ${mytest.carOut_jobId}
+      carInHandleType: 登记放行
+      carOutHandleType: 收费放行
     except:
-      mock_car_in: ok
-      inscreen: 新ZHMD01\\黑名单auto请稍候
-      invoice: $新ZHMD01$黑名单auto请稍候
-      mockCarInMessage: 新ZHMD01\\黑名单auto请稍候
-      checkCarInVoice: $新ZHMD01$登记放行
-      checkCarInScreen: 新ZHMD01\\登记放行
-      checkCarInIsOpenGate: 1
-      presentCarMessage: 新ZHMD01
-      parkingBillDetailMessage: 新ZHMD01
-      mockCarOutMessage: $新ZHMD01$请扫码缴费
-      checkCarOutVoice: 已收费5元一路顺风
-      checkCarOutScreen: 已收费5元\\一路顺风
-      checkCarOutIsOpenGate: 1
-      carLeaveHistoryMessage: 新ZHMD01
+      addBlacklistSpecialTypeMsg: 1
+      createBlacklistCarNumMsg: 操作成功
+      mockCarIn: $${__create_carNum()}$api黑名单${__create_randomNum(val=4)}请稍候
+      checkCarInScreen: ${__create_carNum()}\\api黑名单${__create_randomNum(val=4)}
+      checkCarInVoice: $${__create_carNum()}$\\api黑名单${__create_randomNum(val=4)}
+      checkCarInIsOpenGate: 0
+      checkPresentCarTypeMsg: 黑名单
+      mockCarOutMessage: $${__create_carNum()}$api黑名单${__create_randomNum(val=4)}请稍候
+      sentryPayMessage: 一路顺风
+      checkCarleaveVipTypeStrMsg: 黑名单
+      checkenterVipTypeStrMsg: 黑名单
+
 

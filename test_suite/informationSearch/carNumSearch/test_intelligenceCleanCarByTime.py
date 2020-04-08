@@ -17,7 +17,8 @@ from common.BaseCase import BaseCase
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/intelligenceCleanCarByTime.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("信息查询")
+@allure.feature("信息查询-车辆查询")
+@allure.story('智能盘点-按时间方式盘点离')
 class TestIntelligenceCleanCarByTime(BaseCase):
     """按时间智能盘点,在在场车辆中查看不到该盘点车辆，在异常进场中可以查看到该车辆"""
     def test_mockCarIn(self,send_data,expect):
@@ -29,17 +30,17 @@ class TestIntelligenceCleanCarByTime(BaseCase):
     def test_intelligenceCheckCarOut(self, userLogin, send_data, expect):
         """选择一条进行批量盘点"""
         re = Information(userLogin).intelligenceCheckCarOut(send_data['parkName'])
-        result = re.json()['status']
+        result = re['status']
         Assertions().assert_text(result, expect["cleanCarCheckOutMsg"])
 
     def test_checkPresentCar(self, userLogin, send_data, expect):
         """在场车辆中查看不到该盘点车辆"""
         re = Information(userLogin).getPresentCar(send_data['parkName'], send_data['carNum'])
-        result = re.json()['data']['rows']
+        result = re
         Assertions().assert_not_in_text(result, expect["checkPresentCarMsg"])
 
     def test_checkAbnormalInCar(self, userLogin, send_data, expect):
         """异常进场中可以查看到该车辆"""
         re = Information(userLogin).getAbnormalInCar(send_data['parkName'], send_data['carNum'])
-        result = re.json()['data']['rows']
+        result = re
         Assertions().assert_in_text(result, expect["checkAbnormalInCar"])

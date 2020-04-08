@@ -5,7 +5,7 @@
 # @File    : index.py
 
 from common.Req import Req
-
+from urllib.parse import urlencode
 form_headers = {"Content-Type": "application/x-www-form-urlencoded"}
 json_headers = {"Content-Type": "application/json;charset=UTF-8"}
 
@@ -26,3 +26,19 @@ class Index(Req):
         self.url = "/mgr/valueAdded/getUnsignedParkList.do"
         re = self.get(self.api, headers = json_headers)
         return re
+
+    def getOperatorParkConfigListView(self, parkName):
+        """查看车场配置列表"""
+        operatorId = self.getNewMeun().json()['user']['operatorID']
+        data = {
+            "operatorId": operatorId,
+            "parkName": parkName
+        }
+        json_data = {
+            "pageNumber": 1,
+            "pageSize": 6,
+            "sortType": "ASC"
+        }
+        self.url = "/mgr/operatorPark/getOperatorParkConfigListView?" + urlencode(data)
+        re = self.post(self.api, json= json_data,headers= json_headers)
+        return re.json()['data']['list']

@@ -16,20 +16,21 @@ from Api.sentry_service.carInOutHandle import CarInOutHandle
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/needChargeVipWideInOutProcess.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("智泊云-月票管理模块")
+@allure.story('绑定计费组月票车宽进-需缴费宽出')
 class TestNeedChargeVipWideInOutProcess():
     """绑定计费组月票车宽进，需缴费宽出"""
 
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建绑定计费组月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'],send_data['isChargeGroupRelated'],send_data['vipGroupName'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
 
     def test_openMonthTicketBill(self, userLogin, send_data, expect):
         """用绑定计费组月票类型开通月票"""
         re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNum'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     def test_mockCarIn(self,send_data,expect):
@@ -49,18 +50,18 @@ class TestNeedChargeVipWideInOutProcess():
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭收费处收费-查看车辆离场信息"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],'${mytest.carOut_jobId}')
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['sentryPayMsg'])
 
     def test_checkParkingBillDetail(self, userLogin, send_data, expect):
         """查询收费记录"""
         re = Information(userLogin).getParkingBillDetail(send_data['parkName'], send_data['carNum'])
-        result = re.json()['data']["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result['parkVipTypeStr'], expect['checkParkingBillDetailMsg'])
 
     def test_checkCarInOutHistoryVIPType(self,userLogin,send_data,expect):
         """查看进出场记录中查看到VIP类型"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])

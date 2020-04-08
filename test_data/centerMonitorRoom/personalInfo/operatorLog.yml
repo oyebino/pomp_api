@@ -1,14 +1,14 @@
 - test:
     name: 中央值守操作日志
-    desc: 验证进出场消息处理
+    desc: 中央值守发语音的操作日志
     send_data:
       carNum: ${__create_carNum()}
-      StrictRule_inClientID: ${strictInClientID}
-      carInHandleType: 登记放行
-      carIn_jobId: ${mytest.carIn_jobId}
+      voiceMsg: &voiceMsg ${__create_name()}操作日志case
+      carOut_jobId: ${mytest.carOut_jobId}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
     except:
-      mockCarInMessage: 请稍候
-      carLeaveHistoryMessage: ${__create_carNum()}
-      checkCarInScreen: ${__create_carNum()}\\登记放行
-      checkCarInVoice: $${__create_carNum()}$登记放行
-      checkCarInOpenGate: 1
+      mockCarInMessage: 欢迎光临
+      mockCarOutMessage: 扫码缴费
+      sendVoiceMsg: 0
+      operatorLogMsg: *voiceMsg

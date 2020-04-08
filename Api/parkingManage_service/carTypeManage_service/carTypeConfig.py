@@ -79,7 +79,7 @@ class CarType(Req):
         self.url = "/mgr/park/specialCarTypeConfig/add.do"
         # print(data['parkVipTypeJson'])
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def __getChannelAuthTreeMultiPark(self):
         """获取全部车场区域进出口树"""
@@ -110,12 +110,12 @@ class CarType(Req):
         }
         self.url = "/mgr/park/specialCarTypeConfig/pageList.do?" + urlencode(data)
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
     def updataSpecialCarTypeConfig(self, oldTypeName, newTypeName):
         """编辑车辆基础配置"""
-        typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig().json(), 'name', oldTypeName)
-        typeConfigDetailDict = self.getSpecialCarTypeDetail(typeConfigDict['id']).json()['data']
+        typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig(), 'name', oldTypeName)
+        typeConfigDetailDict = self.getSpecialCarTypeDetail(typeConfigDict['id'])['data']
         optionArrList = self.__selectChargeGroupList(typeConfigDict['financialParkId']).json()['data'][typeConfigDict['financialParkId']]
         optionArrDict = {'optionArr': optionArrList}
         parkJsonList = []
@@ -165,11 +165,11 @@ class CarType(Req):
         }
         self.url = "/mgr/park/specialCarTypeConfig/edit.do"
         re = self.post(self.api, data= data, headers = form_headers)
-        return re
+        return re.json()
 
     def delSpecialCarType(self, typeName):
         """删除特殊车辆分类配置"""
-        typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig().json(), 'name', typeName)
+        typeConfigDict = self.getDictBykey(self.getSpecialCarTypeCofig(), 'name', typeName)
         self.url = "/mgr/park/specialCarTypeConfig/del.do"
         data = {
             "configId": typeConfigDict['id']
@@ -184,7 +184,7 @@ class CarType(Req):
         }
         self.url = "/mgr/park/specialCarTypeConfig/detail.do?" + urlencode(data)
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
     def __getDictChildList(self, json, key):
         """查找json的key把对应的value对象递归存放在list"""
@@ -213,17 +213,17 @@ class ParkVisitor(Req):
             "visitTo": today + ' 23:59:59'
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def delVisitor(self, parkName, carNum):
         """删除访客车辆"""
-        visitorDict = self.getDictBykey(self.getParkVisitorList(parkName).json(), 'carLicenseNumber', carNum)
+        visitorDict = self.getDictBykey(self.getParkVisitorList(parkName), 'carLicenseNumber', carNum)
         self.url = "/mgr/park/parkVisitorlist/del.do"
         data = {
             "parkVisitorlistId": visitorDict['id'],
         }
         re = self.post(self.api, data= data, headers = form_headers)
-        return re
+        return re.json()
 
     def __getVisitorConfigList(self):
         """查看访客配置列表"""
@@ -244,7 +244,7 @@ class ParkVisitor(Req):
         }
         self.url = "/mgr/park/parkVisitorlist/getParkVisitorlist.do?" + urlencode(data)
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
 class ParkBlacklist(Req):
     """黑名单录入"""
@@ -262,7 +262,7 @@ class ParkBlacklist(Req):
             "availTimeFromTo": today + ' 00:00:00~' + today + ' 23:59:59',
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def __getBlacklistConfig(self):
         """获取黑名单配置"""
@@ -272,13 +272,13 @@ class ParkBlacklist(Req):
 
     def delBlacklist(self, parkName, carNum):
         """删除黑名单"""
-        blacklistDict = self.getDictBykey(self.getBlacklist(parkName).json(), 'carLicenseNumber', carNum)
+        blacklistDict = self.getDictBykey(self.getBlacklist(parkName), 'carLicenseNumber', carNum)
         self.url = "/mgr/park/parkBlacklist/del.do"
         data = {
             "parkBlacklistId": blacklistDict['id']
         }
         re = self.post(self.api, data= data, headers= form_headers)
-        return re
+        return re.json()
 
     def getBlacklist(self, parkName):
         """获取黑名单列表"""
@@ -293,7 +293,7 @@ class ParkBlacklist(Req):
         }
         self.url = '/mgr/park/parkBlacklist/getParkBlacklist.do?' + urlencode(data)
         re = self.get(self.api)
-        return re
+        return re.json()
 
 class ParkWhitelist(Req):
     """白名单"""
@@ -306,20 +306,20 @@ class ParkWhitelist(Req):
             "parkIds": parkDict['value']
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def delWhilelist(self, carNum):
         """删除白名单规则"""
-        WhilelistDict = self.getDictBykey(self.getWhilelistRuleList().json(), 'redlistParam', carNum)
+        WhilelistDict = self.getDictBykey(self.getWhilelistRuleList(), 'redlistParam', carNum)
         self.url = "/mgr/park/park_redlist/del.do"
         data = {
             "id": WhilelistDict['id']
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def getWhilelistRuleList(self):
         """获取白名单规则列表"""
         self.url = "/mgr/park/park_redlist/getRules.do"
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()

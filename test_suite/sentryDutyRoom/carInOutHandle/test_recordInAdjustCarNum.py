@@ -14,10 +14,9 @@ from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/recordInAdjustCarNum.yml").getData
-
-
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("岗亭收费处")
+@allure.story('岗亭收费处进场记录校正')
 
 class TestRecordInAdjustCarNum(BaseCase):
 
@@ -31,25 +30,25 @@ class TestRecordInAdjustCarNum(BaseCase):
     def test_recordIn(self, sentryLogin, send_data, expect):
         """在pc端查看进场记录"""
         re = CarInOutHandle(sentryLogin).getCarInRecord(send_data['carNum'], send_data['parkName'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect['carNum'])
 
     def test_adjustCarNum(self, sentryLogin, send_data, expect):
         """在岗亭收费处在场车辆里面校正车牌"""
         re = CarInOutHandle(sentryLogin).patchRecord(send_data['carNum'], send_data['parkName'], send_data['adjustCarNum'])
-        result = re.text
+        result = re
         Assertions().assert_text(result, "")
 
     def test_checkAdjustCarInWaterNum(self, userLogin, send_data, expect):
         """查看校正进场车辆流水"""
         re = Information(userLogin).getAdjustCarWaterNum(send_data['adjustCarNum'], send_data['parkName'])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result, expect["adjustCarInWaterNumMsg"])
 
     def test_recordIn2(self, sentryLogin, send_data, expect):
         """在岗亭收费处在场车辆里面查看校正后车牌"""
         re = CarInOutHandle(sentryLogin).getCarInRecord(send_data['adjustCarNum'], send_data['parkName'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect['adjustCarNum'])
 
     def test_mockCarout(self, send_data, expect):
@@ -61,12 +60,12 @@ class TestRecordInAdjustCarNum(BaseCase):
     def test_checkOut(self, sentryLogin, send_data, expect):
         """收费放行"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['adjustCarNum'], send_data['carOutHandleType'])
-        result = re.json()["success"]
+        result = re
         Assertions().assert_in_text(result, expect["checkOutMessage"])
 
     def test_recordOut(self, sentryLogin, send_data, expect):
 
         """在pc端查看离场记录"""
         re = CarInOutHandle(sentryLogin).getCarOutRecord(send_data['adjustCarNum'], send_data['parkName'])
-        result = re.json()['rows'][0]['carCode']
+        result = re[0]['carCode']
         Assertions().assert_in_text(result, expect['adjustCarNum'])

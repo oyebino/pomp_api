@@ -1,0 +1,13 @@
+- test:
+    name: 远程值班室车辆严进校正车牌
+    desc: 远程值班室车辆严进校正车牌
+    send_data:
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      correctCarNum: &correctCarNum ${__create_carNum(carType = adjustCarNum)}
+      inClientID: ${strictInClientID}
+    except:
+      mockCarInMsg: 临时车请稍候
+      adjustCarNumMsg: *correctCarNum
+      dutyRoomCheckCarInMsg: 0
+      checkCarInRecordMsg: *correctCarNum

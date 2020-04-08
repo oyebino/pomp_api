@@ -4,10 +4,10 @@
     desc: 一位两车VIP进出场流程-第一辆VIP车比第二辆车先离场(不开启在场转VIP)(智泊云)
     send_data:
       parkName: ${usedParkName}
-      carNumList: 粤Y98769,粤Y98779
-      carNumA: 粤Y98769
-      carNumB: 粤Y98779
-      ticketTypeName: &ticketType 一位多车在场不转8777
+      carNumList: ${__create_carNum()},${__create_carNum(carType=B)}
+      carNumA: ${__create_carNum()}
+      carNumB: ${__create_carNum(carType=B)}
+      ticketTypeName: &ticketType 一位多车在场不转${__create_randomNum()}
       renewMethod: 自定义
       validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
       timeperiodListStr: ${__cal_getTheMonth(n=1)}
@@ -18,19 +18,19 @@
     except:
       createMonthTicketConfigMsg: ok
       openMonthTicketBillMsg: 操作成功
-      inscreenAMsg: &screenMsg 粤Y98769\\一位多车在场不转8777
-      invoiceAMsg: &voiceMsg 一位多车在场不转8777
-      presentCarAMsg: 粤Y98769
-      presentCarAvipTypeMsg: 一位多车在场不转8777
-      inscreenB: 粤Y98779\\超出可用车位转临时车
-      invoiceB: $粤Y98779$超出可用车位转临时车
-      presentCarBMsg: 粤Y98779
+      inscreenAMsg: &screenMsg ${__create_carNum()}\\一位多车在场不转${__create_randomNum()}
+      invoiceAMsg: &voiceMsg 一位多车在场不转${__create_randomNum()}
+      presentCarAMsg: ${__create_carNum()}
+      presentCarAvipTypeMsg: 一位多车在场不转${__create_randomNum()}
+      inscreenB: ${__create_carNum(carType=B)}\\超出可用车位转临时车
+      invoiceB: $${__create_carNum(carType=B)}$超出可用车位转临时车
+      presentCarBMsg: ${__create_carNum(carType=B)}
       presentCarBvipTypeBMsg: 临时车
       outScreenA: *screenMsg
       outVoiceA: *voiceMsg
       carAInOutVipTypeMsg: *ticketType
-      outscreenB: 粤Y98779\\扫码缴费5元
-      outvoiceB: $粤Y98779$请扫码缴费5元
+      outscreenB: ${__create_carNum(carType=B)}\\扫码缴费5元
+      outvoiceB: $${__create_carNum(carType=B)}$请扫码缴费5元
       sentryPayMsg: 已收费5元\\一路顺风
-      parkingBillDetailB: 粤Y98779
+      parkingBillDetailB: ${__create_carNum(carType=B)}
       carInOutVipTypeStrMsg: 临时车

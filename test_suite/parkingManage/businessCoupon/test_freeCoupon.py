@@ -15,25 +15,26 @@ from common.Assert import Assertions
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/freeCoupon.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("优惠劵管理")
+@allure.feature("智泊云-优惠劵管理")
+@allure.story('免费券创建并使用')
 class TestFreeCoupon():
     """免费券创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
         re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
     def test_addSell(self,userLogin,send_data,expect):
         """售卖优惠劵"""
         re = Coupon(userLogin).addSell(send_data["couponName"],send_data["parkName"],send_data["traderName"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["addSellMessage"])
 
     def test_sendCoupon(self,weiXinLogin,send_data,expect):
         """发放优惠劵"""
         re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponName"],send_data["carNum"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["sendCouponMessage"])
 
     def test_mockCarIn(self,send_data,expect):
@@ -51,17 +52,17 @@ class TestFreeCoupon():
     def test_checkParkingBillDetail(self,userLogin,send_data,expect):
         """查看收费流水"""
         re = Information(userLogin).getParkingBillDetail(send_data["parkName"],send_data["carNum"])
-        result = re.json()['rows']
+        result = re
         Assertions().assert_in_text(result, expect["checkParkingBillDetailMessage"])
 
     def test_checkCouponSendList(self,userLogin,send_data,expect):
         """查看发放流水"""
         re = Coupon(userLogin).getCouponGrantList(send_data["parkName"],send_data["carNum"])
-        result = re.json()['rows']
+        result = re
         Assertions().assert_in_text(result, expect["checkCouponGrantListMessage"])
 
     def test_checkCouponUsedList(self,userLogin,send_data,expect):
         """查看使用流水"""
         re = Coupon(userLogin).getCouponSerialList(send_data["parkName"],send_data["carNum"])
-        result = re.json()['rows']
+        result = re
         Assertions().assert_in_text(result, expect["checkSerialListMessage"])

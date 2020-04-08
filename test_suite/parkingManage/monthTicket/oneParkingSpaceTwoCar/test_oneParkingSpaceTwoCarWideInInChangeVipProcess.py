@@ -16,7 +16,8 @@ from Api.cloudparking_service import cloudparking_service
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/oneParkingSpaceTwoCar/oneParkingSpaceTwoCarWideInInChangeVipProcess.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("智泊云-月票管理模块-一位两车")
+@allure.story('第一辆VIP车比第二辆车先离场（开启在场转VIP）')
 class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     """多位多车VIP转临时车宽进"""
     """一位两车VIP进出场流程，第一辆VIP车比第二辆车先离场（开启在场转VIP）"""
@@ -24,13 +25,13 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建多位多车月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'],isDynamicMode=send_data['isDynamicMode'],autoSwitchVip=send_data['autoSwitchVip'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
 
     def test_openMonthTicketBill(self, userLogin, send_data, expect):
         """用自定义月票类型开通月票"""
         re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNumList'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     # 多位多车VIP第一辆车进车
@@ -44,7 +45,7 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     def test_presentCarA(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNumA"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['carNo'], expect["presentCarAMsg"])
         Assertions().assert_in_text(result['vipType'], expect["presentCarAvipTypeMsg"])
 
@@ -59,7 +60,7 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     def test_presentCarB(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNumB"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['carNo'], expect["presentCarBMsg"])
         Assertions().assert_in_text(result['vipType'], expect["presentCarBvipTypeBMsg"])
 
@@ -74,7 +75,7 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     def test_carALeaveHistory(self, userLogin, send_data, expect):
         """查看进出场记录A"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNumA"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["carAInOutVipTypeMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["carAInOutVipTypeMsg"])
 
@@ -89,18 +90,18 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
     def test_sentryPay(self, sentryLogin, send_data, expect):
         """岗亭收费处收费-查看车辆离场信息"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNumB'], send_data['carOutHandleType'],'${mytest.carOut_jobId}')
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['sentryPayMsg'])
 
     def test_parkingBillDetail(self,userLogin,send_data,expect):
         """查看收费记录"""
         re = Information(userLogin).getParkingBillDetail(send_data["parkName"],send_data["carNumB"])
-        result = re.json()["data"]["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result,expect["parkingBillDetailMsg"])
 
     def test_CarBLeaveHistory(self, userLogin, send_data, expect):
         """查看进出场记录B"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNumB"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["carBEnterVipTypeStrMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["carBLeaveVipTypeStrMsg"])

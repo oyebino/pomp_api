@@ -2,7 +2,7 @@
     name: 进出场消息处理
     desc: 验证进出场消息处理
     send_data:
-      carNum: ${__create_carNum()}
+      carNum: &carNum ${__create_carNum()}
       parkName: ${usedParkName}
       StrictRule_inClientID: ${strictInClientID}
       StrictRule_outClientID: ${strictOutClientID}
@@ -13,7 +13,7 @@
     except:
       mockCarInMessage: 请稍候
       mockCarOutMessage: 缴费
-      carLeaveHistoryMessage: ${__create_carNum()}
+      carLeaveHistoryMessage: *carNum
       checkCarInScreen: ${__create_carNum()}\\登记放行
       checkCarInVoice: $${__create_carNum()}$登记放行
       checkCarInOpenGate: 1

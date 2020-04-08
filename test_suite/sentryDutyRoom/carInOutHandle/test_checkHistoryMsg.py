@@ -17,6 +17,8 @@ args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkHistoryMsg.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("岗亭收费处")
+@allure.story('岗亭收费处查看历史消息')
+@pytest.mark.skip(reason='尚未处理')
 class TestCheckHistoryMsg(BaseCase):
     """岗亭收费处查看历史消息"""
     def test_mockCarIn(self, send_data, expect):
@@ -30,7 +32,7 @@ class TestCheckHistoryMsg(BaseCase):
     def test_checkCarIn(self,sentryLogin,send_data,expect):
         """岗亭端登记放入"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carInHandleType'],send_data['carIn_jobId'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["checkCarInMessage"])
 
     def test_checkOneHistoryMsg(self,sentryLogin,send_data,expect):
@@ -44,7 +46,7 @@ class TestCheckHistoryMsg(BaseCase):
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkId"],send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result,expect["presentCarMessage"])
 
     def test_mockCarOut(self,send_data,expect):
@@ -56,7 +58,7 @@ class TestCheckHistoryMsg(BaseCase):
     def test_checkCarOut(self,sentryLogin,send_data,expect):
         """岗亭端收费放出"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["checkCarOutMessage"])
 
     def test_checkOneHistoryMsg2(self,sentryLogin,send_data,expect):
@@ -70,5 +72,5 @@ class TestCheckHistoryMsg(BaseCase):
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkId"],send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

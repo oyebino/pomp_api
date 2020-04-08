@@ -1,0 +1,15 @@
+- test:
+    name: 远程值班下班-离开状态
+    desc: 远程值班下班-收不到车辆信息-离开状态
+    send_data:
+      carNum: &carNum ${__create_carNum()}
+      leaveStatus: 离开
+      onStatus: 上班
+      offStatus: 下班
+      inClientID: ${strictInClientID}
+    except:
+      operatorStatusLeaveMsg: 操作成功
+      mockCarInMessage: 临时车请稍候
+      getCarInHandleMsg: *carNum
+      operatorStatusOnMsg: 操作成功
+      operatorStatusOffMsg: 操作成功

@@ -12,32 +12,29 @@ class TollCollection(Req):
     """
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
     nickName = "test" + SuperAction().get_time()
-
-    def add_tollCollection(self, userId, pwd):
+    roleDict = {'收费员':0, '管理员':1}
+    def add_tollCollection(self, userId, pwd, role):
         """
         新增收费员-需绑定车场！！！
         """
         self.url = "/mgr/user/sentryuser/add"
         json_data = {
                         "nickName": "{}".format(self.nickName),
-                        "role": "0",
+                        "role": self.roleDict[role],
                         "telephone": "18000000000",
                         "id": None,
                         "userId": "{}".format(userId),
                         "password": "{}".format(pwd)
                   }
         re = self.post(self.api, json=json_data, headers=self.api_headers)
-        allNameDict = self.getDictBykey(self.__queryAllTollCollection().json(), 'nickName', self.nickName)
-        id = allNameDict['id']
-        self.__bind_park(id)  # 绑定车场
-        return re
+        return re.json()
 
-    def modify_tollCollection(self, editUserId, editPwd):
+    def modify_tollCollection(self, userId, editUserId, editPwd):
         """
         修改收费员
         """
-        allNameDict = self.getDictBykey(self.__queryAllTollCollection().json(), 'nickName', self.nickName)
-        id = allNameDict['id']
+        tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
+        id = tollNameDict['id']
         self.url = "/mgr/user/sentryuser/update"
         json_data = {
                         "nickName": "test{}".format(SuperAction().get_time()),
@@ -48,29 +45,39 @@ class TollCollection(Req):
                         "password": "{}".format(editPwd)
                   }
         re = self.post(self.api, json=json_data, headers=self.api_headers)
-        return re
+        return re.json()
 
-    def freeze_tollCollection(self):
+    def freeze_tollCollection(self,userId):
         """
         冻结收费员
         """
-        allNameDict = self.getDictBykey(self.__queryAllTollCollection().json(), 'nickName', self.nickName)
-        id = allNameDict['id']
+        tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
+        id = tollNameDict['id']
         self.url = "/mgr/user/sentryuser/freeze/{}".format(id)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()
 
-    def del_tollCollection(self):
+    def unfreeze_tollCollection(self, userId):
         """
-        冻结收费员
+        解冻收费员
         """
-        allNameDict = self.getDictBykey(self.__queryAllTollCollection().json(), 'nickName', self.nickName)
-        id = allNameDict['id']
+        tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
+        id = tollNameDict['id']
+        self.url = "/mgr/user/sentryuser/freeze/{}".format(id)
+        re = self.get(self.api, headers=self.api_headers)
+        return re.json()
+
+    def del_tollCollection(self,userId):
+        """
+        删除收费员
+        """
+        tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
+        id = tollNameDict['id']
         self.url = "/mgr/user/sentryuser/delete/{}".format(id)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()
 
-    def __queryAllTollCollection(self):
+    def getAllTollCollection(self):
         self.url = "/mgr/user/sentryuser/getAll"
         json_data = {
                         "pageNumber": 1,
@@ -78,26 +85,27 @@ class TollCollection(Req):
                         "sortType": "ASC"  # 取最新的，需排序
                     }
         re = self.post(self.api, json=json_data, headers=self.api_headers)
-        return re
+        return re.json()
 
-    def __bind_park(self, id):
+    def bindUserPark(self, parkName, userId):
         """
         绑定全部车场
         """
-        parksList = self.__getAllParks().json()['parks']
+        tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
+        parkDict = self.getDictBykey(self.__getAuthzParks().json(),'name',parkName)
+        listParkId = [parkDict['uuid']]
         self.url = "/mgr/user/sentryuser/bindUserPark"
         json_data = {
-                        "id": id,
-                        "listParkId": parksList
+                        "id": tollNameDict['id'],
+                        "listParkId": listParkId
                     }
         re = self.post(self.api, json=json_data, headers=self.api_headers)
-        return re
+        return re.json()
 
-    def __getAllParks(self):
-
+    def __getAuthzParks(self):
         """获取所有车场-但实际上只有两个车场？"""
-        self.url = "/mgr/main/getParks.do"
-        re = self.post(self.api, headers=self.api_headers)
+        self.url = "/mgr/index/getAuthzParks.do"
+        re = self.get(self.api, headers=self.api_headers)
         return re
 
 if __name__ == '__main__':

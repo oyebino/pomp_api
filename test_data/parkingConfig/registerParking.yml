@@ -1,0 +1,16 @@
+- test:
+    name: 登录页面注册停车场-停车场上线使用
+    desc: 登录页面注册停车场-停车场上线使用
+    send_data:
+      parkName: py停车场${__create_randomNum()}
+      cooperativeName: 叶永彬
+      activationCode: ${mytest.activationCode}
+      managerName: py管理方${__get_time()}
+      userAccount: login${__get_time()}
+      pwd: 123456
+    except:
+      getActivationCodeMsg: '-'
+      registerUserMsg: 注册成功
+      addOperatorParkMsg: 1
+      saveParkAuditingMsg: 操作成功
+      parkingOnLineMsg: true

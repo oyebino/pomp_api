@@ -3,24 +3,24 @@
     desc: 临时车离场人工匹配
     send_data:
       parkName: ${usedParkName}
-      carNumA: 京BBBBB2
-      carNum: 京BBBBB3
-      matchCarNum: 京BBBBB4
+      carNumA: &carNumA 粤Y${__create_randomNum(val=5)}
+      carNum: 粤E${__create_randomNum(val=5)}
+      matchCarNum: &matchCarNum 粤X${__create_randomNum(val=5)}
+      confidence: 85
       carOutHandleType: 收费放行
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
       carOut_jobId: ${mytest.carOut_jobId}
     except:
-      carInVoiceA: 京BBBBB2
-      carInScreen: 京BBBBB4\\欢迎光临
-      carInVoice: $京BBBBB4$欢迎光临
+      carInVoiceA: *carNumA
+      carInScreen: 粤X${__create_randomNum(val=5)}\\欢迎光临
+      carInVoice: $粤X${__create_randomNum(val=5)}$欢迎光临
       carInOpenGate: 1
-      presentCarMessage: 京BBBBB4
-      mockCarOutMessage: $京BBBBB3$无在场记录请稍候
-      matchCarNumMessage: 京BBBBB4
-      checkCarOutScreen: 已收费5元\\一路顺风
-      checkCarOutVoice: 已收费5元一路顺风
+      presentCarMessage: *matchCarNum
+      mockCarOutMessage: $粤E${__create_randomNum(val=5)}$无在场记录请稍候
+      matchCarNumMessage: *matchCarNum
+      checkCarOutScreen: 已收费${mytest.payVal}元\\一路顺风
       checkCarOutOpenGate: 1
-      carLeaveHistoryMessage: 京BBBBB4
+      carLeaveHistoryMessage: *matchCarNum
 
 

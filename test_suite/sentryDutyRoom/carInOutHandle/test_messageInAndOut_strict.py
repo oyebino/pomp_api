@@ -10,9 +10,6 @@ from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
 from Api.sentry_service.carInOutHandle import CarInOutHandle
 from common.BaseCase import BaseCase
-
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-root_path = os.path.abspath(os.path.join(BASE_DIR, "../.."))
 from common.utils import YmlUtils
 from common.Assert import Assertions
 
@@ -20,7 +17,8 @@ args_item = "send_data,expect"
 test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/messageInOut.yml").getData
 
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("PC岗亭进出场消息处理")
+@allure.feature("岗亭收费处")
+@allure.story('PC岗亭进出场消息处理')
 class TestSentryMessage(BaseCase):
 
     """岗亭收费处理：进场、离场消息 """
@@ -35,7 +33,7 @@ class TestSentryMessage(BaseCase):
     def test_checkMessageIn(self, sentryLogin, send_data, expect):
         """登记放行"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'], send_data['carInHandleType'],send_data['carIn_jobId'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["checkCarInScreen"])
         Assertions().assert_in_text(result['voice'], expect["checkCarInVoice"])
         Assertions().assert_in_text(result['open_gate'], expect["checkCarInOpenGate"])
@@ -50,7 +48,7 @@ class TestSentryMessage(BaseCase):
     def test_checkMessageOut(self, sentryLogin, send_data, expect):
         """登记放行"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'], send_data['carOutHandleType'], send_data['carOut_jobId'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
         Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
         Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
@@ -58,6 +56,6 @@ class TestSentryMessage(BaseCase):
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result, expect["carLeaveHistoryMessage"])
 

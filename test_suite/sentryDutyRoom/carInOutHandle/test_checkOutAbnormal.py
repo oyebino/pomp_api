@@ -20,7 +20,8 @@ test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkO
 
 
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("pc端异常放行")
+@allure.feature("岗亭收费处")
+@allure.story('pc端异常放行')
 class TestCheckOutAbnormal():
 
     """pc端异常放行"""
@@ -33,7 +34,7 @@ class TestCheckOutAbnormal():
     def test_presentCar(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result, expect["presentCarMessage"])
 
     def test_mockCarOut(self, send_data, expect):
@@ -45,7 +46,7 @@ class TestCheckOutAbnormal():
     def test_sentryCheckOutAbnormal(self, sentryLogin, send_data, expect):
         """岗亭异常放行-查看车辆离场信息"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
         Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
         Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
@@ -53,5 +54,5 @@ class TestCheckOutAbnormal():
     def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看离场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result, expect["carLeaveHistoryMessage"])

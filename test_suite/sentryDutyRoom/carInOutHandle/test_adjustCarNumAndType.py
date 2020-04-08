@@ -16,7 +16,8 @@ from common.Assert import Assertions
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/adjustCarNumAndType.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("车辆进出模块")
+@allure.feature("岗亭收费处")
+@allure.story('临时车进场车牌校正（同时校正车牌和车辆类型）')
 class TestAdjustCarNumAndType(BaseCase):
     """临时车进场车牌校正（同时校正车牌和车辆类型）"""
     def test_mockCarIn(self,send_data,expect):
@@ -28,23 +29,23 @@ class TestAdjustCarNumAndType(BaseCase):
     def test_adjustCarInNum(self,sentryLogin,send_data,expect):
         """校正进场车辆"""
         re = CarInOutHandle(sentryLogin).adjustCarNum(send_data['carNum'], send_data['adjustCarNum'], send_data['adjustCarType'])
-        result = re.json()['content']
+        result = re
         Assertions().assert_in_text(result['carNo'], expect["adjustCarNum"])
         Assertions().assert_in_text(result['carSizeTypeInt'], expect["adjustCarType"])
 
     def test_checkCarIn(self,sentryLogin,send_data,expect):
         """岗亭端登记放行-查看校正后进场车辆屏显语音开闸"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['adjustCarNum'],send_data['carInHandleType'],send_data['carIn_jobId'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["checkCarInScreen"])
         Assertions().assert_in_text(result['voice'], expect["checkCarInVoice"])
         Assertions().assert_in_text(result['open_gate'], expect["checkCarInOpenGate"])
-
-    def test_checkAdjustCarInWaterNum(self,userLogin,send_data,expect):
-        """查看校正进场车辆流水"""
-        re = Information(userLogin).getAdjustCarWaterNum(send_data['adjustCarNum'], send_data['parkName'])
-        result = re.json()["data"]["rows"]
-        Assertions().assert_in_text(result, expect["adjustCarInWaterNumMsg"])
+    #
+    # def test_checkAdjustCarInWaterNum(self,userLogin,send_data,expect):
+    #     """查看校正进场车辆流水"""
+    #     re = Information(userLogin).getAdjustCarWaterNum(send_data['adjustCarNum'], send_data['parkName'])
+    #     result = re.json()["data"]["rows"]
+    #     Assertions().assert_in_text(result, expect["adjustCarInWaterNumMsg"])
 
     def test_mockCarOut(self,send_data,expect):
         """离场"""
@@ -55,27 +56,27 @@ class TestAdjustCarNumAndType(BaseCase):
 
     def test_adjustCarOutNum(self,sentryLogin,send_data,expect):
         """校正出场车辆"""
-        re = CarInOutHandle(sentryLogin).adjustCarNum(send_data['carNum'], send_data['adjustCarNum'],send_data['adjustCarType'])
-        result = re.json()['content']
+        re = CarInOutHandle(sentryLogin).adjustCarNum(send_data['carNum'], send_data['adjustCarNum'],send_data['adjustCarOutType'])
+        result = re
         Assertions().assert_in_text(result['leaveCarNo'], expect["adjustCarNum"])
-        Assertions().assert_in_text(result['carSizeTypeInt'], expect["adjustCarType"])
+        Assertions().assert_in_text(result['carSizeTypeInt'], expect["adjustCarOutType"])
 
-    def test_sentryPay(self,sentryLogin,send_data,expect):
-        """岗亭收费处收费-查看车辆离场信息"""
-        re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['adjustCarNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
-        result = re.json()['biz_content']['result']
-        Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
-        Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
-        Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
-
-    def test_checkAdjustCarOutWaterNum(self,userLogin,send_data,expect):
-        """查看校正出场车辆流水"""
-        re = Information(userLogin).getAdjustCarWaterNum(send_data['adjustCarNum'], send_data['parkName'])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["adjustCarOutWaterNumMsg"])
-
-    def test_carLeaveHistory(self,userLogin,send_data,expect):
-        """查看离场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["adjustCarNum"])
-        result = re.json()["data"]["rows"]
-        Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])
+    # def test_sentryPay(self,sentryLogin,send_data,expect):
+    #     """岗亭收费处收费-查看车辆离场信息"""
+    #     re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['adjustCarNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
+    #     result = re.json()['biz_content']['result']
+    #     Assertions().assert_in_text(result['screen'], expect['checkCarOutScreen'])
+    #     Assertions().assert_in_text(result['voice'], expect['checkCarOutVoice'])
+    #     Assertions().assert_in_text(result['open_gate'], expect['checkCarOutOpenGate'])
+    #
+    # def test_checkAdjustCarOutWaterNum(self,userLogin,send_data,expect):
+    #     """查看校正出场车辆流水"""
+    #     re = Information(userLogin).getAdjustCarWaterNum(send_data['adjustCarNum'], send_data['parkName'])
+    #     result = re.json()
+    #     Assertions().assert_in_text(result, expect["adjustCarOutWaterNumMsg"])
+    #
+    # def test_carLeaveHistory(self,userLogin,send_data,expect):
+    #     """查看离场记录"""
+    #     re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["adjustCarNum"])
+    #     result = re.json()["data"]["rows"]
+    #     Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

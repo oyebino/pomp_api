@@ -16,7 +16,8 @@ from Api.cloudparking_service import cloudparking_service
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/refundMonthTicketProcess.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("智泊云-月票管理模块")
+@allure.story('月票退款-出场是临时车')
 class TestRefundMonthTicketProcess():
     """车辆开通月票，车辆进出，是月票，然后执行月票退款，车辆进出，不是月票"""
 
@@ -24,14 +25,14 @@ class TestRefundMonthTicketProcess():
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建自定义月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
 
     # 开通月票
     def test_openMonthTicketBill(self, userLogin, send_data, expect):
         """用自定义月票类型开通月票"""
         re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNum'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     # 开通月票后进车
@@ -53,13 +54,13 @@ class TestRefundMonthTicketProcess():
     def test_CarLeaveHistory(self, userLogin, send_data, expect):
         """查看进出场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
-        result = re.json()["data"]["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result, expect["carLeaveHistoryMessage"])
 
     # 月票退款
     def test_refundMonthTicket(self,userLogin,send_data,expect):
         re = MonthTicketBill(userLogin).refundMonthTicketBill(send_data["parkName"], send_data["carNum"], send_data['refundValue'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result,expect["refundMonthTicketMsg"])
 
     # 月票退款后进车
@@ -81,13 +82,13 @@ class TestRefundMonthTicketProcess():
     def test_sentryPay(self, sentryLogin, send_data, expect):
         """岗亭收费处收费-查看车辆离场信息"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'], send_data['carOutHandleType'],'${mytest.carOut_jobId}')
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['sentryPayMsg'])
 
     def test_checkCarInOutHistoryVIPType(self,userLogin,send_data,expect):
         """查看进出场记录中查看到VIP类型"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["checkCarInOutHistoryVIPTypeMsg"])
 

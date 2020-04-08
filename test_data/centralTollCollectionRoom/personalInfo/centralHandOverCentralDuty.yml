@@ -1,0 +1,8 @@
+- test:
+    name: 中央收费处交接班
+    desc: 中央收费处交接班
+    send_data:
+      handOverUser: luoguicai
+      handOverPwd: 123456
+    except:
+      handOverCentralDutyMsg: luoguicai

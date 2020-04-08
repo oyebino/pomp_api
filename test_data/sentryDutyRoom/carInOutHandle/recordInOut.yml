@@ -2,7 +2,7 @@
     name: 岗亭进出场记录
     desc: 岗亭进出场记录查询
     send_data:
-      carNum: ${__create_carNum()}
+      carNum: &carNum ${__create_carNum()}
       parkName: ${usedParkName}
       carOutHandleType: 收费放行
       lightRule_inClientID: ${wideInClientId}
@@ -11,8 +11,9 @@
     except:
       mockCarInMessage: 欢迎光临
       mockCarOutMessage: 缴费
-      checkOutMessage: true
-      carNum: ${__create_carNum()}
-      checkCarOutScreen: 已收费5元\\一路顺风
-      checkCarOutVoice: 已收费5元一路顺风
+      recordInMsg: *carNum
+      recordOutCarNum: *carNum
+      recordOutPayVal: ${mytest.payVal}
+      checkCarOutScreen: 已收费${mytest.payVal}元\\一路顺风
+      checkCarOutVoice: 已收费${mytest.payVal}元一路顺风
       checkCarOutOpenGate: 1

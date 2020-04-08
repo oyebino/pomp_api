@@ -1,0 +1,15 @@
+- test:
+    name: 岗亭收费处查看收费流水
+    desc: 岗亭收费处查看收费流水
+    send_data:
+      carNum: &carNum ${__create_carNum()}
+      carOutHandleType: 收费放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      mockCarInMessage: 欢迎光临
+      mockCarOutMessage: 缴费
+      sentryPayMsg: 一路顺风
+      offdutyStatusCode: 200
+      tollFlowCarCodeMsg: *carNum
+      tollFlowPayValMsg: ${mytest.payVal}

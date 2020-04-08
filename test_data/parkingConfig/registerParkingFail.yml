@@ -1,0 +1,14 @@
+- test:
+    name: 注册车场填写已存在停车场名-注册失败
+    desc: 注册车场填写已存在停车场名-注册失败
+    send_data:
+      parkName: ${usedParkName}
+      cooperativeName: 叶永彬
+      activationCode: ${mytest.activationCode}
+      managerName: py管理方${__get_time()}
+      userAccount: login${__get_time()}
+      pwd: 123456
+    except:
+      getActivationCodeMsg: '-'
+      registerUserMsg: 注册成功
+      addOperatorParkMsg: 车场名称重复

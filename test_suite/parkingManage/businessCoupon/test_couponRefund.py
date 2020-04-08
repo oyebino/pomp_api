@@ -15,35 +15,36 @@ from common.BaseCase import BaseCase
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/couponRefund.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("优惠劵管理")
+@allure.feature("智泊云-优惠劵管理")
+@allure.story('优惠劵退款')
 class TestCouponRefund(BaseCase):
     """优惠劵退款"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
         re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
     def test_addSell(self,userLogin,send_data,expect):
         """售卖优惠劵"""
         re = Coupon(userLogin).addSell(send_data["couponName"],send_data["parkName"],send_data["traderName"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["addSellMessage"])
 
     def test_checkCouponOnTrader(self,weiXinLogin,send_data,expect):
         """商户端查看优惠劵"""
         re = WeiXin(weiXinLogin).findCouponList()
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["checkCouponOnTraderMsg"])
 
     def test_refundCoupon(self,userLogin,send_data,expect):
         """优惠劵退款"""
         re = SellManage(userLogin).couponRefund(send_data['parkName'],send_data['couponName'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["refundCouponMsg"])
 
     def test_checkCouponAgain(self,weiXinLogin,send_data,expect):
         """商户端再次查看优惠劵"""
         re = WeiXin(weiXinLogin).findCouponList()
-        result = re.json()
+        result = re
         Assertions().assert_not_in_text(result, expect["checkCouponOnTraderMsg"])

@@ -5,7 +5,7 @@
       parkName: ${usedParkName}
       specialCarType: 访客
       typeName: api访客${__create_randomNum(val=4)}
-      newTypeName: &newTypeName api访客${__create_randomNum(val=5)}
+      newTypeName: api访客${__create_randomNum(val=5)}
       carNum: &carNum ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
@@ -15,7 +15,7 @@
       editVisitorSpecialTypeMsg: 1
       createVisitorCarNumMsg: 操作成功
       mockCarInMessage: ${__create_carNum()}\\api访客${__create_randomNum(val=5)}
-      checkPresentCarTypeMsg: *newTypeName
+      checkPresentCarTypeMsg: 访客
       mockCarOutMessage: $${__create_carNum()}$api访客${__create_randomNum(val=5)}请稍候
       sentryPayMessage: 一路顺风
       checkCarleaveVipTypeStrMsg: 访客

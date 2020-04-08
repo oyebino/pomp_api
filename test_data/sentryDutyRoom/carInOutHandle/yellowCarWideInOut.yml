@@ -1,0 +1,19 @@
+- test:
+    name: 黄牌车宽进-需缴费宽出
+    desc: 黄牌车宽进-需缴费宽出
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      carType: 黄牌车
+      carOutHandleType: 收费放行
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+      carOut_jobId: ${mytest.carOut_jobId}
+    except:
+      mockCarInMsg: 欢迎光临
+      presentCarTypeMsg: 2
+      mockCarOutMessage: 请扫码缴费5元
+      checkCarOutScreen: 已收费5元\\一路顺风
+      carLeaveHistoryMessage: *carNum
+
+

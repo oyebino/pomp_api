@@ -15,7 +15,8 @@ from common.Assert import Assertions
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingConfig/freeParking/lightRuleChannel/carLightRuleInOutNoPay.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("车辆进出模块")
+@allure.feature("智泊云-免费停车场")
+@allure.story('临时车宽进-不需缴费宽出')
 class TestCarLightRuleInOutNoPay(BaseCase):
     """临时车宽进，不需缴费宽出"""
     def test_mockCarIn(self,send_data,expect):
@@ -28,7 +29,7 @@ class TestCarLightRuleInOutNoPay(BaseCase):
     def test_presentCar(self,userLogin,send_data,expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result,expect["presentCarMessage"])
 
     def test_mockCarOut(self,send_data,expect):
@@ -40,5 +41,5 @@ class TestCarLightRuleInOutNoPay(BaseCase):
     def test_carLeaveHistory(self,userLogin,send_data,expect):
         """查看离场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"]
+        result = re
         Assertions().assert_in_text(result,expect["carLeaveHistoryMessage"])

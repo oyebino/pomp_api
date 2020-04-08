@@ -1,0 +1,14 @@
+- test:
+    name: 中央只校正车牌-缴费-离场
+    desc: 中央收费处选择车牌场内校正-只校正车牌
+    send_data:
+      parkName: ${usedParkName}
+      carNum: ${__create_carNum()}
+      adjustCarNum: &adjustCarNum ${__create_carNum(carType = adjustCarNum)}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      mockCarInMessage: ${__create_carNum()}\\欢迎光临
+      centryPayMsg: 5
+      mockCarOutMessage: 一路顺风
+      carLeaveHistoryMessage: *adjustCarNum

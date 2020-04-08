@@ -38,7 +38,7 @@ class Information(Req):
         }
         self.url = "/mgr/park/presentCar/getPresentCar.do?" + urlencode(data)
         re = self.get(self.api,headers= self.api_headers)
-        return re
+        return re.json()["data"]["rows"]
 
     def getCarLeaveHistory(self,parkName,carNum):
         """
@@ -59,7 +59,7 @@ class Information(Req):
         self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?" + urlencode(data)
         time.sleep(5)
         re = self.get(self.api,headers= self.api_headers)
-        return re
+        return re.json()["data"]["rows"]
 
     def getParkingBillDetail(self,parkName,carNum):
         """
@@ -79,7 +79,7 @@ class Information(Req):
         }
         self.url = "/mgr/park/parkingBillDetail/list.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()['data']['rows']
 
     def getAdjustCarWaterNum(self,newCarCode,parkName):
         """
@@ -97,7 +97,7 @@ class Information(Req):
         }
         self.url = "/mgr/park/adjustCarRecord/getAdjustCarRecord.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()["data"]["rows"]
 
 
     def getAbnormalInCar(self, parkName, carCode):
@@ -117,7 +117,7 @@ class Information(Req):
         }
         self.url = "mgr/park/abnormalInCar/getAbnormalInCar.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()['data']['rows']
 
     def getAbnormalPicCar(self, parkName, carCode):
         """
@@ -136,7 +136,7 @@ class Information(Req):
         }
         self.url = "mgr/park/parkAbnormalPicCar/getParkAbnormalPicCar.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
-        return re
+        return re.json()['data']['rows']
 
     def __getParkingBaseTree(self):
         """获取当前用户车场树信息"""
@@ -160,11 +160,11 @@ class Information(Req):
         }
         self.url = "/mgr/park/emergency/record/list.do?" + urlencode(data)
         re = self.get(self.api, headers = self.api_headers)
-        return re
+        return re.json()
 
     def cleanCarCheckOut(self, parkName, carNum):
         """批量盘点"""
-        carNumDict = self.getDictBykey(self.getPresentCar(parkName, carNum).json(), 'carNo', carNum)
+        carNumDict = self.getDictBykey(self.getPresentCar(parkName, carNum), 'carNo', carNum)
         userDict = Index(self.Session).getNewMeun().json()['user']
         data = {
             "topBillCodeList": carNumDict['topBillCode'],
@@ -173,7 +173,7 @@ class Information(Req):
         }
         self.url = '/mgr/park/presentCar/clearByTopBillCodeList?' + urlencode(data)
         re = self.post(self.api, headers = self.api_headers)
-        return re
+        return re.json()
 
     def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件',carNum = None , file = 'auto_clear_car.xls'):
         """
@@ -190,7 +190,7 @@ class Information(Req):
             re = self.__autoClearCarByTime(nowTime, parkDict['parkId'], userDict['nickname'])
         else:
             re = self.__autoClearCarByFile(nowTime, parkDict['parkId'], userDict['nickname'], carNum, file)
-        return re
+        return re.json()
 
 
     def __autoClearCarByTime(self, clearTime, parkUUID, operatorName):
@@ -255,9 +255,6 @@ class Information(Req):
         re = self.post(self.api, headers=self.api_headers)
         return re
 
-    def runTest(self, file, presentCarNum):
-        self.__setCarNumInClearCarFile(file, presentCarNum)
-
     def __setCarNumInClearCarFile(self, file, presentCarNum):
         """往盘点车辆文件设置在场车牌"""
         import xlrd
@@ -286,7 +283,7 @@ class Information(Req):
         }
         self.url = "/mgr/pomplog/list.do"
         re = self.post(self.api, data = data, headers = self.form_headers)
-        return re
+        return re.json()['data']['rows']
 
 
 if __name__ == '__main__':

@@ -1,0 +1,14 @@
+- test:
+    name: pomp管理收费员流程
+    desc: pomp新增-冻结-修改-删除收费员流程
+    send_data:
+      parkName: ${usedParkName}
+      userId: test${__create_randomNum()}
+      pwd: 123456
+      role: 收费员
+      editUserId: &editUserId pytest${__create_randomNum(val=4)}
+      editPwd: 987654
+    except:
+      status: 1
+      onDutyTime: on_duty_time
+      isDelToll: *editUserId

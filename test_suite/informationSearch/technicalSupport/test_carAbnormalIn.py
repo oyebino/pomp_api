@@ -15,7 +15,8 @@ from Api.cloudparking_service import cloudparking_service
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/informationSearch/technicalSupport/carAbnormalIn.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("信息查询-技术支持")
+@allure.story('临时车异常进场')
 class TestCarAbnormalIn():
     """临时车异常进场"""
 
@@ -23,50 +24,45 @@ class TestCarAbnormalIn():
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
         Assertions().assert_in_text(result, expect["invoice"])
 
     def test_presentCar(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNum"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["presentCarMessage"])
-        Assertions().assert_in_text(result, expect["carNum"])
 
     def test_mockCarIn2(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_in"])
         Assertions().assert_in_text(result, expect["inscreen"])
         Assertions().assert_in_text(result, expect["invoice"])
 
     def test_presentCar2(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNum"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["presentCarMessage"])
-        Assertions().assert_in_text(result, expect["carNum"])
 
     def test_getAbnormalInCar(self, userLogin, send_data, expect):
         """查看异常进场记录"""
         re = Information(userLogin).getAbnormalInCar(send_data["parkName"], send_data["carNum"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["AbnormalInCarMessage"])
-        Assertions().assert_in_text(result, expect["carNum"])
-        Assertions().assert_in_text(result, expect["exceptionType"])
+        result = re[0]
+        Assertions().assert_text(result['carCode'], expect["abnormalInCar"])
+        Assertions().assert_text(result['exceptionType'], expect["exceptionType"])
 
     def test_mockCarOut(self, send_data, expect):
         """模拟车辆离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
         result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_out"])
+        Assertions().assert_in_text(result, expect["mockCarOutMsg"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭收费处收费-查看车辆离场信息"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNum'],send_data['carOutHandleType'],send_data['carOut_jobId'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect['outscreen'])
         Assertions().assert_in_text(result['voice'], expect['outvoice'])
         Assertions().assert_in_text(result['open_gate'], expect['outOpen_gate'])
@@ -74,13 +70,13 @@ class TestCarAbnormalIn():
     def test_parkingBillDetail(self,userLogin,send_data,expect):
         """查看收费记录"""
         re = Information(userLogin).getParkingBillDetail(send_data["parkName"],send_data["carNum"])
-        result = re.json()["data"]["rows"]
-        Assertions().assert_in_text(result,expect["carNum"])
+        result = re
+        Assertions().assert_in_text(result,expect["parkingBillMsg"])
 
-    def test_CarLeaveHistory(self, userLogin, send_data, expect):
+    def test_carLeaveHistory(self, userLogin, send_data, expect):
         """查看进出场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNum"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["carNum"])
+        result = re
+        Assertions().assert_in_text(result, expect["carLeaveHistoryMsg"])
 
 

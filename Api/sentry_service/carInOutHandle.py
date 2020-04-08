@@ -9,12 +9,13 @@ from common.Req import Req
 from common.superAction import SuperAction
 from urllib.parse import urlencode
 
-form_headers = {"Content-Type": "application/x-www-form-urlencoded"}
+form_headers = {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
 json_headers = {"Content-Type": "application/json;charset=UTF-8"}
 
 class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
+    carTypeDict = {'蓝牌车': 1, '黄牌车': 2, '新能源小车': 4, '新能源大车': 3,'': None}
 
     def carInOutHandle(self,carNum,carHandleType,jobId = ""):
         """
@@ -49,9 +50,9 @@ class CarInOutHandle(Req):
             result = cloudparking_service().getCarMsgYtj(jobId)
             return result
         else:
-            return re
+            return re.json()["success"]
 
-    def adjustCarNum(self, carNum, adjustCarNum, carType = None):
+    def adjustCarNum(self, carNum, adjustCarNum, carType = ''):
         """进场前校正车牌与类型"""
         carInOutHandle = self.__getCarInOutHandleIdList()
         try:
@@ -62,19 +63,19 @@ class CarInOutHandle(Req):
         data = {
             "car_code": adjustCarNum,
             "operateSource": "2",
-            "carType": carType
+            "carType": self.carTypeDict[carType]
         }
         re =self.post(self.zby_api,data=data,headers = form_headers)
         print(re.text)
         if re.json()['open_gate'] == False:
             re = self.getHandleIdInfo(carHandleInfo['id'])
-            return re
+            return re['content']
         else:
-            return re
+            return re.json()
 
     def patchRecord(self, carNum, parkName, adjustCarNum, carType = None):
         """在场车辆校正"""
-        carInfoDict = self.getDictBykey(self.getCarInRecord(carNum, parkName).json(), 'carCode', carNum)
+        carInfoDict = self.getDictBykey(self.getCarInRecord(carNum, parkName), 'carCode', carNum)
         self.url = "/ydtp-backend-service/api/records/patch"
         data = {
             "car_code": adjustCarNum,
@@ -84,12 +85,12 @@ class CarInOutHandle(Req):
             "carType": carType
         }
         re = self.post(self.zby_api, data = data, headers = form_headers)
-        return re
+        return re.text
 
     def matchCarNum(self,carNum,matchCarNum):
         """人工匹配车牌"""
         carHandleInfo = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'leaveCarNo', carNum)
-        carHandleIdInfo = self.getHandleIdInfo(carHandleInfo['id']).json()
+        carHandleIdInfo = self.getHandleIdInfo(carHandleInfo['id'])
         matchCarInfo = self.getDictBykey(carHandleIdInfo,'car_code',matchCarNum)
 
         self.url = "/ydtp-backend-service/api/messages/{}/match".format(carHandleIdInfo['id'])
@@ -100,16 +101,16 @@ class CarInOutHandle(Req):
         }
         re = self.post(self.zby_api,data=data,headers=form_headers)
         if re.json()['open_gate'] == False:
-            re = self.getHandleIdInfo(carHandleIdInfo['id'])
-            return re
+            re = self.getHandleIdInfo(carHandleIdInfo['id']).json()
+            return re['content']
         else:
-            return re
+            return re.json()
 
     def getHandleIdInfo(self,id):
         """获取处理车辆ID的信息"""
         self.url = "/ydtp-backend-service/api/messages/{}".format(id)
         re = self.get(self.zby_api,headers = json_headers)
-        return re
+        return re.json()
 
     def getCarInRecord(self,car_code, parkName, mode=''):
         """
@@ -126,7 +127,7 @@ class CarInOutHandle(Req):
         }
         self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
         re = self.get(self.zby_api, headers=form_headers)
-        return re
+        return re.json()['rows']
 
     def getCarOutRecord(self,carNum, parkName, mode = ""):
         """
@@ -143,7 +144,7 @@ class CarInOutHandle(Req):
         }
         self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
         re = self.get(self.zby_api, headers = form_headers)
-        return re
+        return re.json()['rows']
 
     def __onDutyParks(self):
         """当前用户上班车场"""
@@ -166,7 +167,7 @@ class CarInOutHandle(Req):
             "pageSize": 250
         }
         self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
-        re = self.get(self.zby_api,headers = json_headers)
+        re = self.get(self.zby_api)
         return re.json()['list']
 
 if __name__ == '__main__':

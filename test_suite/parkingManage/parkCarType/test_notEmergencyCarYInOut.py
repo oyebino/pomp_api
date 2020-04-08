@@ -17,24 +17,25 @@ args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/parkCarType/notEmergencyCarYInOut.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("车辆分类管理")
+@allure.story('非指定告警粤Y类车牌进出使用流程')
 class TestNotEmergencyCarYInOut(BaseCase):
     """非指定告警粤Y类车牌进出使用流程"""
     def test_createEmergencyCarConfig(self, userLogin, send_data, expect):
         """创建告警车牌类"""
         re = EmergencyCarNum(userLogin).createEmergencyCarNum(send_data['parkName'], send_data['oldEmergencyCarNum'], send_data['tel'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createEmergencyCarConfigMsg"])
 
     def test_openEmergencySetting(self, userLogin, send_data, expect):
         """开启告警设置"""
         re = EmergencyCarNum(userLogin).updateEmergencySetting()
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openEmergencySettingMsg"])
 
     def test_updateEmergencyCarNum(self, userLogin, send_data, expect):
         """修改告警车牌类"""
         re = EmergencyCarNum(userLogin).updateEmergencyCarNum(send_data['parkName'], send_data['oldEmergencyCarNum'], send_data['newEmergencyCarNum'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["updateEmergencyCarNumMsg"])
 
     def test_mockCarIn(self, send_data, expect):
@@ -46,7 +47,7 @@ class TestNotEmergencyCarYInOut(BaseCase):
     def test_checkEmergencyCarInRecord(self, userLogin, send_data, expect):
         """查看告警进场车辆记录没有非告警车"""
         re = Information(userLogin).getEmergencyCarRecord(send_data['parkName'], send_data['carType'],send_data['carNum'])
-        result = re.json()
+        result = re
         Assertions().assert_not_in_text(result, expect["checkEmergencyCarInRecordMsg"])
 
     def test_mockCarOut(self,send_data, expect):
@@ -58,17 +59,17 @@ class TestNotEmergencyCarYInOut(BaseCase):
     def test_sentryPay(self,sentryLogin,send_data,expect):
         """岗亭端缴费"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data["carNum"],send_data['carOutHandleType'],'${mytest.carOut_jobId}')
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["sentryPayMessage"])
 
     def test_checkEmergencyCarOutRecord(self, userLogin, send_data, expect):
         """查看告警进场车辆记录没有非告警车"""
         re = Information(userLogin).getEmergencyCarRecord(send_data['parkName'], send_data['carType'],send_data['carNum'])
-        result = re.json()
+        result = re
         Assertions().assert_not_in_text(result, expect["checkEmergencyCarOutRecordMsg"])
 
     def test_delEmergencyCarConfig(self, userLogin, send_data, expect):
         """删除告警车辆配置"""
         re = EmergencyCarNum(userLogin).delEmergencyCarNum(send_data['parkName'], send_data['newEmergencyCarNum'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["delEmergencyCarConfigMsg"])

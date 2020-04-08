@@ -45,9 +45,9 @@ class EmergencyCarNum(Req):
                 "parkIds": parkDict['value']
             }
             re = self.post(self.api, data = data, headers = form_headers)
-            return re
+            return re.json()
         else:
-            return isExistCar
+            return isExistCar.json()
 
     def updateEmergencyCarNum(self, parkName, OldCarNum, newCarNum):
         """修改指定车牌"""
@@ -62,13 +62,13 @@ class EmergencyCarNum(Req):
             }
             self.url = "/mgr/park/emergency/carNo/update.do"
             re = self.post(self.api, data = data, headers = form_headers)
-            return re
+            return re.json()
         else:
-            return isExistCar
+            return isExistCar.json()
 
     def __getEmergencyCarNumById(self, parkName, carNum):
         """通过Id获取指定车牌信息"""
-        EmergencyCarNumDict = self.getDictBykey(self.getEmergencyCarNumList(parkName).json(), 'carCode', carNum + '蓝')
+        EmergencyCarNumDict = self.getDictBykey(self.getEmergencyCarNumList(parkName), 'carCode', carNum + '蓝')
         data = {
             "id": EmergencyCarNumDict['id']
         }
@@ -78,13 +78,13 @@ class EmergencyCarNum(Req):
 
     def delEmergencyCarNum(self, parkName, carNum):
         """删除指定车牌"""
-        EmergencyCarNumDict = self.getDictBykey(self.getEmergencyCarNumList(parkName).json(), 'carCode', carNum + '蓝')
+        EmergencyCarNumDict = self.getDictBykey(self.getEmergencyCarNumList(parkName), 'carCode', carNum + '蓝')
         self.url = "/mgr/park/emergency/carNo/delete.do"
         data = {
             "id": EmergencyCarNumDict['id']
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def getEmergencyCarNumList(self, parkName):
         """获取指定车牌列表"""
@@ -97,7 +97,7 @@ class EmergencyCarNum(Req):
         }
         self.url = "/mgr/park/emergency/carNo/list.do?" + urlencode(data)
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
     def __getEmergencyConfigList(self):
         """查询告警设置"""

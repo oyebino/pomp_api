@@ -79,8 +79,8 @@ class SuperAction:
             newstr += uuidlist[i]
         return newstr
 
-
-    def create_name(self):
+    @staticmethod
+    def create_name():
         xing = '赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜'
         ming = '豫章故郡洪都新府星分翼轸地接衡庐襟三江而带五湖'
         X = random.choice(xing)
@@ -118,6 +118,18 @@ class SuperAction:
         else:
             res = time.strftime(format)
         return res
+
+    @staticmethod
+    def getTimeStamp():
+        return int(time.time() * 1000)
+
+    def getPicBase64(self, picPath):
+        """图片转换成base64编码"""
+        import base64
+        with open(picPath, 'rb') as f:
+            base64_data = base64.b64encode(f.read())
+            s = base64_data.decode()
+            return s
 
     def cal_getTheMonth(self,date = None, n = 0, style='+'):
         """
@@ -216,8 +228,5 @@ class SuperAction:
 
 if __name__ == "__main__":
     SA = SuperAction()
-    # openMonthNum = 2
-    # date1 = '2020-04-05'
-    date = SA.get_today_data()
-
-    print(date)
+    a = SA.create_randomNum(val=4)
+    print(a)

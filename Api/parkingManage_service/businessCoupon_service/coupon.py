@@ -67,6 +67,9 @@ class Coupon(Req):
             "expireRefund":"0",
             "financialParkId":parkDict['value'],
             "isCover":isCover,      # 是否叠加
+            "datePrivilegeType": 0,
+            "priDateArrStr": None,
+            "datePrivilege": 0,
             "useRule":"0~9999",
             "sellFrom":SA().get_today_data()+" 00:00:00",
             "sellTo":SA().cal_get_day(strType = "%Y-%m-%d",days = 365)+" 23:59:59",
@@ -76,7 +79,7 @@ class Coupon(Req):
         }
         self.url = "/mgr/coupon/add.do"
         re = self.post(self.api, data=json_data, headers=form_headers)
-        return re
+        return re.json()
 
     def __getParkingBaseDataTree(self):
         """获取当前用户停车场权限列表树"""
@@ -114,7 +117,7 @@ class Coupon(Req):
         :param sellMoney:商家折扣价 (不填自动取总数)
         :return:
         """
-        couponDict = self.getDictBykey(self.getCouponListByPage(parkName).json(),'name',couponName)
+        couponDict = self.getDictBykey(self.getCouponListByPage(parkName),'name',couponName)
         couponParkDict = self.getDictBykey(self.__getCouponParkList(couponDict['tmpId']).json(), 'name', parkName)
         traderDict = self.getDictBykey(self.__getTraderList(couponParkDict['id']).json(),'name',traderName)
         totalMoney = int(couponDict['originalPrice']) * int(sellNum)
@@ -135,7 +138,7 @@ class Coupon(Req):
         }
         self.url = "/mgr/coupon/sell/add.do"
         re = self.post(self.api, data=json_data, headers=form_headers)
-        return re
+        return re.json()
 
     def __getCouponParkList(self,couponTmpId):
         """查看当前劵的使用停车场列表"""
@@ -158,7 +161,7 @@ class Coupon(Req):
         }
         self.url = "/mgr/coupon/getListByPage.do?" + urlencode(data)
         re = self.get(self.api,headers = form_headers)
-        return re
+        return re.json()
 
     def __getTraderList(self,parkId):
         """
@@ -185,7 +188,7 @@ class Coupon(Req):
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponGrantList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&parkSysType=1&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
-        return re
+        return re.json()['data']['rows']
 
     def getCouponSerialList(self,parkName,carNum):
         """
@@ -199,7 +202,7 @@ class Coupon(Req):
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
-        return re
+        return re.json()['data']['rows']
 
     def getCityCouponUseRecord(self,parkName,carNum):
         """查看城市劵使用记录"""
@@ -215,7 +218,7 @@ class Coupon(Req):
         }
         self.url = "/mgr/cityCoupon/useRecord/list.do?" + urlencode(data)
         re = self.get(self.api, headers = json_headers)
-        return re
+        return re.json()
 
 class CityCoupon(Req):
     """城市劵"""

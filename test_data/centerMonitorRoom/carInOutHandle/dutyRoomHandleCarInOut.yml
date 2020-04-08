@@ -1,0 +1,18 @@
+- test:
+    name: 远程值班室处理进出场消息
+    desc: 远程值班室处理进出场消息
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      inClientID: ${strictInClientID}
+      outClientID: ${strictOutClientID}
+    except:
+      mockCarInMessage: 临时车请稍候
+      dutyRoomCheckCarInMsg: 0
+      checkCarInRecordMsg: *carNum
+      presentCarMessage: *carNum
+      mockCarOutMessage: 缴费
+      dutyRoomCheckCarOutMsg: 0
+      checkCarOutRecordMsg: *carNum
+      carLeaveTypeHistoryMsg: 异常放行
+      carLeaveBillValueHistoryMsg: 5

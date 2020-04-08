@@ -1,6 +1,6 @@
 - test:
     name: 临时车严进-不需缴费严出
-    desc: 临时车严进,不需缴费严出
+    desc: 临时车严进-不需缴费严出
     send_data:
       parkName: ${freeParkName}
       carNum: ${__create_carNum()}

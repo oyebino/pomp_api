@@ -2,7 +2,7 @@
     name: 新能源小车严进-不需缴费严出
     desc: 新能源小车严进-不需缴费严出
     send_data:
-      carType: 4
+      carType: 新能源小车
       parkName: ${freeParkName}
       carInHandleType: 登记放行
       carOutHandleType: 确认放行

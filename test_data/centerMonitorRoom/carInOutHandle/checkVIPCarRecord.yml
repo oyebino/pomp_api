@@ -1,0 +1,16 @@
+- test:
+    name: 远程值班室查看VIP车辆
+    desc: 远程值班室查看VIP车辆
+    send_data:
+      parkName: ${usedParkName}
+      carNum: &carNum ${__create_carNum()}
+      ticketTypeName: 远程值班月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: ${__cal_get_day(strType='%Y-%m-%d',days=60)}
+      timeperiodListStr: ${__cal_getTheMonth(n=1)}
+    except:
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      checkMonthTicketListRecordMsg: *carNum
+
+

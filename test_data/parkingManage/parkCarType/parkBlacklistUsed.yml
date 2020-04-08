@@ -5,7 +5,7 @@
       parkName: ${usedParkName}
       specialCarType: 黑名单
       typeName: api黑名单${__create_randomNum(val=4)}
-      newTypeName: &newTypeName api黑名单${__create_randomNum(val=5)}
+      newTypeName: api黑名单${__create_randomNum(val=5)}
       carNum: &carNum ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
@@ -15,10 +15,10 @@
       editBlacklistSpecialTypeMsg: 1
       createBlacklistCarNumMsg: 操作成功
       mockCarInMessage: ${__create_carNum()}\\api黑名单${__create_randomNum(val=5)}
-      checkPresentCarTypeMsg: *newTypeName
-      mockCarOutMessage: $${__create_carNum()}api黑名单${__create_randomNum(val=5)}请稍候
+      checkPresentCarTypeMsg: 黑名单
+      mockCarOutMessage: $${__create_carNum()}$api黑名单${__create_randomNum(val=5)}请稍候
       sentryPayMessage: 一路顺风
       checkCarleaveVipTypeStrMsg: 黑名单
       checkenterVipTypeStrMsg: 黑名单
-      delVisitorCarNumMsg: 操作成功
+      delBlacklistCarNumMsg: 操作成功
       checkDelBlacklistCarNumMsg: *carNum

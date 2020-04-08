@@ -17,20 +17,21 @@ from common.BaseCase import BaseCase
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/monthTicketFullPositionControl/monthTicketFullPositionStrictInVipCharge.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("月票管理模块")
+@allure.feature("智泊云-月票管理模块-VIP类型满位限行")
+@allure.story('系统有空位自动放行，无空位手动放行按VIP计费')
 class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     """VIP类型满位限行（系统有空位自动放行，无空位手动放行按VIP计费）"""
 
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建满位控制月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'],openVipFullLimit=send_data['openVipFullLimit'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["createMonthTicketConfigMsg"])
 
     def test_openMonthTicketBill(self, userLogin, send_data, expect):
         """用满位控制月票类型开通月票"""
         re = MonthTicketBill(userLogin).openMonthTicketBill(send_data['carNumList'], send_data['ticketTypeName'], send_data['timeperiodListStr'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     # 满位VIP第一辆车进车
@@ -44,7 +45,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_presentCarA(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNumA"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['carNo'], expect["presentCarAMsg"])
         Assertions().assert_in_text(result['vipType'], expect["presentCarAvipTypeMsg"])
 
@@ -59,13 +60,13 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_sentryCheckIn(self, sentryLogin, send_data, expect):
         """车辆B登记放行"""
         re = CarInOutHandle(sentryLogin).carInOutHandle(send_data['carNumB'],send_data['carInHandleType'],'${mytest.carIn_jobId}')
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["sentryCheckInMsg"])
 
     def test_presentCarB(self, userLogin, send_data, expect):
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNumB"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['carNo'], expect["presentCarBMsg"])
         Assertions().assert_in_text(result['vipType'], expect["presentCarBvipTypeBMsg"])
 
@@ -80,7 +81,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_carLeaveHistoryA(self, userLogin, send_data, expect):
         """查看进出场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNumA"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["carAInOutVipTypeMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["carAInOutVipTypeMsg"])
 
@@ -95,6 +96,6 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_carLeaveHistoryB(self, userLogin, send_data, expect):
         """查看进出场记录"""
         re = Information(userLogin).getCarLeaveHistory(send_data["parkName"], send_data["carNumB"])
-        result = re.json()['data']['rows'][0]
+        result = re[0]
         Assertions().assert_in_text(result['enterVipTypeStr'], expect["carInOutVipTypeStrMsg"])
         Assertions().assert_in_text(result['leaveVipTypeStr'], expect["carInOutVipTypeStrMsg"])

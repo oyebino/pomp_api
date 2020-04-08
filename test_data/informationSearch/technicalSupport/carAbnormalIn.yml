@@ -4,7 +4,7 @@
     desc: 临时车异常进场
     send_data:
       parkName: ${usedParkName}
-      carNum: ${__create_carNum()}
+      carNum: &carNum ${__create_carNum()}
       carOutHandleType: 收费放行
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
@@ -14,15 +14,16 @@
       mock_car_in: ok
       inscreen: ${__create_carNum()}\\欢迎光临
       invoice: $${__create_carNum()}$欢迎光临
-      presentCarMessage: 查询在场车辆成功
-      AbnormalInCarMessage: 查询异常进场车辆成功
+      presentCarMessage: *carNum
+      abnormalInCar: *carNum
       exceptionType: 同车场再次进场
-      carNum: ${__create_carNum()}
-      centralPayMessage: billid
+      mockCarOutMsg: 扫码缴费
       mock_car_out: $${__create_carNum()}$请扫码缴费5元
       outscreen: 已收费5元\\一路顺风
       outvoice: 已收费5元一路顺风
       outOpen_gate: 1
+      parkingBillMsg: *carNum
+      carLeaveHistoryMsg: *carNum
 
 
 

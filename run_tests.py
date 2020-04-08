@@ -1,10 +1,4 @@
 
-import time
-
-from sys import argv
-
-
-
 '''
 说明：
 1、用例创建原则，测试文件名必须以“test”开头，测试函数必须以“test”开头。
@@ -14,15 +8,13 @@ from sys import argv
 *  --self-contained-html 表示创建独立的测试报告。
 *  --reruns 3   指定用例失败重跑次数。
 '''
-
-
 import sys
 
 import pytest
 
 from common.Shell import Shell
 
-test_dir = "./test_suite/information/"
+test_dir = "./test_suite/"
 
 if __name__ == "__main__":
 

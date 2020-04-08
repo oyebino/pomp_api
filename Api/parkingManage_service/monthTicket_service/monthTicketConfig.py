@@ -103,7 +103,7 @@ class MonthTicketConfig(Req):
         }
         self.url = "/mgr/monthTicketConfig/save.do"
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()
 
     def editMonthTicketConfig(self, parkName, oldTypeName, newTypeName):
         """
@@ -116,7 +116,7 @@ class MonthTicketConfig(Req):
         :return:
         """
         parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
-        typeConfigDict = self.getDictBykey(self.getMonthTicketList(parkName,oldTypeName).json(), 'ticketName', oldTypeName)
+        typeConfigDict = self.getDictBykey(self.getMonthTicketList(parkName,oldTypeName), 'ticketName', oldTypeName)
         typeConfigDetailDict = self.__getMonthTicketCofigDetail(typeConfigDict['id']).json()['data']
         optionArrList = self.__selectChargeGroupList(parkDict['parkId']).json()['data'][parkDict['parkId']]
         optionArrDict = {'optionArr': optionArrList}
@@ -187,7 +187,7 @@ class MonthTicketConfig(Req):
         else:
             self.url = "/mgr/monthTicketConfig/forceSave.do"
         re = self.post(self.api, data=data, headers= form_headers)
-        return re
+        return re.json()
 
 
 
@@ -244,7 +244,7 @@ class MonthTicketConfig(Req):
         }
         self.url = "/mgr/monthTicketConfig/list.do?" + urlencode(data)
         re = self.get(self.api, headers=form_headers)
-        return re
+        return re.json()
 
     def __findConfigNameList(self):
         """列出全部月票类型名称"""
@@ -267,18 +267,18 @@ class MonthTicketConfig(Req):
             "上架": 'VALID',
             "下架": 'INVALID'
         }
-        ticketConfigDict = self.getDictBykey(self.getMonthTicketList(parkName, ticketConfigName).json(),'ticketName',ticketConfigName)
+        ticketConfigDict = self.getDictBykey(self.getMonthTicketList(parkName, ticketConfigName),'ticketName',ticketConfigName)
         self.url = "/mgr/monthTicketConfig/updateStatus.do"
         data = {
             "monthTicketConfigId":ticketConfigDict['id'],
             "monthTicketStatus":statusDict[monthTicketStatus]
         }
         re = self.post(self.api, data=data, headers= form_headers)
-        return re
+        return re.json()
 
     def delMonthTicketConfig(self, parkName, ticketConfigName):
         """删除月票类型"""
-        ticketConfigDict = self.getDictBykey(self.getMonthTicketList(parkName, ticketConfigName).json(), 'ticketName',ticketConfigName)
+        ticketConfigDict = self.getDictBykey(self.getMonthTicketList(parkName, ticketConfigName), 'ticketName',ticketConfigName)
         self.url = "/mgr/monthTicketConfig/del.do"
         data = {
             "monthTicketConfigId": ticketConfigDict['id']

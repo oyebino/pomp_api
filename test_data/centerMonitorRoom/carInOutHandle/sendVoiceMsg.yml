@@ -1,0 +1,16 @@
+- test:
+    name: 远程值班室发送语音消息
+    desc: 远程值班室发送语音消息
+    send_data:
+      carNum: ${__create_carNum()}
+      voiceMsg: &voiceMsg ${__create_name()}135987
+      carOut_jobId: ${mytest.carOut_jobId}
+      inClientID: ${wideInClientId}
+      outClientID: ${wideOutClientId}
+    except:
+      mockCarInMessage: 欢迎光临
+      mockCarOutMessage: 扫码缴费
+      sendVoiceMsg: 0
+      YtjScreen: *voiceMsg
+      YtjVoice: *voiceMsg
+      dutyRoomCheckCarOutMsg: 0

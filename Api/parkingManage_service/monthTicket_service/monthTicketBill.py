@@ -35,7 +35,7 @@ class MonthTicketBill(Req):
         else:
             carNumList = list()
             carNumList.append(carNum)
-        ticketNameDict = self.getDictBykey(self.getValidCofigList().json(), 'ticketName', ticketName)
+        ticketNameDict = self.getDictBykey(self.getValidCofigList(), 'ticketName', ticketName)
         if ticketNameDict['renewMethod'] == 'NATURAL_MONTH':
             openMonthNum = self.__getMonthCount(timeperiodListStr)
         elif ticketNameDict['renewMethod'] == 'CUSTOM':
@@ -58,7 +58,7 @@ class MonthTicketBill(Req):
         }
         self.url = "mgr/monthTicketBill/open.do"
         re = self.post(self.api, data=json_data, headers=form_headers)
-        return re
+        return re.json()
 
     def __getDayCount(self, str):
         """计算时间段的天数"""
@@ -113,7 +113,7 @@ class MonthTicketBill(Req):
         }
         self.url = "/mgr/monthTicketBill/list.do?" + urlencode(data)
         re = self.get(self.api, headers=form_headers)
-        return re
+        return re.json()
 
     def editOpenMonthTicketBill(self, parkName, carNum, editUser, status = '生效中'):
         """
@@ -123,7 +123,7 @@ class MonthTicketBill(Req):
         :param editUser: 修改车主名
         :return:
         """
-        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, status).json(), 'carCode',carNum)
+        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, status), 'carCode',carNum)
         isDynamicMode = self.__checkMonthTicketBillIsDynamicMode(monthTicketBillDict['id']).json()['data']['isDynamicMode']
 
         data = {
@@ -141,7 +141,7 @@ class MonthTicketBill(Req):
         if self.__preeditMonthTicketBill(data).json()['status'] == 1:
             self.url = "/mgr/monthTicketBill/editMonthTicketBill.do"
             re =self.post(self.api, data = data, headers = form_headers)
-            return re
+            return re.json()
 
     def __preeditMonthTicketBill(self, data):
         """预编辑"""
@@ -168,7 +168,7 @@ class MonthTicketBill(Req):
         """获取月票类型list"""
         self.url = "/mgr/monthTicketBill/validConfigList.do"
         re = self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
     def renewMonthTicketBill(self, parkName, carNum, status , date = None):
         """
@@ -180,7 +180,7 @@ class MonthTicketBill(Req):
         :paramdate 续费的时间点，'2020-02-02'
         :return:
         """
-        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, status).json(), 'carCode', carNum)
+        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, status), 'carCode', carNum)
         self.url = "/mgr/monthTicketBill/renew.do"
         if monthTicketBillDict['renewMethod'] == 'NATURAL_MONTH':
             openMonthNum = 1
@@ -210,14 +210,14 @@ class MonthTicketBill(Req):
             "dynamicCarportNumber": monthTicketBillDict['dynamicCarportNumber'],
         }
         re = self.post(self.api, data= data, headers = form_headers)
-        return re
+        return re.json()
 
 
     def refundMonthTicketBill(self, parkName, carNum, refundValue):
         """
         月票退款
         """
-        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中').json(), 'carCode', carNum)
+        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中'), 'carCode', carNum)
         realValue = (monthTicketBillDict['totalValue'] - monthTicketBillDict['reliefValue']) * 100
         json_data = {
         "monthTicketBillId": monthTicketBillDict['id'],
@@ -230,11 +230,11 @@ class MonthTicketBill(Req):
         else:
             self.url = "mgr/monthTicketBill/refund.do"
             re = self.post(self.api, data=json_data, headers=form_headers)
-            return re
+            return re.json()
 
     def getListBillUpdateRecord(self, parkName, carNum):
         """查看月票日志"""
-        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中').json(), 'carCode',carNum)
+        monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中'), 'carCode',carNum)
         data = {
             "monthTicketBillId": monthTicketBillDict['id'],
             "page":1,
@@ -242,12 +242,12 @@ class MonthTicketBill(Req):
         }
         self.url = '/mgr/monthTicketBill/listBillUpdateRecord?' + urlencode(data)
         re =self.get(self.api, headers = form_headers)
-        return re
+        return re.json()
 
     def batchOpenMonthTicketBill(self,parkName, typeName, carNum, fileName = '批量开通月票.xls'):
         """批量开通月票"""
         file = root_path + '/upload/' + fileName
-        ticketConfigDict = self.getDictBykey(MonthTicketConfig(self.Session).getMonthTicketList(parkName,typeName).json(),'ticketName',typeName)
+        ticketConfigDict = self.getDictBykey(MonthTicketConfig(self.Session).getMonthTicketList(parkName,typeName),'ticketName',typeName)
         self.__editOpenBillFile(file, ticketConfigDict['ticketCode'], carNum)
         file = {
             "importFile": open(file, 'rb'),
@@ -257,7 +257,7 @@ class MonthTicketBill(Req):
         re = self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
         if re.json()['status'] == 1:
             re = self.__getImportBillResut()
-        return re
+        return re.json()['data']
 
     def __getImportBillResut(self):
         """获取导入结果"""
@@ -269,7 +269,7 @@ class MonthTicketBill(Req):
         """修改批量开通月票excel文件"""
         excel = ExcelUnitl(file)
         excel.editCell(1, 0, ticketCode)
-        excel.editCell(1, 1, SA().create_name())
+        excel.editCell(1, 1, SA.create_name())
         excel.editCell(1, 2, "135{}".format(SA().create_randomNum(val=8)))
         excel.editCell(1, 3, carNum)
         excel.editCell(1, 4, "{} 00:00:00".format(SA().get_today_data()))
@@ -279,7 +279,7 @@ class MonthTicketBill(Req):
     def batchRefundMonthTicketBill(self, parkName, carNum, fileName = '批量退费月票.xls'):
         """批量退费月票"""
         file = root_path + '/upload/' + fileName
-        billDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中').json(), 'carCode',carNum)
+        billDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中'), 'carCode',carNum)
         excel = ExcelUnitl(file)
         excel.editCell(1, 0, billDict['ticketCode'])
         excel.editCell(1, 3, carNum)
@@ -292,7 +292,7 @@ class MonthTicketBill(Req):
         re =self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
         if re.json()['status'] == 1 :
             re = self.__getBatchRefundResult()
-        return re
+        return re.json()['data']
 
     def __getBatchRefundResult(self):
         """获取批量退费结果"""
@@ -303,7 +303,7 @@ class MonthTicketBill(Req):
     def batchRenewMonthTicketBill(self, parkName, carNum, fileName = "批量续费月票.xls"):
         """批量续费月票"""
         file = root_path + '/upload/' + fileName
-        ticketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '不在有效期').json(),'carCode',carNum)
+        ticketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '不在有效期'),'carCode',carNum)
         self.__editBatchRenewBillFile(file, ticketBillDict['ticketCode'], carNum)
         file = {
             "renewFile": open(file,'rb')
@@ -312,7 +312,7 @@ class MonthTicketBill(Req):
         re = self.post(self.api, files = file, headers = {'User-Agent':'Chrome/71.0.3578.98'})
         if re.json()['status'] == 1:
             re = self.__getRenewBillResult()
-        return re
+        return re.json()['data']
 
     def __editBatchRenewBillFile(self, file, ticketCode, carNum):
         """修改批量续费excel文件"""

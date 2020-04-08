@@ -230,4 +230,4 @@ class Assertions:
         return path.split('/')[-1]
 
 if __name__ == "__main__":
-    Assertions().assert_in_time('2020-03-24 17:05:50')
+    Assertions().assert_in_text('5','5.0')
