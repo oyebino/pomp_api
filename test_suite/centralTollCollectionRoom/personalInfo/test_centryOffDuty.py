@@ -22,4 +22,3 @@ class TestCentryOffDuty(BaseCase):
         re = CentralPersonalInfo(centralTollLogin).centralOffDuty()
         result = re
         Assertions().assert_text(result, "")
-        Assertions().assert_text(re.status_code, expect['status_code'])

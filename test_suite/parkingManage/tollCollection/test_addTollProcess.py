@@ -17,7 +17,6 @@ test_data, case_desc = YmlUtils("/test_data/parkingManage/tollCollection/addToll
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("岗亭收费处")
 @allure.story('pomp新增-冻结-修改-删除收费员流程')
-@pytest.mark.skip(reason="禅道bug号：15669")
 class TestAddTollProcess(BaseCase):
     """pomp新增-冻结-修改-删除收费员流程"""
     def test_addToll(self,userLogin, send_data, expect):
@@ -27,6 +26,12 @@ class TestAddTollProcess(BaseCase):
         self.save_data('pwd', send_data['pwd'])
         result = re['status']
         Assertions().assert_text(result, expect['status'])
+
+    def test_isTollManage(self, userLogin, send_data, expect):
+        """查看新增是否收费员"""
+        re = TollCollection(userLogin).getAllTollCollection()
+        result = re[0]
+        Assertions().assert_text(result['manager'], expect['isTollManageMsg'])
 
     def test_bindUserPark(self,userLogin, send_data, expect):
         """绑定用户停车场"""
@@ -38,7 +43,7 @@ class TestAddTollProcess(BaseCase):
     def test_loginSentry(self, sentryLogin, send_data, expect):
         """收费员登陆岗亭端收费页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
+        onDutyTime = re
         Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
@@ -58,15 +63,15 @@ class TestAddTollProcess(BaseCase):
     def test_freezeTollLoginSentry(self, sentryLogin, send_data, expect):
         """冻结收费员登陆岗亭收费页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
-        Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
+        onDutyTime = re
+        Assertions().assert_in_text(onDutyTime, expect['freezeLoginMsg'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_freezeTollLoginCentral(self, centralTollLogin, send_data, expect):
         """冻结收费员登陆中央收费页面"""
         re = CentralPersonalInfo(centralTollLogin).duty_info()
         onDutyTime = re
-        Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
+        Assertions().assert_in_text(onDutyTime, expect['freezeLoginMsg'])
 
     def test_unfreezeToll(self, userLogin, send_data, expect):
         """开启收费员"""
@@ -86,7 +91,7 @@ class TestAddTollProcess(BaseCase):
     def test_modifyUserLoginSentry(self, sentryLogin, send_data, expect):
         """修改后收费员登陆中央收费页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
+        onDutyTime = re
         Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.editUserId}', 'pwd': '${mytest.editPwd}'}], indirect=True)

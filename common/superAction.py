@@ -228,5 +228,5 @@ class SuperAction:
 
 if __name__ == "__main__":
     SA = SuperAction()
-    a = SA.create_randomNum(val=4)
+    a = SA.getTimeStamp()
     print(a)

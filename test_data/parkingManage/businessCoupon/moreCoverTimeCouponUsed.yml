@@ -17,7 +17,7 @@
     except:
       additionalRecordingMsg: 0
       sendCouponMessage: 发券成功
-      mockCarOutMessage: ${__create_carNum()}\\扫码缴费8元
+      mockCarOutMessage: ${__create_carNum()}\\扫码缴费
       checkParkingBillDetailMessage: *carNum
       checkCouponGrantListMessage: *carNum
       checkCouponGrantListCount: 5
@@ -26,4 +26,4 @@
       checkSerialListCMessage: *couponNameC
       checkSerialListDMessage: *couponNameD
       checkSerialListEMessage: *couponNameE
-      sentryPayMessage: 已收费8元\\一路顺风
+      sentryPayMessage: 已收费${mytest.payVal}元\\一路顺风

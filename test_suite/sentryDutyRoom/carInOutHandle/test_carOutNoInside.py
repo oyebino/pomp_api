@@ -20,11 +20,10 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/carOutN
 @allure.story('临时车无在场需缴费宽出（岗亭收费处收费放行）')
 class TestCarOutNoInside(BaseCase):
     """临时车无在场需缴费宽出（岗亭收费处收费放行）"""
-    def test_mockCarOut(self, send_data, expect):
+    def test_mockCarOut(self,sentryLogin, send_data, expect):
         """离场"""
         re = cloudparking_service().mockCarInOut(send_data['carNum'], 1, send_data['outClientID'])
-        result = re.json()
-        self.save_data('carOut_jobId', result['biz_content']['job_id'])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryAbnormalPay(self,sentryLogin,send_data,expect):

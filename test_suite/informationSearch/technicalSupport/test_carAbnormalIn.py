@@ -23,7 +23,7 @@ class TestCarAbnormalIn():
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["inscreen"])
         Assertions().assert_in_text(result, expect["invoice"])
 
@@ -36,7 +36,7 @@ class TestCarAbnormalIn():
     def test_mockCarIn2(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["inscreen"])
         Assertions().assert_in_text(result, expect["invoice"])
 
@@ -53,10 +53,10 @@ class TestCarAbnormalIn():
         Assertions().assert_text(result['carCode'], expect["abnormalInCar"])
         Assertions().assert_text(result['exceptionType'], expect["exceptionType"])
 
-    def test_mockCarOut(self, send_data, expect):
+    def test_mockCarOut(self,sentryLogin, send_data, expect):
         """模拟车辆离场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
-        result = re.json()
+        re = cloudparking_service(sentryLogin).mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMsg"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):

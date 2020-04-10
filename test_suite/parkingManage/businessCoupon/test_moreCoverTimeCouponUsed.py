@@ -58,7 +58,7 @@ class TestMoreCoverTimeCouponUsed(BaseCase):
     def test_mockCarOut(self,send_data, expect):
         """模拟车辆出场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):
@@ -82,7 +82,7 @@ class TestMoreCoverTimeCouponUsed(BaseCase):
     def test_checkCouponUsedList(self,userLogin,send_data,expect):
         """查看使用流水"""
         re = Coupon(userLogin).getCouponSerialList(send_data["parkName"],send_data["carNum"])
-        result = re.json()['data']['rows']
+        result = re
         Assertions().assert_in_text(result, expect["checkSerialListAMessage"])
         Assertions().assert_in_text(result, expect["checkSerialListBMessage"])
         Assertions().assert_in_text(result, expect["checkSerialListCMessage"])

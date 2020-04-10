@@ -63,7 +63,7 @@ class TollCollection(Req):
         """
         tollNameDict = self.getDictBykey(self.getAllTollCollection(), 'userId', userId)
         id = tollNameDict['id']
-        self.url = "/mgr/user/sentryuser/freeze/{}".format(id)
+        self.url = "/mgr/user/sentryuser/unfreeze/{}".format(id)
         re = self.get(self.api, headers=self.api_headers)
         return re.json()
 
@@ -77,15 +77,17 @@ class TollCollection(Req):
         re = self.get(self.api, headers=self.api_headers)
         return re.json()
 
-    def getAllTollCollection(self):
+    def getAllTollCollection(self, dutyStatus ='全部'):
+        dutyStatusDict = {'全部':None, '上班中':1, '休息中':'0'}
         self.url = "/mgr/user/sentryuser/getAll"
         json_data = {
-                        "pageNumber": 1,
-                        "pageSize": 250,
-                        "sortType": "ASC"  # 取最新的，需排序
-                    }
+            "pageNumber": 1,
+            "pageSize": 100,
+            "sortType": "ASC",  # 取最新的，需排序
+            "onDuty": dutyStatusDict[dutyStatus]
+        }
         re = self.post(self.api, json=json_data, headers=self.api_headers)
-        return re.json()
+        return re.json()['list']
 
     def bindUserPark(self, parkName, userId):
         """
@@ -107,6 +109,26 @@ class TollCollection(Req):
         self.url = "/mgr/index/getAuthzParks.do"
         re = self.get(self.api, headers=self.api_headers)
         return re
+
+    def forceOfDuty(self, id):
+        self.url = "/mgr/user/sentryuser/forceOfDuty/{}".format(id)
+        re = self.get(self.api)
+        return re.json()
+
+    def forceOfDutyAll(self):
+        """强制下班"""
+        import json
+        idList = []
+        try:
+            userList = self.getAllTollCollection('上班中')
+            for user in userList:
+                idList.append(user['id'])
+            for id in idList:
+                self.forceOfDuty(id)
+            return "全部用户强制下班"
+        except json.JSONDecodeError:
+            return "全部用户强制下班"
+
 
 if __name__ == '__main__':
     re = TollCollection().add_tollCollection("test006")

@@ -7,6 +7,7 @@
 import allure,pytest
 from common.utils import YmlUtils
 from Api.parkingManage_service.cendutySeat import CendutySeat
+from Api.centerMonitor_service.personalInfo import PersonalInfo
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
@@ -21,8 +22,17 @@ class TestCendutySeatUser(BaseCase):
     def test_addCendutySeat(self, userLogin, send_data, expect):
         """新增远程值班帐户"""
         re = CendutySeat(userLogin).addCendutySeat(send_data['userId'], send_data['userName'], send_data['pwd'])
+        self.save_data('userId',send_data['userId'])
+        self.save_data('pwd',send_data['pwd'])
         result = re['status']
         Assertions().assert_text(result, expect['addCendutySeatMsg'])
+
+    @pytest.mark.parametrize('centerMonitorLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
+    def test_loginCendutySeat(self,centerMonitorLogin, send_data, expect):
+        """新增远程值班账号登录"""
+        re = PersonalInfo(centerMonitorLogin).getCendutySeat()
+        result = re['userid']
+        Assertions().assert_text(result, expect['loginCendutySeatMsg'])
 
     def test_lockCendutySeat(self, userLogin, send_data, expect):
         """冻结远程值班帐户"""
@@ -30,11 +40,25 @@ class TestCendutySeatUser(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['lockCendutySeatMsg'])
 
+    # @pytest.mark.parametrize('centerMonitorLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
+    # def test_lockLoginCendutySeat(self,centerMonitorLogin, send_data, expect):
+    #     """冻结远程值班账号登录"""
+    #     re = PersonalInfo(centerMonitorLogin).getCendutySeat()
+    #     result = re['message']
+    #     Assertions().assert_text(result, expect['lockLoginCendutySeatMsg'])
+
     def test_startCendutySeat(self, userLogin, send_data, expect):
         """开启远程值班帐户"""
         re = CendutySeat(userLogin).startCendutySeat(send_data['userId'])
         result = re['status']
         Assertions().assert_text(result, expect['startCendutySeatMsg'])
+
+    # @pytest.mark.parametrize('centerMonitorLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
+    # def test_startLoginCendutySeat(self,centerMonitorLogin, send_data, expect):
+    #     """新增远程值班账号登录"""
+    #     re = PersonalInfo(centerMonitorLogin).getCendutySeat()
+    #     result = re['userid']
+    #     Assertions().assert_text(result, expect['loginCendutySeatMsg'])
 
     def test_updateCendutySeat(self, userLogin, send_data, expect):
         """修改远程值班帐户"""

@@ -28,6 +28,7 @@ class CarInOutHandle(Req):
         """
         # channelDict = self.getDictBykey(self.__getDutyChannelStatus().json(), 'entrance_name', channelName)
         type = carHandleType.strip()
+
         if type == "登记放行":
             type = ""
             carHandleInfoDict = self.getDictByList(self.__getCarInOutHandleIdList(), 'content', 'carNo', carNum)
@@ -101,7 +102,7 @@ class CarInOutHandle(Req):
         }
         re = self.post(self.zby_api,data=data,headers=form_headers)
         if re.json()['open_gate'] == False:
-            re = self.getHandleIdInfo(carHandleIdInfo['id']).json()
+            re = self.getHandleIdInfo(carHandleIdInfo['id'])
             return re['content']
         else:
             return re.json()
@@ -166,9 +167,22 @@ class CarInOutHandle(Req):
             "pageNumber": 1,
             "pageSize": 250
         }
+        sleep(3)
         self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
         re = self.get(self.zby_api)
         return re.json()['list']
+
+    def getHandleHistoryMsg(self):
+        """获取处理历史信息"""
+        data = {
+            "type": 'deal',
+            "pageNumber": 1,
+            "pageSize": 20
+        }
+        self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
+        re = self.get(self.zby_api)
+        return re.json()['list']
+
 
 if __name__ == '__main__':
     # f =CarInOutHandle()

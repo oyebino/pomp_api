@@ -28,7 +28,7 @@ class TestCentralAdditionalRecord(BaseCase):
     def test_centryPay(self,centralTollLogin, send_data, expect):
         """中央查费-收费"""
         re = PresentCarHandle(centralTollLogin).centraPay(send_data['carNum'])
-        result = re.json()['parkFee']
+        result = re['parkFee']
         Assertions().assert_in_text(result, expect["centryPayMsg"])
 
     def test_checkCentralChargeRecord(self, centralTollLogin, send_data, expect):
@@ -46,7 +46,7 @@ class TestCentralAdditionalRecord(BaseCase):
     def test_mockCarOut(self,send_data,expect):
         """模拟离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkCarLeaveHistory(self,userLogin,send_data,expect):

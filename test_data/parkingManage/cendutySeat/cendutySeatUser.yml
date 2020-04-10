@@ -2,13 +2,15 @@
     name: 远程值班帐户管理
     desc: 远程值班帐户新增-冻结-开启-修改-删除-查看
     send_data:
-      userId: py${__create_randomNum()}
+      userId: &userId py${__create_randomNum()}
       userName: ${__create_name()}
       editUserName: &editUserName py${__create_name()}
       pwd: 123456
     except:
       addCendutySeatMsg: 1
+      loginCendutySeatMsg: *userId
       lockCendutySeatMsg: 1
+      lockLoginCendutySeatMsg: 账号目前正在冻结中...
       startCendutySeatMsg: 1
       updateCendutySeatMsg: 1
       checkEditCendutySeatListMsg: *editUserName

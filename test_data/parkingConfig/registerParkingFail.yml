@@ -5,8 +5,8 @@
       parkName: ${usedParkName}
       cooperativeName: 叶永彬
       activationCode: ${mytest.activationCode}
-      managerName: py管理方${__get_time()}
-      userAccount: login${__get_time()}
+      managerName: py管理方${__getTimeStamp()}
+      userAccount: login${__getTimeStamp()}
       pwd: 123456
     except:
       getActivationCodeMsg: '-'

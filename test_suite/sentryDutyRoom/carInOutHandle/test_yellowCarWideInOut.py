@@ -19,10 +19,10 @@ test_data,case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/yellowC
 @allure.story('黄牌车宽进-需缴费宽出（岗亭收费处收费放行）')
 class TestYellowCarWideInOut(BaseCase):
     """黄牌车宽进，需缴费宽出（岗亭收费处收费放行）"""
-    def test_mockCarIn(self, send_data, expect):
+    def test_mockCarIn(self,sentryLogin, send_data, expect):
         """模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["inClientID"], carType = send_data['carType'])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMsg"])
 
     def test_presentCarType(self,userLogin, send_data, expect):
@@ -34,7 +34,7 @@ class TestYellowCarWideInOut(BaseCase):
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPaty(self, sentryLogin, send_data, expect):

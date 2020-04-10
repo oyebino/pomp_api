@@ -117,4 +117,4 @@ class EmergencyCarNum(Req):
             "lmCarcodeOut": lmCarcodeOut
         }
         re = self.post(self.api, data = data, headers = form_headers)
-        return re
+        return re.json()

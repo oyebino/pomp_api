@@ -169,6 +169,7 @@ class Req(requests.Session):
             kwargs.setdefault('allow_redirects', True)
             url = self.__formatRule(r'%24%7B(.*?)%7D',url)
             result = self.request('GET', url, **kwargs)
+            time.sleep(3)
             self.__getLogFormat(url,kwargs,result)
             return result
         else:
@@ -233,7 +234,7 @@ class Req(requests.Session):
             json = self.__formatCaseParm(json)
             result = self.request('POST', url, data=data, json=json, **kwargs)
             self.__postLogFormat(url,data,json,result)
-            time.sleep(5)
+            time.sleep(3)
             tempDataPath.testName = inspect.stack()[2][3]
             return result
         else:

@@ -14,9 +14,9 @@
       addBlacklistSpecialTypeMsg: 1
       createBlacklistCarNumMsg: 操作成功
       mockCarIn: $${__create_carNum()}$api黑名单${__create_randomNum(val=4)}请稍候
-      checkCarInScreen: ${__create_carNum()}\\api黑名单${__create_randomNum(val=4)}
-      checkCarInVoice: $${__create_carNum()}$\\api黑名单${__create_randomNum(val=4)}
-      checkCarInIsOpenGate: 0
+      checkCarInScreen: ${__create_carNum()}\\登记放行
+      checkCarInVoice: $${__create_carNum()}$登记放行
+      checkCarInIsOpenGate: 1
       checkPresentCarTypeMsg: 黑名单
       mockCarOutMessage: $${__create_carNum()}$api黑名单${__create_randomNum(val=4)}请稍候
       sentryPayMessage: 一路顺风

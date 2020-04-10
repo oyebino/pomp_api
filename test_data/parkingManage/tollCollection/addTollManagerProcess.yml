@@ -4,12 +4,14 @@
     desc: pomp新增-冻结-修改-删除管理员流程
     send_data:
       parkName: ${usedParkName}
-      userId: test1256
+      userId: test${__create_randomNum()}
       pwd: 123456
       role: 管理员
-      editUserId: &editUserId pytest1256
+      editUserId: &editUserId pytest${__create_randomNum(val=4)}
       editPwd: 987654
     except:
       status: 1
+      isTollManageMsg: true
       onDutyTime: on_duty_time
       isDelToll: *editUserId
+      freezeLoginMsg: 您的账号已被冻结

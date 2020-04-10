@@ -21,8 +21,7 @@ class TestGreenCarStrictRuleInOutNoPay(BaseCase):
     """新能源小车严进，不需缴费严出"""
     def test_mockCarIn(self,send_data,expect):
         re = cloudparking_service().mockCarInOut(send_data['carNum'],0,send_data['inClientID'],carType=send_data['carType'])
-        result = re.json()
-        self.save_data('carIn_jobId',result['biz_content']['job_id'])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_checkCarIn(self,sentryLogin,send_data,expect):
@@ -42,8 +41,7 @@ class TestGreenCarStrictRuleInOutNoPay(BaseCase):
     def test_mockCarOut(self,send_data,expect):
         """模拟车辆离场"""
         re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
-        result = re.json()
-        self.save_data('carOut_jobId', result['biz_content']['job_id'])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkCarOut(self,sentryLogin,send_data,expect):

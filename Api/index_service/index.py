@@ -42,3 +42,13 @@ class Index(Req):
         self.url = "/mgr/operatorPark/getOperatorParkConfigListView?" + urlencode(data)
         re = self.post(self.api, json= json_data,headers= json_headers)
         return re.json()['data']['list']
+
+    def downloadExcelTmp(self,fileName,downPath):
+        """下载excel模板"""
+        data = {
+            "fileName": fileName
+        }
+        self.url = "/mgr/common/templateDownload.do?" + urlencode(data)
+        re = self.get(self.api)
+        with open(downPath, 'wb') as code:
+            code.write(re.content)

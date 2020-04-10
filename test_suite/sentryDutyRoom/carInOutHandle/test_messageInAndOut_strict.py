@@ -23,11 +23,10 @@ class TestSentryMessage(BaseCase):
 
     """岗亭收费处理：进场、离场消息 """
 
-    def test_mockCarIn(self, send_data, expect):
+    def test_mockCarIn(self,sentryLogin, send_data, expect):
         """模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
-        result = re.json()
-        self.save_data('carIn_jobId', result['biz_content']['job_id'])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_checkMessageIn(self, sentryLogin, send_data, expect):
@@ -41,8 +40,7 @@ class TestSentryMessage(BaseCase):
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["StrictRule_outClientID"])
-        result = re.json()
-        self.save_data('carOut_jobId', result['biz_content']['job_id'])
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_checkMessageOut(self, sentryLogin, send_data, expect):

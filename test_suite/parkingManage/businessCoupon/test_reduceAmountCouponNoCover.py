@@ -37,19 +37,19 @@ class TestReduceAmountCouponNoCover(BaseCase):
     def test_sendCoupon(self,weiXinLogin,send_data,expect):
         """发放优惠劵"""
         re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponName"],send_data["carNum"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["sendCouponMessage"])
 
     def test_mockCarIn(self,send_data,expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_mockCarOut(self,send_data, expect):
         """模拟车辆出场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):

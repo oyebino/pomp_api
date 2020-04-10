@@ -36,7 +36,7 @@ class TestBlacklistStrictRuleInOutPay(BaseCase):
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result, expect["mockCarIn"])
 
     def test_checkCarIn(self,sentryLogin,send_data,expect):
@@ -56,7 +56,7 @@ class TestBlacklistStrictRuleInOutPay(BaseCase):
     def test_mockCarOut(self,send_data,expect):
         """模拟车辆离场"""
         re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryPay(self,sentryLogin,send_data,expect):

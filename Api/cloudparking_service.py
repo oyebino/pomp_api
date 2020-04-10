@@ -35,7 +35,7 @@ class cloudparking_service(Req):
             self.save('carOut_jobId',re.json()['biz_content']['job_id'])
         elif str(mockType) == '0':
             self.save('carIn_jobId', re.json()['biz_content']['job_id'])
-        return re
+        return re.json()['biz_content']['result']
 
     def getCarMsgYtj(self,job_id):
         """
@@ -102,11 +102,11 @@ class cloudparking_service(Req):
         LoginReponse.loginRe = {"status": 1}
         self.url = "/get_center_monitor_msg_list"
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
-        return re
+        return re.json()
 
 
 if __name__ == "__main__":
-    b = cloudparking_service().mockCarInOut("粤Y25799",0,"20190507171503")
+    b = cloudparking_service().mockCarInOut("粤E40222",0,"20190507171502")
     # b = cloudparking_service().getCarMsgYtj("73f511ea8a3c7427eac14803")
     # a = cloudparking_service()._getCenterMonitorHandleCarMsg('粤BG7599')
     # re = b.json()

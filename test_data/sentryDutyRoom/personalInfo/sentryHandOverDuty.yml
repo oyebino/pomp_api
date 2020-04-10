@@ -2,10 +2,8 @@
     name: 岗亭收费处收费员交接班
     desc: 岗亭收费处收费员交接班
     send_data:
-      parkName: ${usedParkName}
-      handUser: test${__create_randomNum()}
+      handUser: luoguicai
       pwd: 123456
-      role: 收费员
     except:
       offdutyStatusCode: 200
       handOverDutyStatusCode: 200

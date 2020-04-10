@@ -23,13 +23,13 @@ class TestIntelligenceCleanCarByFile(BaseCase):
     def test_mockCarInA(self,send_data,expect):
         """模拟车辆A进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumA"],0,send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_mockCarInB(self,send_data,expect):
         """模拟车辆B进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumB"],0,send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_intelligenceUploadFile(self, userLogin, send_data, expect):

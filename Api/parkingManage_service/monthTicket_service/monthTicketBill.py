@@ -247,6 +247,7 @@ class MonthTicketBill(Req):
     def batchOpenMonthTicketBill(self,parkName, typeName, carNum, fileName = '批量开通月票.xls'):
         """批量开通月票"""
         file = root_path + '/upload/' + fileName
+        Index(self.Session).downloadExcelTmp("month_ticket_bill.xls", file)
         ticketConfigDict = self.getDictBykey(MonthTicketConfig(self.Session).getMonthTicketList(parkName,typeName),'ticketName',typeName)
         self.__editOpenBillFile(file, ticketConfigDict['ticketCode'], carNum)
         file = {
@@ -279,6 +280,7 @@ class MonthTicketBill(Req):
     def batchRefundMonthTicketBill(self, parkName, carNum, fileName = '批量退费月票.xls'):
         """批量退费月票"""
         file = root_path + '/upload/' + fileName
+        Index(self.Session).downloadExcelTmp("refund_month_ticket_bill.xls", file)
         billDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '生效中'), 'carCode',carNum)
         excel = ExcelUnitl(file)
         excel.editCell(1, 0, billDict['ticketCode'])
@@ -303,6 +305,7 @@ class MonthTicketBill(Req):
     def batchRenewMonthTicketBill(self, parkName, carNum, fileName = "批量续费月票.xls"):
         """批量续费月票"""
         file = root_path + '/upload/' + fileName
+        Index(self.Session).downloadExcelTmp("renew_month_ticket_bill.xls", file)
         ticketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, '不在有效期'),'carCode',carNum)
         self.__editBatchRenewBillFile(file, ticketBillDict['ticketCode'], carNum)
         file = {

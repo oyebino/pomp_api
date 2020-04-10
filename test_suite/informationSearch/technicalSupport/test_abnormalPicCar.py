@@ -25,13 +25,13 @@ class TestabnormalPicCar():
     def test_mockCarIn(self, send_data, expect):
         """第一辆车模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["StrictRule_inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_mockCarIn2(self, send_data, expect):
         """第二辆车模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum2"], 0, send_data["StrictRule_inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarIn2Message"])
 
     def test_getAbnormalPicCar(self, userLogin, send_data, expect):

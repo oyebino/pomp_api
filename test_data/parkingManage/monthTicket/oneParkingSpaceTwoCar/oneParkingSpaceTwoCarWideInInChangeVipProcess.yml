@@ -30,7 +30,7 @@
       outScreenA: *screenMsg
       outVoiceA: *voiceMsg
       carAInOutVipTypeMsg: *ticketType
-      outscreenB: ${__create_carNum(carType=B)}\\请扫码缴费5元
+      outscreenB: ${__create_carNum(carType=B)}\\扫码缴费5元
       outvoiceB: $${__create_carNum(carType=B)}$请扫码缴费5元
       sentryPayMsg: 已收费5元\\一路顺风
       parkingBillDetailMsg: ${__create_carNum(carType=B)}

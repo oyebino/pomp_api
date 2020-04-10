@@ -21,7 +21,7 @@ class TestDutyRoomHandleCarInOut(BaseCase):
     def test_mockCarIn(self,centerMonitorLogin, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service(centerMonitorLogin).mockCarInOut(send_data["carNum"], 0, send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_dutyRoomCheckCarIn(self, centerMonitorLogin, send_data, expect):
@@ -45,7 +45,7 @@ class TestDutyRoomHandleCarInOut(BaseCase):
     def test_mockCarOut(self,centerMonitorLogin, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service(centerMonitorLogin).mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_dutyRoomCheckCarOut(self, centerMonitorLogin, send_data, expect):

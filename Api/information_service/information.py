@@ -175,7 +175,7 @@ class Information(Req):
         re = self.post(self.api, headers = self.api_headers)
         return re.json()
 
-    def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件',carNum = None , file = 'auto_clear_car.xls'):
+    def intelligenceCheckCarOut(self, parkName, cleanType = '按时间条件',carNum = None ):
         """
         智能盘点
         :param parkName:
@@ -189,7 +189,7 @@ class Information(Req):
         if cleanType == '按时间条件':
             re = self.__autoClearCarByTime(nowTime, parkDict['parkId'], userDict['nickname'])
         else:
-            re = self.__autoClearCarByFile(nowTime, parkDict['parkId'], userDict['nickname'], carNum, file)
+            re = self.__autoClearCarByFile(nowTime, parkDict['parkId'], userDict['nickname'], carNum)
         return re.json()
 
 
@@ -232,7 +232,7 @@ class Information(Req):
         re = self.post(self.api, files=files, headers={'User-Agent':'Chrome/71.0.3578.98 Safari/537.36'})
         return re
 
-    def __autoClearCarByFile(self,clearTime, parkUUID, operatorName, carNum, fileName):
+    def __autoClearCarByFile(self,clearTime, parkUUID, operatorName, carNum, fileName = "智能盘点.xls"):
         """
         智能盘点-按在场车场，按模板盘点在场车场信息记录
         :param clearTime:
@@ -243,6 +243,7 @@ class Information(Req):
         :return:
         """
         file = root_path + '/upload/' + str(fileName)
+        Index(self.Session).downloadExcelTmp("auto_clear_car.xls", file)
         self.__setCarNumInClearCarFile(file, carNum)
         clearCarCheck = self.__autoClearCarCheck(clearTime, operatorName, parkUUID, file).json()
         data = {
@@ -284,7 +285,6 @@ class Information(Req):
         self.url = "/mgr/pomplog/list.do"
         re = self.post(self.api, data = data, headers = self.form_headers)
         return re.json()['data']['rows']
-
 
 if __name__ == '__main__':
     Information().runTest('E:/POMP_API/upload/auto_clear_car.xls','粤Q12344,粤B12344')

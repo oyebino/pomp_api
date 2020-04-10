@@ -17,7 +17,6 @@ test_data, case_desc = YmlUtils("/test_data/parkingManage/tollCollection/addToll
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("岗亭收费处")
 @allure.story('pomp新增-冻结-修改-删除管理员流程')
-@pytest.mark.skip(reason="禅道bug号：15669")
 class TestAddTollManagerProcess(BaseCase):
     """pomp新增-冻结-修改-删除管理员流程"""
     def test_addToll(self,userLogin, send_data, expect):
@@ -28,17 +27,29 @@ class TestAddTollManagerProcess(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
+    def test_isTollManage(self, userLogin, send_data, expect):
+        """查看新增是否管理员"""
+        re = TollCollection(userLogin).getAllTollCollection()
+        result = re[0]
+        Assertions().assert_text(result['manager'], expect['isTollManageMsg'])
+
     def test_bindUserPark(self,userLogin, send_data, expect):
         """绑定用户停车场"""
         re = TollCollection(userLogin).bindUserPark(send_data['parkName'], send_data['userId'])
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
+    def test_forceOfDuty(self,userLogin, send_data, expect):
+        """强制下班"""
+        re = TollCollection(userLogin).forceOfDutyAll()
+        result = re
+        Assertions().assert_text(result, '全部用户强制下班')
+
     @pytest.mark.parametrize('sentryLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_loginSentry(self, sentryLogin, send_data, expect):
         """管理员登陆岗亭端收费页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
+        onDutyTime = re
         Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
@@ -54,19 +65,25 @@ class TestAddTollManagerProcess(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
+    def test_forceOfDutyA(self,userLogin, send_data, expect):
+        """强制下班"""
+        re = TollCollection(userLogin).forceOfDutyAll()
+        result = re
+        Assertions().assert_text(result, '全部用户强制下班')
+
     @pytest.mark.parametrize('sentryLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_freezeTollLoginSentry(self, sentryLogin, send_data, expect):
         """冻结管理员登陆岗亭收费页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
-        Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
+        onDutyTime = re
+        Assertions().assert_in_text(onDutyTime, expect['freezeLoginMsg'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_freezeTollLoginCentral(self, centralTollLogin, send_data, expect):
         """冻结管理员登陆中央收费页面"""
         re = CentralPersonalInfo(centralTollLogin).duty_info()
         onDutyTime = re
-        Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
+        Assertions().assert_in_text(onDutyTime, expect['freezeLoginMsg'])
 
     def test_unfreezeToll(self, userLogin, send_data, expect):
         """开启管理员"""
@@ -82,11 +99,17 @@ class TestAddTollManagerProcess(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
+    def test_forceOfDutyB(self,userLogin, send_data, expect):
+        """强制下班"""
+        re = TollCollection(userLogin).forceOfDutyAll()
+        result = re
+        Assertions().assert_text(result, '全部用户强制下班')
+
     @pytest.mark.parametrize('sentryLogin', [{'user': '${mytest.editUserId}', 'pwd': '${mytest.editPwd}'}], indirect=True)
     def test_modifyUserLoginSentry(self, sentryLogin, send_data, expect):
-        """修改后管理员登陆中央收费页面"""
+        """修改后管理员登陆岗亭端页面"""
         re = SentryPersonalInfo(sentryLogin).dutyInfo()
-        onDutyTime = re.json()
+        onDutyTime = re
         Assertions().assert_in_text(onDutyTime, expect['onDutyTime'])
 
     @pytest.mark.parametrize('centralTollLogin', [{'user': '${mytest.editUserId}', 'pwd': '${mytest.editPwd}'}], indirect=True)

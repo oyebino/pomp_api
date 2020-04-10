@@ -21,10 +21,10 @@ test_data, case_desc = YmlUtils("/test_data/sentryDutyRoom/carInOutHandle/checkO
 class TestCheckOutNormal(BaseCase):
 
     """pc端收费放行"""
-    def test_mockCarIn(self, send_data, expect):
+    def test_mockCarIn(self,sentryLogin, send_data, expect):
         """模拟进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_presentCar(self, userLogin, send_data, expect):
@@ -36,7 +36,7 @@ class TestCheckOutNormal(BaseCase):
     def test_mockCarOut(self, send_data, expect):
         """模拟离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
     def test_sentryCheckOut(self, sentryLogin, send_data, expect):

@@ -38,7 +38,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_mockCarInA(self, send_data, expect):
         """模拟车辆A进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumA"],0,send_data["inClientID"])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["inscreenAMsg"])
         Assertions().assert_in_text(result['voice'], expect["invoiceAMsg"])
 
@@ -53,7 +53,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_mockCarInB(self, send_data, expect):
         """模拟车辆B进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumB"],0,send_data["inClientID"])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["inscreenB"])
         Assertions().assert_in_text(result['voice'], expect["invoiceB"])
 
@@ -74,7 +74,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_mockCarOutA(self, send_data, expect):
         """模拟车辆A离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumA"],1,send_data["outClientID"])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["outScreenA"])
         Assertions().assert_in_text(result['voice'], expect["outVoiceA"])
 
@@ -89,7 +89,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
     def test_mockCarOutB(self, send_data, expect):
         """模拟车辆离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumB"],1,send_data["outClientID"])
-        result = re.json()['biz_content']['result']
+        result = re
         Assertions().assert_in_text(result['screen'], expect["outscreenB"])
         Assertions().assert_in_text(result['voice'], expect["outvoiceB"])
 

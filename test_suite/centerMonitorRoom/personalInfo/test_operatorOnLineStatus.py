@@ -27,13 +27,13 @@ class TestOperatorOnLineStatus(BaseCase):
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场-严进"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["inClientID"])
-        result = re.json()
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_getCarInHandleInfo(self, send_data, expect):
         """"下班状态不能-获取车辆处理信息"""
         re = cloudparking_service().getCenterMonitorMsgList()
-        result = re.json()
+        result = re
         Assertions().assert_not_in_text(result, expect["getCarInHandleMsg"])
 
     def test_operatorStatusOn(self, centerMonitorLogin, send_data, expect):

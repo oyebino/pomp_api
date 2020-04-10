@@ -67,8 +67,11 @@ class Login():
         except TypeError:
             return self.Seesion
 
+from Api.parkingManage_service.tollCollection import TollCollection as Tol
+import json
 class SentryLogin():
     """岗亭端"""
+
     def __init__(self,user = None, pwd = None):
         self.S = requests.Session()
         self.C = Config()
@@ -82,11 +85,13 @@ class SentryLogin():
 
     def login(self):
         """登录并获取token"""
+        # self.__forceofDutyAllUser()
         url = self.host + "/user-service/api/sessions"
         data = {
             "user_id": self.user,
             "password": self.password
         }
+        self.S.headers.update({"cookie":"akeparking_grey_zone_name = grey"})
         loginRe = self.S.post(url=url, data=data, headers=form_headers)
         LoginReponse.loginRe = loginRe
         try:
@@ -103,6 +108,18 @@ class SentryLogin():
                 return self.S
         except KeyError:
             return self.S
+
+    def __forceofDutyAllUser(self):
+        """强制下班所有用户"""
+        idList = []
+        try:
+            userList = Tol(Login().login()).getAllTollCollection('上班中')
+            for user in userList:
+                idList.append(user['id'])
+            for id in idList:
+                Tol(Login().login()).forceOfDuty(id)
+        except json.JSONDecodeError:
+            pass
 
 
     def __getAllChannel(self):
@@ -221,6 +238,7 @@ class AompLogin(object):
 
 
 class WeiXinLogin():
+
     """微信商户端"""
     def __init__(self,user = None, pwd = None):
         self.conf = Config()
@@ -286,6 +304,7 @@ class CentralTollLogin():
                 }
         print("登录名：【"+data['user_id']+"】")
         print("密码：【" + data['password'] + "】")
+        self.S.headers.update({"cookie":"akeparking_grey_zone_name=grey"})
         r = self.S.post(url=url, data=data, headers=form_headers)
         LoginReponse.loginRe = r
         try:
@@ -302,7 +321,7 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = SentryLogin('apitest','123456')
+    L = SentryLogin('yeyongbin','123456')
     # ip ="wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
     L.login()
     # re =L.createUserSocket(ip,'123456')

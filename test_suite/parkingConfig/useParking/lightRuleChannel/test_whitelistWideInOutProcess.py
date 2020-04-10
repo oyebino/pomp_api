@@ -21,8 +21,7 @@ class TestWhitelistWideInOutProcess():
     def test_mockCarIn(self, send_data, expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_in"])
+        result = re
         Assertions().assert_in_text(result, expect["screen"])
         Assertions().assert_in_text(result, expect["voice"])
 
@@ -30,15 +29,13 @@ class TestWhitelistWideInOutProcess():
         """查看在场记录"""
         re = Information(userLogin).getPresentCar(send_data["parkName"], send_data["carNum"])
         result = re
-        Assertions().assert_in_text(result, expect["presentCarMessage"])
         Assertions().assert_in_text(result, send_data["carNum"])
         Assertions().assert_in_text(result, send_data["ticketName"])
 
     def test_mockCarOut(self, send_data, expect):
         """模拟车辆离场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
-        result = re.json()
-        Assertions().assert_in_text(result, expect["mock_car_out"])
+        result = re
         Assertions().assert_in_text(result, expect["screen"])
         Assertions().assert_in_text(result, expect["voice"])
 

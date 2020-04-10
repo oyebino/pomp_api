@@ -19,7 +19,7 @@ class PersonalInfo(Req):
             "password": pwd
         }
         re = self.post(url=self.zby_api,data=data, headers=form_headers)
-        return re
+        return re.text
 
 
     def offduty(self):
@@ -27,14 +27,14 @@ class PersonalInfo(Req):
         """退出登录"""
         self.url = "/ydtp-backend-service/api/offduty"
         re = self.post(url=self.zby_api, headers=form_headers)
-        return re
+        return re.text
 
     def dutyInfo(self):
 
         """个人信息"""
         self.url = "/ydtp-backend-service/api/duty"
         re =self.get(url=self.zby_api, headers=form_headers)
-        return re
+        return re.json()
 
     def __shiftRecords(self):
         """收费汇总列表"""
