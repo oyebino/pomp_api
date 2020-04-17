@@ -20,7 +20,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/useParking/lightRuleCha
 @allure.story('车辆进场流程')
 class TestCarInOutDetail(BaseCase):
     """车辆进场流程"""
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self, sentryLogin,send_data,expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re

@@ -26,7 +26,7 @@ class TestParkWhitelistUsed(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect["createWhitelistCarMsg"])
 
-    def test_mockCarIn(self, send_data, expect):
+    def test_mockCarIn(self,sentryLogin, send_data, expect):
         """模拟白名单车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 0, send_data["inClientID"])
         result = re

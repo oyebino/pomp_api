@@ -22,7 +22,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/moreCove
 @allure.story('多种(5种不一样的)可叠加扣减券并使用')
 class TestMoreCoverCouponUsed(BaseCase):
     """多种（5种不一样的）可叠加扣减券，售卖，进出场使用，查看收费流水，券发放流水和使用记录"""
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self, sentryLogin,send_data,expect):
         """模拟车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
         result = re

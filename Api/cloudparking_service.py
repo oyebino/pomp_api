@@ -31,10 +31,13 @@ class cloudparking_service(Req):
         }
         LoginReponse.loginRe = {"status":1}
         re = self.post(self.mock_api, json=json_data, headers=self.api_headers)
-        if str(mockType) == '1':
-            self.save('carOut_jobId',re.json()['biz_content']['job_id'])
-        elif str(mockType) == '0':
-            self.save('carIn_jobId', re.json()['biz_content']['job_id'])
+        try:
+            if str(mockType) == '1':
+                self.save('carOut_jobId',re.json()['biz_content']['job_id'])
+            elif str(mockType) == '0':
+                self.save('carIn_jobId', re.json()['biz_content']['job_id'])
+        except KeyError:
+            raise KeyError("【{}】一体机状态异常，无法进出车！".format(ytj_id))
         return re.json()['biz_content']['result']
 
     def getCarMsgYtj(self,job_id):
@@ -65,8 +68,6 @@ class cloudparking_service(Req):
         }
         LoginReponse.loginRe = {"status": 1}
         self.url = "/get_center_monitor_msg"
-        import time
-        time.sleep(3)
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
         result = re.json()['biz_content']['center_monitor_msg']
         if result['msgType'] == "CORRECT_CAR_NO_ALERT" :
@@ -104,10 +105,22 @@ class cloudparking_service(Req):
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
         return re.json()
 
+    def checkYtjOnlineList(self):
+        """查看在线一体机"""
+        self.url = "/check_ytj_list"
+        data = {
+            "message_id": SA().get_uuid(),
+            "timestamp": SA().get_time(),
+            "biz_content": {
+            }
+        }
+        LoginReponse.loginRe = {"status": 1}
+        re = self.post(self.mock_api, json=data, headers = self.api_headers)
+        return re
+
 
 if __name__ == "__main__":
-    b = cloudparking_service().mockCarInOut("粤E40222",0,"20190507171502")
-    # b = cloudparking_service().getCarMsgYtj("73f511ea8a3c7427eac14803")
-    # a = cloudparking_service()._getCenterMonitorHandleCarMsg('粤BG7599')
-    # re = b.json()
-    print(b.json())
+    b = cloudparking_service().mockCarInOut("粤E40224",0,"20190507171500")
+    # b = cloudparking_service().checkYtjOnlineList()
+
+    # print(b.json())

@@ -4,11 +4,12 @@
 # @Date  : 2018/10/15
 # @Desc  :
 
-import os
+import os,sys
 import re
 import yaml
 from Config.parameter import tempDataPath
 from Config.Config import Config
+from common.logger import logger
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
@@ -99,21 +100,32 @@ class YmlCommon(object):
         textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
-            funName,argsList,kwargsList=self.getFunNameAndParm(key)
-            c = getattr(SuperAction(),funName)
-            if len(argsList)==0 and len(kwargsList)==0:
-                value = c()
-            elif not len(argsList)==0 and len(kwargsList)==0:
-                argsList = tuple(argsList)
-                value = c(*argsList)
-            elif len(argsList)==0 and not len(kwargsList)==0:
-                kwargsdict = self.listToDict(kwargsList)
-                value = c(**kwargsdict)
-            else:
-                argsList = tuple(argsList)
-                kwargsdict = self.listToDict(kwargsList)
-                value = c(*argsList,**kwargsdict)
+            try:
+                funName,argsList,kwargsList=self.getFunNameAndParm(key)
+                c = getattr(SuperAction(),funName)
+            except TypeError:
+                logger.error("【"+ key +"】写法错误！")
+                sys.exit(0)
+            except AttributeError:
+                logger.error("【"+ key +"】方法函数不存在！")
+                sys.exit(0)
+            try:
 
+                if len(argsList)==0 and len(kwargsList)==0:
+                    value = c()
+                elif not len(argsList)==0 and len(kwargsList)==0:
+                    argsList = tuple(argsList)
+                    value = c(*argsList)
+                elif len(argsList)==0 and not len(kwargsList)==0:
+                    kwargsdict = self.listToDict(kwargsList)
+                    value = c(**kwargsdict)
+                else:
+                    argsList = tuple(argsList)
+                    kwargsdict = self.listToDict(kwargsList)
+                    value = c(*argsList,**kwargsdict)
+            except TypeError:
+                logger.error("【"+ key +"】请检查参数是否正确！")
+                sys.exit(0)
             text_dic[key] = value
         for key in text_dic:
             strKey = "${__" + key + "}"

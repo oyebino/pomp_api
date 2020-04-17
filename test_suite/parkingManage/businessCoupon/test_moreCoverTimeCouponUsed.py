@@ -55,7 +55,7 @@ class TestMoreCoverTimeCouponUsed(BaseCase):
         result = re
         Assertions().assert_in_text(result, expect["sendCouponMessage"])
 
-    def test_mockCarOut(self,send_data, expect):
+    def test_mockCarOut(self, sentryLogin,send_data, expect):
         """模拟车辆出场"""
         re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
         result = re

@@ -19,7 +19,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/freeParking/strictRuleC
 @allure.story('新能源小车严进-不需缴费严出')
 class TestGreenCarStrictRuleInOutNoPay(BaseCase):
     """新能源小车严进，不需缴费严出"""
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self, sentryLogin,send_data,expect):
         re = cloudparking_service().mockCarInOut(send_data['carNum'],0,send_data['inClientID'],carType=send_data['carType'])
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])

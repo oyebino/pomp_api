@@ -14,7 +14,8 @@ json_headers = {"content-type": "application/json;charset=UTF-8"}
 
 class CarInOutHandle(Req):
     """远程值班室-处理车辆"""
-    data = SA().get_today_data()
+    date = SA().get_today_data()
+    endDate = SA().cal_get_day('%Y-%m-%d',days=1)
 
     def checkCarIn(self, carNum):
         """远程值班室-处理车辆进场-登记放行"""
@@ -57,8 +58,8 @@ class CarInOutHandle(Req):
             "pageNumber": 1,
             "pageSize": 1,
             "id": presonalDict['id'],
-            "begin_time": self.data + " 00:00:00",
-            "end_time": self.data + " 23:59:59",
+            "begin_time": self.date + " 00:00:00",
+            "end_time": self.endDate + " 23:59:59",
         }
         self.url = "/zbcloud/center-monitor-service/in-out/open/cenduty_records?" + urlencode(data)
         re = self.get(self.monitor_api, headers = form_headers)

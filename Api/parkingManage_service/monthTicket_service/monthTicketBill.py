@@ -21,7 +21,6 @@ class MonthTicketBill(Req):
     """
     月票管理
     """
-    data = SA().get_today_data()
     def openMonthTicketBill(self, carNum, ticketName, timeperiodListStr):
         """
         开通月票
@@ -43,18 +42,18 @@ class MonthTicketBill(Req):
         price = self.__operationPrice(ticketNameDict['price'])
 
         json_data = {
-        "monthTicketId": ticketNameDict['id'],
-        "monthTicketName": ticketNameDict['ticketName'],
-        "timeperiodListStr": timeperiodListStr,
-        "userName": "pytest",
-        "userPhone": "135{}".format(SA().create_randomNum(val=8)),
-        "price": price,
-        "totalValue": int(float(price) * openMonthNum * len(carNumList)),
-        "openMonthNum": openMonthNum,
-        "realValue": 10,
-        "inviteCarTotal": len(carNumList),
-        "dynamicCarportNumber": 1,
-        "carCode": carNumList,
+            "monthTicketId": ticketNameDict['id'],
+            "monthTicketName": ticketNameDict['ticketName'],
+            "timeperiodListStr": timeperiodListStr,
+            "userName": "pytest",
+            "userPhone": "135{}".format(SA().create_randomNum(val=8)),
+            "price": price,
+            "totalValue": int(float(price) * openMonthNum * len(carNumList)),
+            "openMonthNum": openMonthNum,
+            "realValue": 10,
+            "inviteCarTotal": len(carNumList),
+            "dynamicCarportNumber": 1,
+            "carCode": carNumList,
         }
         self.url = "mgr/monthTicketBill/open.do"
         re = self.post(self.api, data=json_data, headers=form_headers)

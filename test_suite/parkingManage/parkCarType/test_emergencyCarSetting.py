@@ -38,7 +38,7 @@ class TestEmergencyCarSetting(BaseCase):
         result = re
         Assertions().assert_in_text(result, expect["updateEmergencyCarNumMsg"])
 
-    def test_mockCarIn(self, send_data, expect):
+    def test_mockCarIn(self,sentryLogin, send_data, expect):
         """模拟告警车辆进场"""
         re = cloudparking_service().mockCarInOut(send_data["newCarNum"], 0, send_data["inClientID"])
         result = re

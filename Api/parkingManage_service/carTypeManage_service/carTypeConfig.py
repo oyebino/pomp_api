@@ -19,6 +19,7 @@ specialCarTypeDict = {
     "预定":3
 }
 today = SA().get_today_data()
+endDate = SA().cal_get_day('%Y-%m-%d',days=1)
 
 class CarType(Req):
     """车辆分类"""
@@ -210,7 +211,7 @@ class ParkVisitor(Req):
             "visitReason": 'apipytest',
             "remark1": "apipytest",
             "visitFrom": today +' 00:00:00',
-            "visitTo": today + ' 23:59:59'
+            "visitTo": endDate + ' 23:59:59'
         }
         re = self.post(self.api, data = data, headers = form_headers)
         return re.json()
@@ -238,7 +239,7 @@ class ParkVisitor(Req):
             "page":1,
             "rp": 20,
             "startDate": today + ' 00:00:00',
-            "endDate": today + ' 23:59:59',
+            "endDate": endDate + ' 23:59:59',
             "parkIds": parkDict['value'],
             "parkSysType": 1,
         }
@@ -259,7 +260,7 @@ class ParkBlacklist(Req):
             "reason": 'pytest',
             "remark1": 'pytest',
             "blacklistForeverFlag": 'CLOSE',
-            "availTimeFromTo": today + ' 00:00:00~' + today + ' 23:59:59',
+            "availTimeFromTo": today + ' 00:00:00~' + endDate + ' 23:59:59',
         }
         re = self.post(self.api, data = data, headers = form_headers)
         return re.json()
@@ -287,7 +288,7 @@ class ParkBlacklist(Req):
             "page":1,
             "rp": 20,
             "startDate": today + ' 00:00:00',
-            "endDate": today + ' 23:59:59',
+            "endDate": endDate + ' 23:59:59',
             "parkIds": parkDict['value'],
             "parkSysType": 1,
         }

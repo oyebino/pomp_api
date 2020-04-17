@@ -25,6 +25,7 @@ couponTypeDict = {
 class Coupon(Req):
     """优惠配置"""
     today = SA().get_today_data()
+    endDate = SA().cal_get_day('%Y-%m-%d', days=1)
 
     def addCoupon(self,couponName,parkName,traderName,couponType = '免费劵',couponRule = 0,faceValue = 0,chargeGroupName=None,isCover=0):
         """
@@ -197,10 +198,8 @@ class Coupon(Req):
         :param carNum: 使用车牌
         :return:
         """
-        from time import sleep
-        sleep(5)
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
-        self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=20&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
+        self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=20&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.endDate+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re.json()['data']['rows']
 
@@ -211,7 +210,7 @@ class Coupon(Req):
             "page":1,
             "rp":20,
             "query_useTimeFrom": self.today + " 00:00:00",
-            "query_useTimeTo": self.today + " 23:59:59",
+            "query_useTimeTo": self.endDate + " 23:59:59",
             "query_carCode":carNum,
             "parkIds": parkDict['value'],
             "parkSysType":1

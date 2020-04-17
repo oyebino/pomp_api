@@ -315,7 +315,8 @@ class Req(requests.Session):
         """
         logger.info("===请求方式:{}".format('GET'))
         logger.info("===请求路径:{}".format(url))
-        logger.info("===请求参数:{}".format(kwargs))
+        for i in kwargs.keys():
+            logger.info("===请求{}参数:{}".format(i,kwargs.get(i)))
         logger.info("===返回状态码:{}".format(result.status_code))
         logger.info("===返回结果:{}".format(result.text))
 
@@ -442,42 +443,3 @@ class Req(requests.Session):
                         else:
                             jsonNew[i] = value
         return json
-
-if __name__ == "__main__":
-    a=[{
-            'content': {
-                'stoppingTime': '15秒',
-                'normal2Vip': False,
-                'traderCouponInfoList': [],
-                'parkFee': '5',
-                'enterVipName': '临时车',
-                'favorVal': '0',
-                'adjust': True,
-                'enterTime': '2020/04/07 11:05:48',
-                'paidVal': '0',
-                'leaveCarImg': 'http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/04/07/CAR_OUT/2064/CAR/2020040711060357713046-BCV906.jpg',
-                'abName': '临时车严出需缴费',
-                'carInOutId': '12631',
-                'leavePlateImg': 'http://ake-parking-test.oss-cn-shenzhen.aliyuncs.com/zbclound-oss/c-i-o-h-s/2KR52FYV/2020/04/07/CAR_OUT/2064/PLATE/2020040711060357713046-BCV906.jpg',
-                'carSizeType': '小车',
-                'billCode': '2020040711064780847515',
-                'carSizeTypeInt': 1.0,
-                'leaveCarNo': '粤CCCDB9',
-                'leavePicTime': '2020/04/07 11:06:03',
-                'topBillCode': '200407110530835739004419',
-                'leaveChannelId': '2064',
-                'leaveChannelName': '智泊云接口测试出口-严出',
-                'abType': '10',
-                'inMatch': '1',
-                'payVal': '5'
-            },
-            'deal_status': 0,
-            'id': 33096,
-            'msg_type': 1,
-            'msg_level': 1,
-            'create_time': '2020/04/07 11:06:49'
-        }]
-    try:
-        b = Req().getDictByList(a,'content','leaveCarNo','粤CCCDB9')
-    except KeyError:
-        print('123')

@@ -3,7 +3,6 @@
  微信公众号：泉头活水
 """
 import json
-from time import sleep
 from Api.cloudparking_service import cloudparking_service
 from common.Req import Req
 from common.superAction import SuperAction
@@ -15,6 +14,7 @@ json_headers = {"Content-Type": "application/json;charset=UTF-8"}
 class CarInOutHandle(Req):
     """pc收费端相关业务：获取所有消息id，对消息记录确认放行、收费放行、异常放行"""
     date = SuperAction().get_today_data()
+    endDate = SuperAction().cal_get_day('%Y-%m-%d',days=1)
     carTypeDict = {'蓝牌车': 1, '黄牌车': 2, '新能源小车': 4, '新能源大车': 3,'': None}
 
     def carInOutHandle(self,carNum,carHandleType,jobId = ""):
@@ -45,8 +45,6 @@ class CarInOutHandle(Req):
         else:
             self.save('payVal', data['real_value'])
         re = self.post(self.zby_api, data=data, headers=form_headers)
-        sleep(3)  # 可能需要加上延时
-
         if jobId != "" and "success" in re.json() and re.json()["success"] == True:
             result = cloudparking_service().getCarMsgYtj(jobId)
             return result
@@ -126,7 +124,7 @@ class CarInOutHandle(Req):
             "pageNumber": "1",
             "record_type": "in"
         }
-        self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
+        self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.endDate)
         re = self.get(self.zby_api, headers=form_headers)
         return re.json()['rows']
 
@@ -143,7 +141,7 @@ class CarInOutHandle(Req):
             "park_id": parkDict['id'],
             "record_type": "out"
         }
-        self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.date)
+        self.url = "/ydtp-backend-service/api/records?{}&begin_time={}+00:00:00&end_time={}+23:59:59".format(urlencode(data),self.date,self.endDate)
         re = self.get(self.zby_api, headers = form_headers)
         return re.json()['rows']
 
@@ -167,7 +165,6 @@ class CarInOutHandle(Req):
             "pageNumber": 1,
             "pageSize": 250
         }
-        sleep(3)
         self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
         re = self.get(self.zby_api)
         return re.json()['list']

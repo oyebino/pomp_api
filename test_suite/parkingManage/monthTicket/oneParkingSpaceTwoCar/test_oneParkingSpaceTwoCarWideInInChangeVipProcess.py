@@ -35,7 +35,7 @@ class TestOneParkingSpaceTwoCarWideInInChangeVipProcess():
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     # 多位多车VIP第一辆车进车
-    def test_mockCarAIn(self, send_data, expect):
+    def test_mockCarAIn(self, sentryLogin, send_data, expect):
         """模拟车辆A进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumA"],0,send_data["inClientID"])
         result = re

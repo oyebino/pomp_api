@@ -19,6 +19,7 @@ class Information(Req):
     api_headers = {"Content-Type": "application/json;charset=UTF-8"}
     form_headers = {"content-type": "application/x-www-form-urlencoded"}
     data = SA().get_today_data()
+    endDate = SA().cal_get_day('%Y-%m-%d',days=1)
 
     def getPresentCar(self,parkName,carNum = ""):
         """
@@ -31,7 +32,7 @@ class Information(Req):
             "page":1,
             "rp":5,
             "approchTimeFrom":self.data +" 00:00:00",
-            "approchTimeTo":self.data +" 23:59:59",
+            "approchTimeTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
             "parkSysType":1,
             "plate":carNum
@@ -51,13 +52,12 @@ class Information(Req):
             "page":1,
             "rp":1,
             "fromLeaveTime":self.data + " 00:00:00",
-            "toLeaveTime":self.data +" 23:59:59",
+            "toLeaveTime":self.endDate +" 23:59:59",
             "query_carNo":carNum,
             "parkIds":parkDict['value'],
             "parkSysType":1
         }
         self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?" + urlencode(data)
-        time.sleep(5)
         re = self.get(self.api,headers= self.api_headers)
         return re.json()["data"]["rows"]
 
@@ -68,12 +68,11 @@ class Information(Req):
         :return:
         """
         parkDict = self.getDictBykey(self.__getParkingBaseTree().json(), 'name', parkName)
-        time.sleep(5)
         data = {
             "page":1,
             "rp":1,
             "query_payTimeFrom":self.data + " 00:00:00",
-            "query_payTimeTo":self.data + " 23:59:59",
+            "query_payTimeTo":self.endDate + " 23:59:59",
             "query_carCode":carNum,
             "parkIds":parkDict['value']
         }
@@ -92,7 +91,7 @@ class Information(Req):
             "rp":20,
             "newCarCode":newCarCode,
             "modifyDateFrom": self.data + " 00:00:00",
-            "modifyDateTo":self.data +" 23:59:59",
+            "modifyDateTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value']
         }
         self.url = "/mgr/park/adjustCarRecord/getAdjustCarRecord.do?" + urlencode(data)
@@ -111,7 +110,7 @@ class Information(Req):
             "rp":20,
             "carCode": carCode,
             "modifyDateFrom": self.data + " 00:00:00",
-            "modifyDateTo":self.data +" 23:59:59",
+            "modifyDateTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
             "parkSysType": 1
         }
@@ -130,7 +129,7 @@ class Information(Req):
             "rp":20,
             "carCode": carCode,
             "modifyDateFrom": self.data + " 00:00:00",
-            "modifyDateTo":self.data +" 23:59:59",
+            "modifyDateTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
             "parkSysType": 1
         }
@@ -154,7 +153,7 @@ class Information(Req):
             "carType": carTypeDict[carType],
             "carCode": carNum,
             "createTimeFrom": self.data + " 00:00:00",
-            "createTimeTo": self.data +" 23:59:59",
+            "createTimeTo": self.endDate +" 23:59:59",
             "parkIds": parkDict['value'],
             "parkSysType": 1,
         }
@@ -278,7 +277,7 @@ class Information(Req):
             "page": 1,
             "rp": 1,
             "query_startTime": self.data + " 00:00:00",
-            "query_endTime": self.data +" 23:59:59",
+            "query_endTime": self.endDate +" 23:59:59",
             "query_menuLevel": menuLevel,
             "query_operationObject": operationObject
         }

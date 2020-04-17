@@ -20,7 +20,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/freeParking/strictRuleC
 @allure.story('临时车无在场严出')
 class TestCarLightRuleOutNoInside(BaseCase):
     """临时车无在场严出"""
-    def test_mockCarOut(self,send_data,expect):
+    def test_mockCarOut(self, sentryLogin,send_data,expect):
         """模拟离场"""
         re = cloudparking_service().mockCarInOut(send_data['carNum'],1,send_data['outClientID'])
         result = re

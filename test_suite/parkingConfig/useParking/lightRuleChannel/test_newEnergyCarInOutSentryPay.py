@@ -21,7 +21,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/useParking/lightRuleCha
 @allure.story('新能源小车宽进-需缴费宽出（岗亭收费处收费放行）')
 class TestNewEnergyCarInOutSentryPay(BaseCase):
     """新能源小车宽进，需缴费宽出（岗亭收费处收费放行）"""
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self, sentryLogin,send_data,expect):
         re = cloudparking_service().mockCarInOut(send_data['carNum'],0,send_data['inClientID'])
         result = re
         Assertions().assert_in_text(result['screen'], expect["mockCarInScreen"])

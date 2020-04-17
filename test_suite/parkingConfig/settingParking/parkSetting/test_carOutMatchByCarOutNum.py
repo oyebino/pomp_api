@@ -26,7 +26,7 @@ class TestCarOutMatchByCarOutNum(BaseCase):
         result = re['status']
         Assertions().assert_text(result, 1)
 
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self, sentryLogin,send_data,expect):
         re = cloudparking_service().mockCarInOut(send_data['carNumIn'],0,send_data['inClientID'],send_data['carNumInConfidence'])
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])

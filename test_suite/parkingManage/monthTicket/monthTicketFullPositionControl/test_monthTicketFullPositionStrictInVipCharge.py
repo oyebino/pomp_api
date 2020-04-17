@@ -35,7 +35,7 @@ class TestMonthTicketFullPositionStrictInVipCharge(BaseCase):
         Assertions().assert_in_text(result, expect["openMonthTicketBillMsg"])
 
     # 满位VIP第一辆车进车
-    def test_mockCarInA(self, send_data, expect):
+    def test_mockCarInA(self, sentryLogin, send_data, expect):
         """模拟车辆A进场"""
         re = cloudparking_service().mockCarInOut(send_data["carNumA"],0,send_data["inClientID"])
         result = re
