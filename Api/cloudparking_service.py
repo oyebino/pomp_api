@@ -6,7 +6,6 @@
 
 from common.Req import Req
 from common.superAction import SuperAction as SA
-from Config.parameter import LoginReponse
 
 class cloudparking_service(Req):
     """
@@ -29,7 +28,6 @@ class cloudparking_service(Req):
             "car_size": self.carTypeDict[carType]
             }
         }
-        LoginReponse.loginRe = {"status":1}
         re = self.post(self.mock_api, json=json_data, headers=self.api_headers)
         try:
             if str(mockType) == '1':
@@ -54,7 +52,6 @@ class cloudparking_service(Req):
                 "job_id": job_id
             }
         }
-        LoginReponse.loginRe = {"status": 1}
         re = self.post(self.mock_api, json=json_data, headers=self.api_headers)
         return re.json()['biz_content']['result']
 
@@ -66,7 +63,6 @@ class cloudparking_service(Req):
            "biz_content":{
               }
         }
-        LoginReponse.loginRe = {"status": 1}
         self.url = "/get_center_monitor_msg"
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
         result = re.json()['biz_content']['center_monitor_msg']
@@ -100,7 +96,6 @@ class cloudparking_service(Req):
             "biz_content": {
             }
         }
-        LoginReponse.loginRe = {"status": 1}
         self.url = "/get_center_monitor_msg_list"
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
         return re.json()
@@ -114,7 +109,6 @@ class cloudparking_service(Req):
             "biz_content": {
             }
         }
-        LoginReponse.loginRe = {"status": 1}
         re = self.post(self.mock_api, json=data, headers = self.api_headers)
         return re
 

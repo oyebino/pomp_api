@@ -4,7 +4,6 @@
 # @Date  : 2018/11/15
 # @Desc  :
 import requests
-import inspect
 import time,os,hashlib
 from common.superAction import SuperAction as SA
 from common.utils import FloderUtil
@@ -165,7 +164,7 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
-        if self.__checkLoginStatus(LoginReponse.loginRe):
+        if self.__checkLoginStatus(LoginReponse.loginRe, url):
             kwargs.setdefault('allow_redirects', True)
             url = self.__formatRule(r'%24%7B(.*?)%7D',url)
             result = self.request('GET', url, **kwargs)
@@ -175,8 +174,10 @@ class Req(requests.Session):
         else:
             return LoginReponse.loginRe
 
-    def __checkLoginStatus(self,obj):
+    def __checkLoginStatus(self,obj, url):
         """验证登录状态"""
+        if self.mock_host in url:
+            return True
         if not isinstance(obj, dict):
             objDict = obj.json()
         else:
@@ -229,13 +230,12 @@ class Req(requests.Session):
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
-        if self.__checkLoginStatus(LoginReponse.loginRe):
-            data = self.__formatCaseParm(data)
-            json = self.__formatCaseParm(json)
+        data = self.__formatCaseParm(data)
+        json = self.__formatCaseParm(json)
+        if self.__checkLoginStatus(LoginReponse.loginRe, url):
             result = self.request('POST', url, data=data, json=json, **kwargs)
             self.__postLogFormat(url,data,json,result)
             time.sleep(3)
-            tempDataPath.testName = inspect.stack()[2][3]
             return result
         else:
             return LoginReponse.loginRe
