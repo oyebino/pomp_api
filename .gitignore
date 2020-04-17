@@ -4,7 +4,7 @@ _windows
 codestyles
 allure-report/
 allure-results/
-result/
+reports/
 logs/
 temporaryDataLog/
 __pycache__/
