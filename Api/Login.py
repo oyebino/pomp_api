@@ -321,7 +321,7 @@ class CentralTollLogin():
 
 if __name__ == "__main__":
 
-    L = SentryLogin('yeyongbin','123456')
+    L = OpenYDTLogin()
     # ip ="wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
     L.login()
     # re =L.createUserSocket(ip,'123456')
