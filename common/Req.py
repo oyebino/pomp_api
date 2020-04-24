@@ -379,10 +379,11 @@ class Req(requests.Session):
     def getDictBykey(self, json_object,key,expectedValue):
         if isinstance(json_object, list):
             json_object = {'data':json_object}
-        if self.getDictBykeySon(json_object,key,expectedValue) == None:
+        serchData = self.getDictBykeySon(json_object,key,expectedValue)
+        if serchData == None:
             raise ValueError("【{}】字段没有该参数值【{}】！".format(key,expectedValue))
         else:
-            return self.getDictBykeySon(json_object,key,expectedValue)
+            return serchData
 
     def getDictBykeySon(self,json_object,key,expectedValue):
         """
@@ -399,11 +400,11 @@ class Req(requests.Session):
             elif isinstance(json_object[k],list):
                 for item in json_object[k]:
                     if isinstance(item,dict):
-                        result = self.getDictBykey(item, key, expectedValue)
+                        result = self.getDictBykeySon(item, key, expectedValue)
                         if  result != None:
                             return result
             elif isinstance(json_object[k],dict):
-                result = self.getDictBykey(json_object[k],key,expectedValue)
+                result = self.getDictBykeySon(json_object[k],key,expectedValue)
                 if result != None:
                     return result
 
