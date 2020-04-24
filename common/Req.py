@@ -176,7 +176,7 @@ class Req(requests.Session):
 
     def __checkLoginStatus(self,obj, url):
         """验证登录状态"""
-        if self.mock_host in url:
+        if self.mock_host or self.openYDT_host in url:
             return True
         if not isinstance(obj, dict):
             objDict = obj.json()
@@ -239,6 +239,9 @@ class Req(requests.Session):
             return result
         else:
             return LoginReponse.loginRe
+
+    def runTest(self,a):
+        return self.__formatCaseParm(a)
 
     def __formatCaseParm(self,template):
         """
@@ -376,9 +379,10 @@ class Req(requests.Session):
     def getDictBykey(self, json_object,key,expectedValue):
         if isinstance(json_object, list):
             json_object = {'data':json_object}
-
-        return self.getDictBykeySon(json_object,key,expectedValue)
-
+        if self.getDictBykeySon(json_object,key,expectedValue) == None:
+            raise ValueError("【{}】字段没有该参数值【{}】！".format(key,expectedValue))
+        else:
+            return self.getDictBykeySon(json_object,key,expectedValue)
 
     def getDictBykeySon(self,json_object,key,expectedValue):
         """
@@ -443,3 +447,7 @@ class Req(requests.Session):
                         else:
                             jsonNew[i] = value
         return json
+
+if __name__ == '__main__':
+    a = {"a":"1","b":2}
+    print(Req().getDictBykey(a,"c",2))

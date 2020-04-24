@@ -2,25 +2,25 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/3/13 17:13
 # @Author  : 叶永彬
-# @File    : test_intelligenceCleanCarByTime.py
+# @File    : test_vemsIntelligenceCleanCarByTime.py
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
+from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/intelligenceCleanCarByTime.yml").getData
+test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/vemsIntelligenceCleanCarByTime.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("信息查询-车辆查询")
-@allure.story('智能盘点-按时间方式盘点离')
-class TestIntelligenceCleanCarByTime(BaseCase):
+@allure.story('vems智能盘点-按时间方式盘点离')
+class TestVemsIntelligenceCleanCarByTime(BaseCase):
     """按时间智能盘点,在在场车辆中查看不到该盘点车辆，在异常进场中可以查看到该车辆"""
-    def test_mockCarIn(self,send_data,expect):
+    def test_mockCarIn(self,openYDTLogin,send_data,expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
+        re = VemsParkingReq(openYDTLogin).carInOut(send_data["parkCode"],send_data["carNum"],0)
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 

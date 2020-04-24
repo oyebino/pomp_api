@@ -2,34 +2,34 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/3/13 17:13
 # @Author  : 叶永彬
-# @File    : test_intelligenceCleanCarByFile.py
+# @File    : test_vemsIntelligenceCleanCarByFile.py
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.cloudparking_service import cloudparking_service
 from Api.information_service.information import Information
+from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/intelligenceCleanCarByFile.yml").getData
+test_data,case_desc = YmlUtils("/test_data/informationSearch/carNumSearch/vemsIntelligenceCleanCarByFile.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("信息查询-车辆查询")
-@allure.story('智能盘点-按表格上传方式盘离')
-class TestIntelligenceCleanCarByFile(BaseCase):
-    """智能盘点，选择智泊云车场，然后按在场车辆盘点，上传盘点表格，上传成功后，勾选“将未匹配的车辆补录进场”，点击确定后，不在表格中的车辆都被盘点走，
+@allure.story('vems智能盘点-按表格上传方式盘离')
+class TestVemsIntelligenceCleanCarByFile(BaseCase):
+    """智能盘点，选择vems，然后按在场车辆盘点，上传盘点表格，上传成功后，勾选“将未匹配的车辆补录进场”，点击确定后，不在表格中的车辆都被盘点走，
     在在场车辆中查看不到被盘点走的车辆，在异常进场中可以查看到该被盘点走的车辆，并且未匹配的车辆以当前时间补录到在场车辆中"""
 
-    def test_mockCarInA(self,send_data,expect):
+    def test_mockCarInA(self,openYDTLogin,send_data,expect):
         """模拟车辆A进场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNumA"],0,send_data["inClientID"])
-        result = re.json()
+        re = VemsParkingReq(openYDTLogin).carInOut(send_data["parkCode"],send_data["carNumA"],0)
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
-    def test_mockCarInB(self,send_data,expect):
+    def test_mockCarInB(self,openYDTLogin,send_data,expect):
         """模拟车辆B进场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNumB"],0,send_data["inClientID"])
-        result = re.json()
+        re = VemsParkingReq(openYDTLogin).carInOut(send_data["parkCode"],send_data["carNumB"],0)
+        result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
     def test_intelligenceUploadFile(self, userLogin, send_data, expect):

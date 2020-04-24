@@ -1,0 +1,14 @@
+- test:
+    name: 按时间智能盘点-vems
+    desc: vems场按时间智能点-记录在异常进场
+    send_data:
+      carNum: &carNum ${__create_carNum()}
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+    except:
+      mockCarInMessage: VEMS：模拟进场成功
+      cleanCarCheckOutMsg: 1
+      checkPresentCarMsg: *carNum
+      checkAbnormalInCar: *carNum
+
+

@@ -20,7 +20,9 @@ class ParseTemplate():
         """
         import re
         rule = r'\${(.*)}'
-        textList = re.findall(rule, template)
+        # if not isinstance(template, str):
+        #     return template
+        textList = re.findall(rule, str(template))
         text_dic = {}
         for key in textList:
             caseName = str(key).split('.')[0]

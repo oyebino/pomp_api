@@ -1,0 +1,23 @@
+- test:
+    name: 可叠加金额扣减券创建-vems
+    desc: 可叠加金额扣减券创建-vems
+    send_data:
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+      couponName: &couponName vems金额扣减可叠加券${__create_randomNum()}
+      traderName: &traderName vems勿动
+      carNum: &carNum ${__create_carNum()}
+      couponType: 金额扣减券
+      isCover: 1
+      faceValue: 2.3
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: VEMS：模拟进场成功
+      mockCarOutMessage: VEMS：模拟离场成功,此车辆不需要缴费
+      payParkFeeMsg: 业务成功
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

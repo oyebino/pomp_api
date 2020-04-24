@@ -228,6 +228,5 @@ class SuperAction:
 
 if __name__ == "__main__":
     SA = SuperAction()
-    a = SA.get_today_data()
-    b = SA.cal_get_day('%Y-%m-%d',days=1)
+    b = SA.cal_get_day(days=20)
     print(b)

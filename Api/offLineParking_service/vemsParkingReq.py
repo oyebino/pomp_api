@@ -5,6 +5,7 @@
 # @File    : vemsParkingReq.py
 from common.superAction import SuperAction as SA
 from common.Req import Req
+import time
 form_headers = {"Content-Type": "application/x-www-form-urlencoded"}
 json_headers = {"Content-Type": "application/json"}
 
@@ -22,6 +23,7 @@ class VemsParkingReq(Req):
             "operator": "operator",
             "parkCode": parkCode
         }
+        time.sleep(5)
         re = self.post(self.openYDT_api, json = data, headers = json_headers)
         return re.json()
 
@@ -55,13 +57,23 @@ class VemsParkingReq(Req):
         re = self.post(self.openYDT_api, json=data, headers = json_headers)
         return re.json()
 
-    def getVipType(self,parkCode):
+    def getVipType(self,parkCode,customVipName):
         """通过开放平台-查询vems月票类型信息"""
         self.url = "/openydt/api/v2/getVipType"
         data = {
             "parkCode": parkCode,
-            "operateTime": "2017-07-04 13:14:15",
-            "settleType": 0
+            "customVipName":customVipName,
+            "operateTime": SA().get_time(strType='%Y-%m-%d %H:%M:%S')
         }
         re = self.post(self.openYDT_api,json=data, headers = json_headers)
         return re.json()['data']['vipTypeList']
+
+    def getMonthCard(self,parkCode ,carNum):
+        """通过开放平台-查询vems月卡信息"""
+        self.url = "/openydt/api/v2/getMonthCard"
+        data = {
+            "parkCode": parkCode,
+            "carNO": carNum
+        }
+        re = self.post(self.openYDT_api, json= data, headers = json_headers)
+        return re.json()['data']['monthCardList']

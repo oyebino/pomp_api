@@ -1,27 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2019/12/20 17:41
+# @Time    : 2020/2/28 15:28
 # @Author  : 叶永彬
-# @File    : test_discountAmountCoupon.py
+# @File    : test_reduceAmountCouponCover.py
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
 from Api.parkingManage_service.businessCoupon_service.coupon import Coupon
-from Api.cloudparking_service import cloudparking_service
+from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
+from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
 from Api.information_service.information import Information
+from Api.parkingManage_service.businessCoupon_service.trader import Trader
 from common.Assert import Assertions
+from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/timeCouponNoCover.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingConfig/vemsParking/businessCoupon/reduceAmountCouponCover.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
-@allure.feature("智泊云-优惠劵管理")
-@allure.story('时间劵创建并使用')
-class TestTimeCoupon():
-    """时间劵创建并使用"""
+@allure.feature("线下车场-优惠劵模块")
+@allure.story('vems可叠加金额扣减劵创建并使用')
+class TestReduceAmountCouponCover(BaseCase):
+    """可叠加金额扣减劵创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
-        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue =send_data["faceValue"],isCover=send_data["isCover"])
+        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'],isCover=send_data['isCover'])
         result = re
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
@@ -31,21 +33,35 @@ class TestTimeCoupon():
         result = re
         Assertions().assert_in_text(result, expect["addSellMessage"])
 
+    def test_checkTraderAccount(self,userLogin,send_data,expect):
+        """查找商家"""
+        re =Trader(userLogin).getTraderListData(send_data['parkName'],send_data['traderName'])
+        result = re
+        self.save_data('traderAccount',result[0]['account'])
+        Assertions().assert_in_text(result, expect["traderAccountMsg"])
+
+    @pytest.mark.parametrize('weiXinLogin', [{'user': '${mytest.traderAccount}', 'pwd': '123456'}], indirect=True)
     def test_sendCoupon(self,weiXinLogin,send_data,expect):
         """发放优惠劵"""
         re = WeiXin(weiXinLogin).grantCouponToCar(send_data["couponName"],send_data["carNum"])
         result = re
         Assertions().assert_in_text(result, expect["sendCouponMessage"])
 
-    def test_mockCarIn(self, sentryLogin,send_data,expect):
+    def test_mockCarIn(self, openYDTLogin,send_data,expect):
         """模拟车辆进场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNum"],0,send_data["inClientID"])
+        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
-    def test_mockCarOut(self,send_data, expect):
+    def test_payParkFee(self,openYDTLogin,send_data,expect):
+        """离场缴费"""
+        re = VemsParkingReq(openYDTLogin).payParkFee(send_data['parkCode'],send_data["carNum"])
+        result = re
+        Assertions().assert_in_text(result, expect["payParkFeeMsg"])
+
+    def test_mockCarOut(self,openYDTLogin,send_data, expect):
         """模拟车辆出场"""
-        re = cloudparking_service().mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
+        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
         result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 
@@ -61,7 +77,7 @@ class TestTimeCoupon():
         result = re
         Assertions().assert_in_text(result, expect["checkCouponGrantListMessage"])
 
-    def test_checkUsedList(self,userLogin,send_data,expect):
+    def test_checkCouponUsedList(self,userLogin,send_data,expect):
         """查看使用流水"""
         re = Coupon(userLogin).getCouponSerialList(send_data["parkName"],send_data["carNum"])
         result = re

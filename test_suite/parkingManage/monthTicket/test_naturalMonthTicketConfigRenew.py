@@ -13,7 +13,7 @@ from common.Assert import Assertions
 from Api.cloudparking_service import cloudparking_service
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/naturalMonthTicketConfigRenew.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingManage/monthTicket/naturalMonthTicketUsed.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("智泊云-月票管理模块")
 @allure.story('智泊云自然月票创建并使用')

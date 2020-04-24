@@ -9,6 +9,7 @@ from common.db import Db as db
 from common.superAction import SuperAction as SA
 from urllib.parse import urlencode
 from Api.index_service.index import Index
+from time import sleep
 
 form_headers = {"content-type": "application/x-www-form-urlencoded"}
 json_headers = {"content-type": "application/json;charset=UTF-8"}
@@ -44,8 +45,10 @@ class Coupon(Req):
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(),'name',parkName)
         traderDict = self.getDictBykey(self.__getTrader2Sell(parkDict['value']).json(),'name',traderName)
         if str(couponType) == '不同计价券':
-            chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']).json(), 'typeName',chargeGroupName)
-            faceValue = chargeGroupDict['chargeTypeSeq']
+            if parkDict.get('parkSysType') == 1:
+                chargeGroupDict = self.getDictBykey(self.__selectChargeGroupList(parkDict['parkId']).json(), 'typeName',chargeGroupName)
+                faceValue = chargeGroupDict['chargeTypeSeq']
+            else: faceValue = chargeGroupName
         if str(couponType) == '金额折扣券':
             faceValue = int(faceValue)/10
         json_data = {
@@ -153,12 +156,12 @@ class Coupon(Req):
 
     def getCouponListByPage(self,parkName):
         """优惠配置-获取优惠劵列表"""
-        parkDict = self.getDictBykey(Index(self.Session).getUnsignedParkList().json(), 'name', parkName)
+        parkDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
         data = {
             "page":1,
             "rp":20,
-            "query_parkId":parkDict['id'],
-            "parkSysType":1
+            "query_parkId":parkDict.get("value"),
+            "parkSysType":parkDict.get('parkSysType')
         }
         self.url = "/mgr/coupon/getListByPage.do?" + urlencode(data)
         re = self.get(self.api,headers = form_headers)
@@ -200,6 +203,7 @@ class Coupon(Req):
         """
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
         self.url = "/mgr/coupon/getCouponSerialList.do?page=1&rp=20&query_parkId="+str(parkDict['value'])+"&beginTime="+self.today+"+00:00:00&endTime="+self.endDate+"+23:59:59&carCode="+carNum
+        sleep(3)
         re = self.get(self.api, headers=json_headers)
         return re.json()['data']['rows']
 

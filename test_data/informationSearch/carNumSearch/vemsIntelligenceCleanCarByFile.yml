@@ -1,0 +1,18 @@
+- test:
+    name: vems智能盘点-按在场车辆
+    desc: vems智能盘点-上传按在场车辆文件-未匹配车辆以盘点时间入场
+    send_data:
+      carNumList: ${__create_carNum(carType=B)},${__create_carNum(carType=C)}
+      carNumA: &carNumA ${__create_carNum(carType=A)}
+      carNumB: &carNumB ${__create_carNum(carType=B)}
+      carNumC: ${__create_carNum(carType=C)}
+      cleanType: 按在场车辆
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+    except:
+      mockCarInMessage: VEMS：模拟进场成功
+      cleanCarCheckOutMsg: 1
+      checkPresentCarA: *carNumA
+      checkPresentCarB: *carNumB
+      checkAbnormalInCar: *carNumA
+      checkPresentCarC: 盘点进场

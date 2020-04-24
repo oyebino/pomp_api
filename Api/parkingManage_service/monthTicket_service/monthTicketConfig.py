@@ -33,24 +33,28 @@ class MonthTicketConfig(Req):
             "自然月": "NATURAL_MONTH",
             "自定义": "CUSTOM"
         }
-        parkInfoDict = self.getDictBykey(Index(self.Session).getUnsignedParkList().json(), 'name', parkName)
-        optionArrListDict = self.__selectChargeGroupList(parkInfoDict['parkUUID']).json()
-        optionArrList = optionArrListDict['data'][parkInfoDict['parkUUID']]
+        parkInfoDict = self.getDictBykey(Index(self.Session).getParkingBaseDataTree().json(), 'name', parkName)
+        parkSysType = parkInfoDict['parkSysType']
+        if parkSysType == 1:
+            optionArrListDict = self.__selectChargeGroupList(parkInfoDict['parkId']).json()
+            optionArrList = optionArrListDict['data'][parkInfoDict['parkId']]
+        else:
+            optionArrList = []
 
         vipGroupType = 0
         if str(isChargeGroupRelated) == '1':
             vipGroupType = self.getDictBykey(optionArrListDict, 'typeName', vipGroupName)['chargeTypeSeq']
         parkJson = [{
-            "parkSysType": 1,
+            "parkSysType": parkInfoDict['parkSysType'],
             "parkVipTypeId": "",
-            "parkId": parkInfoDict['id'],
-            "parkUuid": parkInfoDict['parkUUID'],
+            "parkId": parkInfoDict['value'],
+            "parkUuid": parkInfoDict['parkId'],
             "parkName": parkName,
             "chargeGroupCode": vipGroupType,
             "optionArr": optionArrList
         }]
 
-        channelAuthTree = self.getDictBykey(self.__getChannelAuthTreeMultiPark().json(), 'name', parkName)
+        channelAuthTree = self.getDictBykey(self.__getChannelAuthTreeMultiPark(parkSysType).json(), 'name', parkName)
         self.__getDictChildList(channelAuthTree, 'childrenList')
         newChannelAuthTree = json.dumps(self.setValueByDict(self.aList, ['checked'], True))
 
@@ -87,7 +91,7 @@ class MonthTicketConfig(Req):
             "price": 35,
             "renewMethod": renewMethodDict[renewMethod],
             "maxSellLimit": 'NO',
-            "financialParkId": parkInfoDict['id'],
+            "financialParkId": parkInfoDict['value'],
             "parkJson": str(parkJson),
             "remark": 'pytest',
             "renewFormerDays": 60, # 允许向前续费天数
@@ -200,13 +204,16 @@ class MonthTicketConfig(Req):
         re = self.get(self.api, headers = form_headers)
         return re
 
-    def __getChannelAuthTreeMultiPark(self):
+    def runTest(self):
+        return self.__getChannelAuthTreeMultiPark(0)
+
+    def __getChannelAuthTreeMultiPark(self, parkSysType):
         """获取全部车场区域进出口树"""
         self.url = "/mgr/vip/vipType/getChannelAuthTreeMultiPark.do"
         data = {
             "parkId":None,
             "vipTypeId":None,
-            "parkSysType":1,
+            "parkSysType":parkSysType,
             "canCheckAll":1
         }
         re = self.post(self.api, data = data, headers = form_headers)
@@ -285,4 +292,5 @@ class MonthTicketConfig(Req):
         }
         re = self.post(self.api, data = data, headers = form_headers)
         return re
+
 

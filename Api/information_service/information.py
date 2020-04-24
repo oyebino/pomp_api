@@ -34,7 +34,7 @@ class Information(Req):
             "approchTimeFrom":self.data +" 00:00:00",
             "approchTimeTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
-            "parkSysType":1,
+            "parkSysType":parkDict['parkSysType'],
             "plate":carNum
         }
         self.url = "/mgr/park/presentCar/getPresentCar.do?" + urlencode(data)
@@ -55,7 +55,7 @@ class Information(Req):
             "toLeaveTime":self.endDate +" 23:59:59",
             "query_carNo":carNum,
             "parkIds":parkDict['value'],
-            "parkSysType":1
+            "parkSysType":parkDict['parkSysType']
         }
         self.url = "/mgr/park/carLeaveHistory/pageListParkingRecord.do?" + urlencode(data)
         re = self.get(self.api,headers= self.api_headers)
@@ -77,6 +77,7 @@ class Information(Req):
             "parkIds":parkDict['value']
         }
         self.url = "/mgr/park/parkingBillDetail/list.do?" + urlencode(data)
+        time.sleep(3)
         re = self.get(self.api, headers=self.api_headers)
         return re.json()['data']['rows']
 
@@ -112,7 +113,7 @@ class Information(Req):
             "modifyDateFrom": self.data + " 00:00:00",
             "modifyDateTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
-            "parkSysType": 1
+            "parkSysType": parkDict['parkSysType']
         }
         self.url = "mgr/park/abnormalInCar/getAbnormalInCar.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
@@ -131,7 +132,7 @@ class Information(Req):
             "modifyDateFrom": self.data + " 00:00:00",
             "modifyDateTo":self.endDate +" 23:59:59",
             "parkIds":parkDict['value'],
-            "parkSysType": 1
+            "parkSysType": parkDict['parkSysType']
         }
         self.url = "mgr/park/parkAbnormalPicCar/getParkAbnormalPicCar.do?" + urlencode(data)
         re = self.get(self.api, headers=self.api_headers)
@@ -155,7 +156,7 @@ class Information(Req):
             "createTimeFrom": self.data + " 00:00:00",
             "createTimeTo": self.endDate +" 23:59:59",
             "parkIds": parkDict['value'],
-            "parkSysType": 1,
+            "parkSysType": parkDict['parkSysType'],
         }
         self.url = "/mgr/park/emergency/record/list.do?" + urlencode(data)
         re = self.get(self.api, headers = self.api_headers)
@@ -285,8 +286,4 @@ class Information(Req):
         re = self.post(self.api, data = data, headers = self.form_headers)
         return re.json()['data']['rows']
 
-if __name__ == '__main__':
-    Information().runTest('E:/POMP_API/upload/auto_clear_car.xls','粤Q12344,粤B12344')
-    # carNum =['1','2']
-    # print(len(carNum))
 

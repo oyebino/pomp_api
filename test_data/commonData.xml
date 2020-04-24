@@ -13,4 +13,7 @@
 	<caseData name="freePark_wideOutClientId" value="20200115172347"/>
 	<caseData name="freePark_strictInClientID" value="20200116092926"/>
 	<caseData name="freePark_strictOutClientID" value="20200116092930"/>
+    <!--线下车场-->
+    <caseData name="vemsParkName" value="自动化测试停车场"/>
+    <caseData name="vemsParkCode" value="2KNX073C"/>
 </root>

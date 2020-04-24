@@ -1,0 +1,23 @@
+
+- test:
+    name: vems月票订单及类型同步
+    desc: VEMS月票类型以及修改月票订单同步-在VEMS可以查看到同步下去的月票
+    send_data:
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+      carNum: ${__create_carNum()}
+      ticketTypeName: &ticketTypeName 同步月票pytest${__create_randomNum()}
+      renewMethod: 自定义
+      validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
+      timeperiodListStr: ${__cal_getTheMonth(2020-02-05)}
+      status: 不在有效期
+      combinedStatus: 不在有效期
+      startData: ${__cal_get_day(strType ="%Y-%m-%d",days=10)}
+      customVipName: ${mytest.vemsTicketName}
+    except:
+      createMonthTicketConfigMsg: ok
+      openMonthTicketBillMsg: 操作成功
+      renewMonthTicketBillMsg: 操作成功
+      ticketBillResyncMsg: 1
+      checkVemsEditMonthBillInfo: ${__cal_get_day(days=10)}000000
+      checkVemsTicketType: *ticketTypeName

@@ -1,0 +1,22 @@
+- test:
+    name: 不可叠加时间券创建-vems
+    desc: 不可叠加时间券创建-vems
+    send_data:
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+      couponName: &couponName vems不可叠时间券${__create_randomNum()}
+      traderName: &traderName vems勿动
+      carNum: &carNum ${__create_carNum()}
+      couponType: 时间券
+      isCover: 0
+      faceValue: 5
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: VEMS：模拟进场成功
+      mockCarOutMessage: VEMS：模拟离场成功,此车辆不需要缴费
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

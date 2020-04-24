@@ -332,6 +332,13 @@ class MonthTicketBill(Req):
         return re
 
 
-
-if __name__ == "__main__":
-    MonthTicketBill().editOpenBillFile('E:/POMP_API/upload/批量开通月票.xls','123','456')
+    def resyncMonthTicketBill(self,parkName, carNum, combinedStatus='生效中'):
+        """重新同步月票订单"""
+        ticketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName,combinedStatus = combinedStatus),'carCode',carNum)
+        data = {
+            "monthTicketBillId":ticketBillDict.get('id'),
+            "ticketCode":ticketBillDict.get('ticketCode')
+        }
+        self.url = "/mgr/monthTicketBill/resync.do"
+        re = self.post(self.api, data = data, headers =form_headers)
+        return re.json()

@@ -254,11 +254,6 @@ class FloderUtil(object):
 
 
 if __name__ == "__main__":
-    test_data, case_desc =YmlUtils("/test_data/parkingManage/tollCollection/addTollProcess.yml").getData
-    # print(test_data)
-    print(test_data)
-
-
-
-
-
+    test_data, case_desc =YmlUtils("/test_data/parkingConfig/vemsParking/monthTicketManage/naturalMonthTicketUsed.yml").getData
+    # print(test_data[0][1])
+    print(type(test_data[0][1]['ticketBillResyncMsg']))

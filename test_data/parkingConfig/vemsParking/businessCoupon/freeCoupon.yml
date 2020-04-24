@@ -1,0 +1,20 @@
+- test:
+    name: vems自定义月票创建创建并使用
+    desc: vems自定义月票创建创建并使用
+    send_data:
+      parkName: ${vemsParkName}
+      parkCode: ${vemsParkCode}
+      couponName: &couponName vems免费劵${__create_randomNum()}
+      traderName: &traderName vems勿动
+      couponType: 免费劵
+      carNum: &carNum ${__create_carNum()}
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: VEMS：模拟进场成功
+      mockCarOutMessage: VEMS：模拟离场成功,此车辆不需要缴费
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName
