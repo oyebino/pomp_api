@@ -1,0 +1,23 @@
+- test:
+    name: 金额折扣券创建-rmps
+    desc: 金额折扣券创建-rmps
+    send_data:
+      parkName: ${rpmsParkName}
+      parkCode: ${rpmsParkCode}
+      rmpsParkName: ${parkNameInRmps}
+      couponName: &couponName rmps金额折扣劵123
+      traderName: &traderName hjx
+      carNum: &carNum 粤FUE987
+      couponType: 金额折扣券
+      faceValue: 5
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: 模拟进车成功
+      payYdtoMsg: 业务成功
+      mockCarOutMessage: 模拟离场成功
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

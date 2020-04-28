@@ -7,7 +7,7 @@
 import allure,pytest
 from common.utils import YmlUtils
 from Api.information_service.information import Information
-from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
+from Api.offLineParking_service.openYDTReq import OpenYDTReq
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
@@ -20,7 +20,7 @@ class TestVemsIntelligenceCleanCarByTime(BaseCase):
     """按时间智能盘点,在在场车辆中查看不到该盘点车辆，在异常进场中可以查看到该车辆"""
     def test_mockCarIn(self,openYDTLogin,send_data,expect):
         """模拟车辆进场"""
-        re = VemsParkingReq(openYDTLogin).carInOut(send_data["parkCode"],send_data["carNum"],0)
+        re = OpenYDTReq(openYDTLogin).carInOut(send_data["parkCode"],send_data["carNum"],0)
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 

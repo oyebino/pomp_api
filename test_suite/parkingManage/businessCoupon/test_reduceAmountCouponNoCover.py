@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/2/28 15:02
 # @Author  : 叶永彬
-# @File    : test_reduceAmountCouponNoCover.py
+# @File    : test_reduceAmountCouponNoCoverVems.py
 
 
 import allure,pytest

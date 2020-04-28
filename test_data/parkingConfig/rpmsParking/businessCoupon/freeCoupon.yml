@@ -1,0 +1,21 @@
+- test:
+    name: 免费优惠劵使用流程-rmps
+    desc: 免费优惠劵使用流程-rmps
+    send_data:
+      parkName: ${rpmsParkName}
+      parkCode: ${rpmsParkCode}
+      rmpsParkName: ${parkNameInRmps}
+      couponName:  &couponName rmps免费劵${__create_randomNum()}
+      traderName: &traderName hjx
+      couponType: 免费劵
+      carNum: &carNum ${__create_carNum()}
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: 模拟进车成功
+      mockCarOutMessage: 模拟离场成功
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

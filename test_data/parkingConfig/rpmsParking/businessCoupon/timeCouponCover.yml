@@ -1,0 +1,24 @@
+- test:
+    name: 可叠加时间券创建-rmps
+    desc: 可叠加时间券创建-rmps
+    send_data:
+      parkName: ${rpmsParkName}
+      parkCode: ${rpmsParkCode}
+      rmpsParkName: ${parkNameInRmps}
+      couponName: &couponName rmps时间可叠加券${__create_randomNum()}
+      traderName: &traderName hjx
+      carNum: &carNum ${__create_carNum()}
+      couponType: 时间券
+      isCover: 1
+      faceValue: 5
+    except:
+      addCouponMessage: ok
+      addSellMessage: 操作成功
+      traderAccountMsg: *traderName
+      sendCouponMessage: 发券成功
+      mockCarInMessage: 模拟进车成功
+      payYdtoMsg: 业务成功
+      mockCarOutMessage: 模拟离场成功
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

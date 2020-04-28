@@ -210,6 +210,8 @@ class MonthTicketConfig(Req):
     def __getChannelAuthTreeMultiPark(self, parkSysType):
         """获取全部车场区域进出口树"""
         self.url = "/mgr/vip/vipType/getChannelAuthTreeMultiPark.do"
+        if parkSysType == 3:
+            parkSysType = 100
         data = {
             "parkId":None,
             "vipTypeId":None,

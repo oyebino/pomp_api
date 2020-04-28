@@ -16,4 +16,8 @@
     <!--线下车场-->
     <caseData name="vemsParkName" value="自动化测试停车场"/>
     <caseData name="vemsParkCode" value="2KNX073C"/>
+    <!--路边车场-->
+    <caseData name="rpmsParkName" value="桂城-rpms-test"/>
+    <caseData name="parkNameInRmps" value="test_101"/>
+    <caseData name="rpmsParkCode" value="2KPJZM2A"/>
 </root>

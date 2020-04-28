@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/20 17:41
 # @Author  : 叶永彬
-# @File    : test_discountAmountCoupon.py
+# @File    : test_discountAmountCouponVems.py
 
 import allure,pytest
 from common.utils import YmlUtils

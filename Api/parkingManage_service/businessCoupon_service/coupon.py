@@ -123,7 +123,7 @@ class Coupon(Req):
         """
         couponDict = self.getDictBykey(self.getCouponListByPage(parkName),'name',couponName)
         couponParkDict = self.getDictBykey(self.__getCouponParkList(couponDict['tmpId']).json(), 'name', parkName)
-        traderDict = self.getDictBykey(self.__getTraderList(couponParkDict['id']).json(),'name',traderName)
+        traderDict = self.getDictBykey(self.__getTraderList(couponParkDict['id'],traderName).json(),'name',traderName)
         totalMoney = int(couponDict['originalPrice']) * int(sellNum)
         if sellMoney == None:
             sellMoney = totalMoney
@@ -167,13 +167,14 @@ class Coupon(Req):
         re = self.get(self.api,headers = form_headers)
         return re.json()
 
-    def __getTraderList(self,parkId):
+    def __getTraderList(self,parkId,traderName):
         """
         在优惠配置，销售劵，获取商家信息列表
         :return:
         """
         form_data = {
             "query_parkId":parkId,
+            "name": traderName,
             "page":1,
             "rp":10
         }

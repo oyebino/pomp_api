@@ -318,10 +318,36 @@ class CentralTollLogin():
         except KeyError:
             return self.S
 
+class RoadSideLogin():
+    """路边登录"""
+    def __init__(self,user = None,pwd = None):
+        self.S = requests.Session()
+        self.host = Config().roadSide_host
+        if user == None and pwd == None:
+            self.user = Config().getValue("roadSide_user")
+            self.password = Config().getValue("roadSide_pwd")
+        else:
+            self.user = user
+            self.password = pwd
+
+    def login(self):
+        url = self.host + "/parking/checkLogin.do"
+        data = {
+            "user": self.user,
+            "cipher": self.password,
+            "isOnLine": "isOnLine",
+            "flag":3
+        }
+        r = self.S.post(url=url, data=data, headers=form_headers)
+        LoginReponse.loginRe = r
+        print(r.json())
+        return self.S
+
+
 
 if __name__ == "__main__":
 
-    L = OpenYDTLogin()
+    L = RoadSideLogin()
     # ip ="wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
     L.login()
     # re =L.createUserSocket(ip,'123456')

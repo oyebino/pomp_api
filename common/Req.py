@@ -34,6 +34,7 @@ class Req(requests.Session):
         self.weiXin_host = self.conf.weiXin_host
         self.openYDT_host = self.conf.openYDT_host
         self.mock_host = self.conf.mock_host
+        self.roadSide_host = self.conf.roadSide_host
         if Session == None:
             self.Session = requests.Session()
         else:
@@ -91,6 +92,15 @@ class Req(requests.Session):
     def mock_api(self):
         """微信商家端调用地址"""
         return self._mock_host(self.url)
+
+    @property
+    def roadSide_api(self):
+        """路边调用地址"""
+        return self._roadSide_host(self.url)
+
+    def _roadSide_host(self,url):
+        full_url = urljoin(self.roadSide_host, url)
+        return full_url
 
     def _zby_host(self,url):
         full_url = urljoin(self.zby_host, url)
@@ -176,7 +186,7 @@ class Req(requests.Session):
 
     def __checkLoginStatus(self,obj, url):
         """验证登录状态"""
-        if self.mock_host or self.openYDT_host in url:
+        if self.mock_host or self.openYDT_host or self.roadSide_host in url:
             return True
         if not isinstance(obj, dict):
             objDict = obj.json()

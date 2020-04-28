@@ -32,6 +32,7 @@ class Config(object):
     VALUE_ENT_WEIXIN_PWD = "weixin_pwd"
     VALUE_ENT_OPENYDT_HOST = "openYDT_host"
     VALUE_ENT_MOCK_HOST = "mock_host"
+    VALUE_ENT_ROADSIDE_HOST = "roadSide_host"
 
     def __init__(self,env="SIT"):
 
@@ -65,6 +66,7 @@ class Config(object):
         self.weiXin_pwd = self.config.get(self.CATEGORY, self.VALUE_ENT_WEIXIN_PWD)
         self.openYDT_host = self.config.get(self.CATEGORY, self.VALUE_ENT_OPENYDT_HOST)
         self.mock_host = self.config.get(self.CATEGORY, self.VALUE_ENT_MOCK_HOST)
+        self.roadSide_host = self.config.get(self.CATEGORY, self.VALUE_ENT_ROADSIDE_HOST)
 
 
     def get(self, title, value):

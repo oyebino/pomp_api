@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/4/22 14:31
 # @Author  : 叶永彬
-# @File    : test_naturalMonthTicketUsed.py
+# @File    : test_naturalMonthTicketUsedVems.py
 
 import pytest,allure
 from common.utils import YmlUtils
@@ -10,15 +10,16 @@ from Api.parkingManage_service.monthTicket_service.monthTicketConfig import Mont
 from Api.parkingManage_service.monthTicket_service.monthTicketBill import MonthTicketBill
 from Api.information_service.information import Information
 from common.Assert import Assertions
-from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
+from Api.offLineParking_service.openYDTReq import OpenYDTReq
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingConfig/vemsParking/monthTicketManage/naturalMonthTicketUsed.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingConfig/rpmsParking/monthTicketManage/naturalMonthTicketUsed.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("线下车场-月票管理模块")
-@allure.story('vems自然月月票创建创建并使用')
-class TestNaturalMonthTicketUsed():
-    """VEMS车场自然月月票创建，开通，续费。车辆进出是月票（在进出场记录中查看到VIP类型为售卖的月票类型）"""
+@allure.story('rpms自然月月票创建创建并使用')
+@pytest.mark.skip(reason='存在bug，编号：15503')
+class TestRpmsNaturalMonthTicketUsed():
+    """rpms车场自然月月票创建，开通，续费。车辆进出是月票（在进出场记录中查看到VIP类型为售卖的月票类型）"""
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
         """创建自然月月票类型"""
         re = MonthTicketConfig(userLogin).createMonthTicketConfig(send_data['parkName'], send_data['ticketTypeName'], send_data['renewMethod'], send_data['validTo'])
@@ -45,13 +46,13 @@ class TestNaturalMonthTicketUsed():
 
     def test_mockCarIn(self,openYDTLogin,send_data,expect):
         """模拟车辆进场"""
-        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
+        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
         result = re
         Assertions().assert_text(result['message'], expect["mockCarInMsg"])
 
     def test_mockCarOut(self,openYDTLogin,send_data, expect):
         """模拟车辆出场"""
-        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
+        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
         result = re
         Assertions().assert_text(result['message'], expect["mockCarOutMsg"])
 

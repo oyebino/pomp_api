@@ -1,29 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2020/2/28 15:28
+# @Time    : 2020/2/28 15:02
 # @Author  : 叶永彬
-# @File    : test_timeCouponCover.py
+# @File    : test_reduceAmountCouponNoCoverVems.py
 
 import allure,pytest
 from common.utils import YmlUtils
-from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
 from Api.parkingManage_service.businessCoupon_service.coupon import Coupon
-from Api.offLineParking_service.vemsParkingReq import VemsParkingReq
-from Api.parkingManage_service.businessCoupon_service.trader import Trader
+from Api.parkingManage_service.businessCoupon_service.weiXin import WeiXin
+from Api.offLineParking_service.openYDTReq import OpenYDTReq
 from Api.information_service.information import Information
+from Api.parkingManage_service.businessCoupon_service.trader import Trader
 from common.Assert import Assertions
 from common.BaseCase import BaseCase
 
 args_item = "send_data,expect"
-test_data,case_desc = YmlUtils("/test_data/parkingConfig/vemsParking/businessCoupon/timeCouponCover.yml").getData
+test_data,case_desc = YmlUtils("/test_data/parkingConfig/vemsParking/businessCoupon/reduceAmountCouponNoCover.yml").getData
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("线下车场-优惠劵模块")
-@allure.story('vems可叠加的时间券创建并使用')
-class TestTimeCouponCover(BaseCase):
-    """可叠加时间劵创建并使用"""
+@allure.story('vems不可叠加金额扣减劵创建并使用')
+class TestVemsReduceAmountCouponNoCover(BaseCase):
+    """不可叠加的扣减券创建并使用"""
     def test_addCoupon(self,userLogin,send_data,expect):
         """新增优惠劵"""
-        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue =send_data["faceValue"],isCover=send_data["isCover"])
+        re = Coupon(userLogin).addCoupon(send_data["couponName"],send_data["parkName"],send_data["traderName"],send_data["couponType"],faceValue=send_data['faceValue'],isCover=send_data['isCover'])
         result = re
         Assertions().assert_in_text(result, expect["addCouponMessage"])
 
@@ -49,13 +49,19 @@ class TestTimeCouponCover(BaseCase):
 
     def test_mockCarIn(self, openYDTLogin,send_data,expect):
         """模拟车辆进场"""
-        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
+        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
         result = re
         Assertions().assert_in_text(result, expect["mockCarInMessage"])
 
+    def test_payParkFee(self,openYDTLogin,send_data,expect):
+        """离场缴费"""
+        re = OpenYDTReq(openYDTLogin).payParkFee(send_data['parkCode'],send_data["carNum"])
+        result = re
+        Assertions().assert_in_text(result, expect["payParkFeeMsg"])
+
     def test_mockCarOut(self,openYDTLogin,send_data, expect):
         """模拟车辆出场"""
-        re = VemsParkingReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
+        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
         result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 

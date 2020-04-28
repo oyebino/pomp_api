@@ -3,10 +3,12 @@
 # @Time    : 2019/1/26 15:41
 # @Author  : 叶永彬
 # @File    : superAction.py
-import random,string,time
+import random,string,time,os
 import datetime
 import uuid
 import calendar
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 class SuperAction:
 
@@ -175,6 +177,16 @@ class SuperAction:
 
         return first_date +" - "+ end_date
 
+    def execjs(self, fileName,func,*args):
+        """执行js文件"""
+        import execjs
+        f = open(os.path.join(root_path,'upload','js',fileName), 'r', encoding='utf-8')
+        line = f.readline()
+        jsStr = ''
+        while line:
+            jsStr += line
+            line = f.readline()
+        return execjs.compile(jsStr).call(func,*args)
 
         # 获取当前时间的自然月
     def get_now_natural_month(self):
@@ -228,5 +240,5 @@ class SuperAction:
 
 if __name__ == "__main__":
     SA = SuperAction()
-    b = SA.cal_get_day(days=20)
+    b = SA.getTimeStamp()
     print(b)

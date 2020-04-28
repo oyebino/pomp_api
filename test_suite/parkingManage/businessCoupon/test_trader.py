@@ -16,7 +16,6 @@ test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/trader.y
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("商户管理")
 @allure.story('冻结-启用商户流程')
-@pytest.mark.skip(reason='bug号：15503')
 class TestTrader(BaseCase):
     """新增商户流程"""
     def test_addTrader(self,userLogin,send_data,expect):

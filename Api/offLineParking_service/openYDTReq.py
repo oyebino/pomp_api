@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/4/20 15:48
 # @Author  : 叶永彬
-# @File    : vemsParkingReq.py
+# @File    : openYDTReq.py
 from common.superAction import SuperAction as SA
 from common.Req import Req
 import time
 form_headers = {"Content-Type": "application/x-www-form-urlencoded"}
 json_headers = {"Content-Type": "application/json"}
 
-class VemsParkingReq(Req):
+class OpenYDTReq(Req):
     """vems车场业务"""
 
     def carInOut(self,parkCode, carNum, mockType):
-        """开放平台模拟车进出"""
+        """开放平台模拟vems车进出"""
         self.url = "/openydt/api/v2/mockInOut"
         data = {
             "carCard": "",
@@ -40,6 +40,7 @@ class VemsParkingReq(Req):
     def payParkFee(self ,parkCode, carNum):
         """缴费"""
         parkFeeDict = self.getParkFee(parkCode, carNum)
+        # couponList = parkFeeDict.get('otherAttr').get('traderCouponList') if parkFeeDict.get('otherAttr').get('traderCouponList') else []
         data = {
             "parkingCode": parkFeeDict.get("parkingCode"),
             "chargeDate": parkFeeDict.get("chargeDate"),
