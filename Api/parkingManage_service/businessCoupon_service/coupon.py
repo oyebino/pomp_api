@@ -123,7 +123,7 @@ class Coupon(Req):
         """
         couponDict = self.getDictBykey(self.getCouponListByPage(parkName),'name',couponName)
         couponParkDict = self.getDictBykey(self.__getCouponParkList(couponDict['tmpId']).json(), 'name', parkName)
-        traderDict = self.getDictBykey(self.__getTraderList(couponParkDict['id'],traderName).json(),'name',traderName)
+        traderDict = self.getDictBykey(self.__getTraderList(couponParkDict['id'],traderName),'name',traderName)
         totalMoney = int(couponDict['originalPrice']) * int(sellNum)
         if sellMoney == None:
             sellMoney = totalMoney
@@ -132,7 +132,7 @@ class Coupon(Req):
             "realPrice": couponDict['originalPrice'],
             "originalPrice":couponDict['originalPrice'],
             "traderName":traderName,
-            "traderId": traderDict['id'],
+            "traderId": traderDict.get("id"),
             "totalAvilableToBuy":0,
             "maxBuyNum":0,
             "sellNum":sellNum,
@@ -141,6 +141,7 @@ class Coupon(Req):
             "couponTmpId":couponDict['tmpId']
         }
         self.url = "/mgr/coupon/sell/add.do"
+        sleep(3)
         re = self.post(self.api, data=json_data, headers=form_headers)
         return re.json()
 
@@ -180,7 +181,7 @@ class Coupon(Req):
         }
         self.url = '/mgr/coupon/sell/getTraderListByPage.do?' + urlencode(form_data)
         re = self.get(self.api , headers = json_headers)
-        return re
+        return re.json()['data']['rows']
 
 
     def getCouponGrantList(self,parkName,carNum):

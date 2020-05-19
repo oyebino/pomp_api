@@ -69,7 +69,7 @@ class RpmsParkingReq(Req):
         self.url = "/parking/test/carOut.do?" + urlencode(data)
         if re.json().get("code") == 1:
             re = self.post(self.roadSide_api)
-        return re
+        return re.json()
 
     def __userParkTreeList(self):
         """用户车场列表"""
@@ -97,7 +97,10 @@ class RpmsParkingReq(Req):
     def __listDeviceWaitSureList(self, parkName, statusStr, carPositionName = ""):
         """车位地磁绑定"""
         positionList =  self.__listByParkId(parkName).get('dataList')
-        diciCode = self.__checkAvailableDiciCode(parkName,positionList,statusStr) if statusStr == '无车' else ""
+        if statusStr == "无车":
+            diciCode = self.__checkAvailableDiciCode(parkName, positionList, statusStr)
+        else:
+            diciCode = ""
         data = {
             "diciCode":diciCode,
             "carPositionName":carPositionName,

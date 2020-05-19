@@ -10,7 +10,7 @@ from Api.parkingManage_service.monthTicket_service.monthTicketConfig import Mont
 from Api.parkingManage_service.monthTicket_service.monthTicketBill import MonthTicketBill
 from Api.information_service.information import Information
 from common.Assert import Assertions
-from Api.offLineParking_service.openYDTReq import OpenYDTReq
+from Api.offLineParking_service.rpmsParkingReq import RpmsParkingReq
 
 args_item = "send_data,expect"
 test_data,case_desc = YmlUtils("/test_data/parkingConfig/rpmsParking/monthTicketManage/naturalMonthTicketUsed.yml").getData
@@ -44,15 +44,15 @@ class TestRpmsNaturalMonthTicketUsed():
         result = re
         Assertions().assert_text(result['status'], expect["ticketBillResyncMsg"])
 
-    def test_mockCarIn(self,openYDTLogin,send_data,expect):
+    def test_mockCarIn(self,rmpsLogin,send_data,expect):
         """模拟车辆进场"""
-        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],0)
+        re = RpmsParkingReq(rmpsLogin).carIn(send_data['parkCode'], send_data["parkNameInRmps"], send_data['carNum'])
         result = re
         Assertions().assert_text(result['message'], expect["mockCarInMsg"])
 
-    def test_mockCarOut(self,openYDTLogin,send_data, expect):
+    def test_mockCarOut(self,rmpsLogin,send_data, expect):
         """模拟车辆出场"""
-        re = OpenYDTReq(openYDTLogin).carInOut(send_data['parkCode'],send_data["carNum"],1)
+        re = RpmsParkingReq(rmpsLogin).carOut(send_data['parkCode'], send_data["rmpsParkName"], send_data['carNum'])
         result = re
         Assertions().assert_text(result['message'], expect["mockCarOutMsg"])
 

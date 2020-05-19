@@ -2,15 +2,15 @@
 ## 工程目录：
 
 - Project/:  系统名称
-  - interface   接口基础类
-  - Api  接口基础类封装
+  - Api  模块接口基础类封装
   - common  公共方法类(日志,数据库等)
   - Config 配置文件
   - lib 依赖插件库
   - report/： 存储测试结果
   - result  存放运行截图
+  - temporaryDataLog 案例临时数据
   - Log  执行日志
-  - test_data 业务数据
+  - test_data 用例业务数据
   - test_suit 接口测试用例集
   - run_test:  执行接口测试入口
 
@@ -45,7 +45,7 @@
     except:
       status_code: 200
 ```
-- 在yml中,使用中括号加参数能直接配置文件里的值，如：
+- 在yml中,使用"${}"加参数能直接配置文件里的值，如：
 ```
 ${lightRule_inChannelCode}
 ${lightRule_parkID}
@@ -75,7 +75,7 @@ class TestCarStrictRuleInOutNoPay(BaseCase):
     except:
       status_code: 200
 ```
-- 在用例数据yml中，可以运行基本的运行代码块，用{{}}表示，如
+- 在用例数据yml中，可以运行基本的运行代码块，用"{{}}"表示(需要添加双引用)，如
 ```
 - test:
     name: 异常放行
@@ -84,7 +84,7 @@ class TestCarStrictRuleInOutNoPay(BaseCase):
       carNo: ${异常放行.carNum}
       leaveType: 3
     except:
-      num: {{1+1}}
+      num: "{{1+1}}"
 ```
 
 **3.test_suit文件保存按模块的执行用例，用例文件，类名及用例方法必须以test为前缀**

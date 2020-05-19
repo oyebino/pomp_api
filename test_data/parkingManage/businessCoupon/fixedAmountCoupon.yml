@@ -3,9 +3,9 @@
     desc: 固定金额优惠劵使用流程-智泊云
     send_data:
       parkName: ${usedParkName}
-      couponName: api固定金额劵${__create_randomNum()}
+      couponName: &couponName api固定金额劵${__create_randomNum()}
       traderName: pytest勿动
-      carNum: ${__create_carNum()}
+      carNum: &carNum ${__create_carNum()}
       inClientID: ${wideInClientId}
       outClientID: ${wideOutClientId}
       couponType: 金额固定值券
@@ -18,6 +18,6 @@
       mockCarInMessage: $${__create_carNum()}$欢迎光临
       mockCarOutMessage: ${__create_carNum()}\\扫码缴费1.5元
       sentryPayMessage: 已收费1.5元\\一路顺风
-      checkParkingBillDetailMessage: ${__create_carNum()}
-      checkCouponGrantListMessage: ${__create_carNum()}
-      checkSerialListMessage: ${__create_carNum()}
+      checkParkingBillDetailMessage: *carNum
+      checkCouponGrantListMessage: *couponName
+      checkSerialListMessage: *couponName

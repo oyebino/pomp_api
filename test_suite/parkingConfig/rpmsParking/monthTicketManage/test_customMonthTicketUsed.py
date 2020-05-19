@@ -17,7 +17,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingConfig/rpmsParking/monthTicket
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("线下车场-月票管理模块")
 @allure.story('rmps自定义月票创建创建并使用')
-
+@pytest.mark.skip(reason='存在bug，编号：15503')
 class TestRpmsCustomMonthTicketUsed():
     """rmps车场自定义月票创建，开通，续费。车辆进出是月票（在进出场记录中查看到VIP类型为售卖的月票类型）"""
     def test_createMonthTicketConfig(self, userLogin, send_data, expect):
@@ -52,7 +52,7 @@ class TestRpmsCustomMonthTicketUsed():
 
     def test_mockCarOut(self,rmpsLogin,send_data, expect):
         """模拟车辆出场"""
-        re = RpmsParkingReq(rmpsLogin).carOut(send_data['parkCode'],send_data["parkNameInRmps"],send_data['carNum'])
+        re = RpmsParkingReq(rmpsLogin).carOut(send_data['parkCode'],send_data["rmpsParkName"],send_data['carNum'])
         result = re
         Assertions().assert_text(result['message'], expect["mockCarOutMsg"])
 

@@ -5,9 +5,9 @@
       parkName: ${rpmsParkName}
       parkCode: ${rpmsParkCode}
       rmpsParkName: ${parkNameInRmps}
-      couponName: &couponName rmps金额折扣劵123
+      couponName: &couponName rmps金额折扣劵124
       traderName: &traderName hjx
-      carNum: &carNum 粤FUE987
+      carNum: &carNum 粤FUE988
       couponType: 金额折扣券
       faceValue: 5
     except:

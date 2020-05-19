@@ -27,17 +27,17 @@ class TestAddTollProcess(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
-    def test_isTollManage(self, userLogin, send_data, expect):
-        """查看新增是否收费员"""
-        re = TollCollection(userLogin).getAllTollCollection()
-        result = re[0]
-        Assertions().assert_text(result['manager'], expect['isTollManageMsg'])
-
     def test_bindUserPark(self,userLogin, send_data, expect):
         """绑定用户停车场"""
         re = TollCollection(userLogin).bindUserPark(send_data['parkName'], send_data['userId'])
         result = re['status']
         Assertions().assert_text(result, expect['status'])
+
+    def test_offDuty(self, sentryLogin, send_data, expect):
+        """下班"""
+        re = SentryPersonalInfo(sentryLogin).offduty()
+        result = re
+        Assertions().assert_text(result, '')
 
     @pytest.mark.parametrize('sentryLogin', [{'user': '${mytest.userId}', 'pwd': '${mytest.pwd}'}], indirect=True)
     def test_loginSentry(self, sentryLogin, send_data, expect):

@@ -169,6 +169,9 @@ class CarInOutHandle(Req):
         re = self.get(self.zby_api)
         return re.json()['list']
 
+    def runTest1(self):
+        return self.__getCarInOutHandleIdList()
+
     def getHandleHistoryMsg(self):
         """获取处理历史信息"""
         data = {

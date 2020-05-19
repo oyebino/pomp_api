@@ -182,7 +182,7 @@ class MonthTicketBill(Req):
         monthTicketBillDict = self.getDictBykey(self.getMonthTicketBillList(parkName, carNum, status), 'carCode', carNum)
         self.url = "/mgr/monthTicketBill/renew.do"
         if monthTicketBillDict['renewMethod'] == 'NATURAL_MONTH':
-            openMonthNum = 1
+            openMonthNum = 2
             timeperiodListStr = SA().cal_getTheMonth(date = date, n = openMonthNum - 1)
         else:
             openMonthNum = 10

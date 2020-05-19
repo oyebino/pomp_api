@@ -5,9 +5,9 @@
     send_data:
       parkName: ${rpmsParkName}
       parkCode: ${rpmsParkCode}
-      parkNameInRmps: ${parkNameInRmps}
-      carNum: 粤BBE654
-      ticketTypeName: &ticketTypeName 路边自定义pytest654
+      rmpsParkName: ${parkNameInRmps}
+      carNum: ${__create_randomNum()}
+      ticketTypeName: &ticketTypeName 路边自定义pytest${__create_randomNum()}
       renewMethod: 自定义
       validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
       timeperiodListStr: ${__cal_getTheMonth(2020-02-05)}
@@ -18,5 +18,5 @@
       renewMonthTicketBillMsg: 操作成功
       ticketBillResyncMsg: 1
       mockCarInMsg: 模拟进车成功
-      mockCarOutMsg: VEMS：模拟离场成功,此车辆不需要缴费
+      mockCarOutMsg: 确认离场成功
       checkCarInOutHistoryVIPTypeMsg: *ticketTypeName

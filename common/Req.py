@@ -186,7 +186,7 @@ class Req(requests.Session):
 
     def __checkLoginStatus(self,obj, url):
         """验证登录状态"""
-        if self.mock_host or self.openYDT_host or self.roadSide_host in url:
+        if self.mock_host in url or self.openYDT_host in url or self.roadSide_host in url:
             return True
         if not isinstance(obj, dict):
             objDict = obj.json()

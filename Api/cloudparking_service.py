@@ -114,7 +114,7 @@ class cloudparking_service(Req):
 
 
 if __name__ == "__main__":
-    b = cloudparking_service().mockCarInOut("粤E40224",0,"20190507171500")
+    b = cloudparking_service().mockCarInOut("粤A75034",0,"20190507171501")
     # b = cloudparking_service().checkYtjOnlineList()
 
     # print(b.json())

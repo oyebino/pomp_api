@@ -54,7 +54,7 @@ class TestRpmsTimeCouponCover():
 
     def test_mockCarOut(self,rmpsLogin,send_data, expect):
         """模拟车辆出场"""
-        re = RpmsParkingReq(rmpsLogin).carOut(send_data["parkCode"], send_data["carNum"], '${mytest.position}','${mytest.cmcId}', '${mytest.pmdId}')
+        re = RpmsParkingReq(rmpsLogin).carOut(send_data["parkCode"], send_data["rmpsParkName"], send_data["carNum"])
         result = re
         Assertions().assert_in_text(result, expect["mockCarOutMessage"])
 

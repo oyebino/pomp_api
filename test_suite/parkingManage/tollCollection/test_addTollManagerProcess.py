@@ -27,12 +27,6 @@ class TestAddTollManagerProcess(BaseCase):
         result = re['status']
         Assertions().assert_text(result, expect['status'])
 
-    def test_isTollManage(self, userLogin, send_data, expect):
-        """查看新增是否管理员"""
-        re = TollCollection(userLogin).getAllTollCollection()
-        result = re[0]
-        Assertions().assert_text(result['manager'], expect['isTollManageMsg'])
-
     def test_bindUserPark(self,userLogin, send_data, expect):
         """绑定用户停车场"""
         re = TollCollection(userLogin).bindUserPark(send_data['parkName'], send_data['userId'])

@@ -3,10 +3,11 @@
     name: rmps车场自然月月票使用
     desc: rmps车场自然月月票创建-开通-续费-车辆进出是月票
     send_data:
-      parkName: ${vemsParkName}
-      parkCode: ${vemsParkCode}
-      carNum: ${__create_carNum()}
-      ticketTypeName: &ticketTypeName 自然月pytest${__create_randomNum()}
+      parkName: ${rpmsParkName}
+      parkCode: ${rpmsParkCode}
+      rmpsParkName: ${parkNameInRmps}
+      carNum: 粤ASA123
+      ticketTypeName: &ticketTypeName 自然月pytest969
       renewMethod: 自然月
       validTo: "${__cal_get_day(strType='%Y-%m-%d',days=60)}"
       timeperiodListStr: ${__cal_getTheMonth(2020-02-05)}
@@ -16,6 +17,6 @@
       openMonthTicketBillMsg: 操作成功
       renewMonthTicketBillMsg: 操作成功
       ticketBillResyncMsg: 1
-      mockCarInMsg: VEMS：模拟进场成功
-      mockCarOutMsg: VEMS：模拟离场成功,此车辆不需要缴费
+      mockCarInMsg: 模拟进车成功
+      mockCarOutMsg: 确认离场成功
       checkCarInOutHistoryVIPTypeMsg: *ticketTypeName
