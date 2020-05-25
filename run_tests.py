@@ -14,7 +14,7 @@ import pytest
 
 from common.Shell import Shell
 
-test_dir = "./test_suite/informationSearch/"
+test_dir = "./test_suite/informationSearch/technicalSupport/"
 
 if __name__ == "__main__":
 
