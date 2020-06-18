@@ -347,7 +347,7 @@ class RoadSideLogin():
 
 if __name__ == "__main__":
 
-    L = RoadSideLogin()
+    L = CenterMonitorLogin()
     # ip ="wss://monitor.k8s.yidianting.com.cn/zbcloud/center-monitor/websocket"
     L.login()
     # re =L.createUserSocket(ip,'123456')

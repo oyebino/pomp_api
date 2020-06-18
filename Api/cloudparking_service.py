@@ -66,6 +66,7 @@ class cloudparking_service(Req):
         self.url = "/get_center_monitor_msg"
         re = self.post(self.mock_api, json=data, headers=self.api_headers)
         result = re.json()['biz_content']['center_monitor_msg']
+        if result == "null": raise Exception("远程值班获取车场进出场处理车辆信息为null")
         if result['msgType'] == "CORRECT_CAR_NO_ALERT" :
             if result['data']['carNo'] == carNum :
                 return result['data']
@@ -114,7 +115,6 @@ class cloudparking_service(Req):
 
 
 if __name__ == "__main__":
-    b = cloudparking_service().mockCarInOut("粤A75034",0,"20190507171501")
-    # b = cloudparking_service().checkYtjOnlineList()
+    b = cloudparking_service().mockCarInOut("粤s39671",0,"20190507171501")
 
     # print(b.json())

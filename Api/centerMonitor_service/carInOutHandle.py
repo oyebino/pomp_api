@@ -9,8 +9,8 @@ from Api.cloudparking_service import cloudparking_service
 from urllib.parse import urlencode
 from Api.centerMonitor_service.personalInfo import PersonalInfo
 
-form_headers = {"content-type": "application/x-www-form-urlencoded"}
-json_headers = {"content-type": "application/json;charset=UTF-8"}
+form_headers = {"content-type": "application/x-www-form-urlencoded","cookie":"akeparking_grey_zone_name=grey"}
+json_headers = {"content-type": "application/json;charset=UTF-8","cookie":"akeparking_grey_zone_name=grey"}
 
 class CarInOutHandle(Req):
     """远程值班室-处理车辆"""

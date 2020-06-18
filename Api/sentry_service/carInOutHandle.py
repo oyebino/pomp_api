@@ -7,6 +7,7 @@ from Api.cloudparking_service import cloudparking_service
 from common.Req import Req
 from common.superAction import SuperAction
 from urllib.parse import urlencode
+from time import sleep
 
 form_headers = {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
 json_headers = {"Content-Type": "application/json;charset=UTF-8"}
@@ -46,6 +47,7 @@ class CarInOutHandle(Req):
             self.save('payVal', data['real_value'])
         re = self.post(self.zby_api, data=data, headers=form_headers)
         if jobId != "" and "success" in re.json() and re.json()["success"] == True:
+            sleep(2)
             result = cloudparking_service().getCarMsgYtj(jobId)
             return result
         else:
@@ -65,7 +67,6 @@ class CarInOutHandle(Req):
             "carType": self.carTypeDict[carType]
         }
         re =self.post(self.zby_api,data=data,headers = form_headers)
-        print(re.text)
         if re.json()['open_gate'] == False:
             re = self.getHandleIdInfo(carHandleInfo['id'])
             return re['content']
@@ -166,11 +167,22 @@ class CarInOutHandle(Req):
             "pageSize": 250
         }
         self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
+        sleep(3)
         re = self.get(self.zby_api)
+        if re.json()['list'] == []: raise Exception("当前没有需要处理的车辆！")
         return re.json()['list']
 
     def runTest1(self):
-        return self.__getCarInOutHandleIdList()
+        data = {
+            "type": "undeal",
+            "pageNumber": 1,
+            "pageSize": 250
+        }
+        self.url = "/ydtp-backend-service/api/messages?" + urlencode(data)
+        sleep(3)
+        re = self.get(self.zby_api)
+        if re.json()['list'] == []: raise Exception("当前没有需要处理的车辆！")
+        return re.json()['list']
 
     def getHandleHistoryMsg(self):
         """获取处理历史信息"""

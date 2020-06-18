@@ -16,7 +16,7 @@ test_data,case_desc = YmlUtils("/test_data/parkingManage/businessCoupon/editTrad
 @pytest.mark.parametrize(args_item, test_data)
 @allure.feature("商户管理")
 @allure.story('新增-修改-删除商户流程')
-@pytest.mark.skip(reason='bug号：15503')
+@pytest.mark.skip(reason='bug号：16593')
 class TestEditTraderPassword(BaseCase):
     """新增商户流程"""
     def test_addTrader(self,userLogin,send_data,expect):

@@ -86,6 +86,7 @@ class MonthTicketConfig(Req):
 
         data = {
             "ticketName": ticketTypeName,
+            "settlementType": 0,
             "ticketType": 'OUTTER',
             "renew": 1,
             "price": 35,
@@ -163,6 +164,7 @@ class MonthTicketConfig(Req):
         }
         data = {
             "id":typeConfigDetailDict['id'],
+            "settlementType": 0,
             "parkSysType": typeConfigDetailDict['parkSysType'],
             "price": typeConfigDetailDict['price'],
             "ticketName": newTypeName,

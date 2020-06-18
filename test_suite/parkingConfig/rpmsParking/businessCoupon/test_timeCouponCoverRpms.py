@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/2/28 15:28
 # @Author  : 叶永彬
-# @File    : test_timeCouponCoverVems.py
+# @File    : test_timeCouponCoverRpms.py
 
 import allure,pytest
 from common.utils import YmlUtils

@@ -74,6 +74,8 @@ class TestRefundMonthTicketProcess():
     # 月票退款后出车
     def test_mockCarOut2(self, send_data, expect):
         """模拟车辆离场"""
+        from time import sleep
+        sleep(5)
         re = cloudparking_service().mockCarInOut(send_data["carNum"],1,send_data["outClientID"])
         result = re
         Assertions().assert_in_text(result['screen'], expect["outscreen2"])

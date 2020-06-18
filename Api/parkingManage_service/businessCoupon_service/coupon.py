@@ -192,7 +192,7 @@ class Coupon(Req):
         :return:
         """
         parkDict = self.getDictBykey(self.__getParkingBaseDataTree().json(), 'name', parkName)
-        self.url = "/mgr/coupon/getCouponGrantList.do?page=1&rp=1&query_parkId="+str(parkDict['value'])+"&parkSysType=1&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
+        self.url = "/mgr/coupon/getCouponGrantList.do?page=1&rp=20&query_parkId="+str(parkDict['value'])+"&parkSysType=1&beginTime="+self.today+"+00:00:00&endTime="+self.today+"+23:59:59&carCode="+carNum
         re = self.get(self.api, headers=json_headers)
         return re.json()['data']['rows']
 

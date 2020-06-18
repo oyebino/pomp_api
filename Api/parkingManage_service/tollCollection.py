@@ -129,7 +129,3 @@ class TollCollection(Req):
         except json.JSONDecodeError:
             return "全部用户强制下班"
 
-
-if __name__ == '__main__':
-    re = TollCollection().add_tollCollection("test006")
-    print(re.text)

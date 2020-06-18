@@ -25,7 +25,8 @@ class Req(requests.Session):
     """
 
     def __init__(self,Session=None):
-        super(Req, self).__init__()
+        # super(Req, self).__init__()
+        super().__init__()
         self.conf = Config()
         self.host = self.conf.host
         self.monitor_host = self.conf.monitor_host

@@ -40,7 +40,7 @@ class PresentCarHandle(Req):
         matchCarDict = self.__getMatchCarIn(carCode, parkDict['park_id']).json()
         enterTime = datetime.datetime.strftime(enterTime,'%Y-%m-%d %H:%M:%S')
         if matchCarDict['carNo'] == None:
-            self.url = "/car-record-service/carRecord/additionalRecording"
+            self.url = "/car-in-out-handler-service/carRecord/additionalRecording"
             data = {
                 "carCodeType": carSizeDict['id'],
                 "carNo": carCode,
@@ -70,7 +70,7 @@ class PresentCarHandle(Req):
 
     def __getMatchCarIn(self, carNum, parkUUID):
         """匹配是否已有在场记录"""
-        self.url = "/car-record-service/carRecord/getMatchCarIn"
+        self.url = "/car-in-out-handler-service/carRecord/getMatchCarIn"
         data = {
             "carNo": carNum,
             "parkUUID": parkUUID

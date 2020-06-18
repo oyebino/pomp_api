@@ -34,8 +34,8 @@ if __name__ == "__main__":
     self_args = sys.argv[1:]
 
     # 针对本地执行时，把allure的结果文件清空，在jenkins执行不需要
-    # delAllureCmd = 'del /s /f /q allure-results'
-    # shell.invoke(delAllureCmd)
+    delAllureCmd = 'del /s /f /q allure-results'
+    shell.invoke(delAllureCmd)
 
     pytest.main(args)
 

@@ -36,33 +36,33 @@ class TestDutyRoomHandleCarInOut(BaseCase):
         result = re[0]
         Assertions().assert_text(result['carCode'], expect["checkCarInRecordMsg"])
 
-    def test_presentCar(self,userLogin,send_data,expect):
-        """查看在场记录"""
-        re = Information(userLogin).getPresentCar(send_data["parkName"],send_data["carNum"])
-        result = re
-        Assertions().assert_in_text(result,expect["presentCarMessage"])
-
-    def test_mockCarOut(self,centerMonitorLogin, send_data, expect):
-        """模拟车辆进场"""
-        re = cloudparking_service(centerMonitorLogin).mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
-        result = re
-        Assertions().assert_in_text(result, expect["mockCarOutMessage"])
-
-    def test_dutyRoomCheckCarOut(self, centerMonitorLogin, send_data, expect):
-        """值班室异常放行车辆"""
-        re = CarInOutHandle(centerMonitorLogin).checkCarOut(send_data['carNum'])
-        result = re['status']
-        Assertions().assert_text(result, expect["dutyRoomCheckCarOutMsg"])
-
-    def test_cendutyCarOutRecord(self, centerMonitorLogin, send_data, expect):
-        """查看远程值班室出场记录"""
-        re = CarInOutHandle(centerMonitorLogin).carInOutRecord(send_data['parkName'], send_data['carNum'], 'out')
-        result = re[0]
-        Assertions().assert_text(result['carCode'], expect["checkCarOutRecordMsg"])
-
-    def test_carLeaveHistory(self,userLogin,send_data,expect):
-        """获取出场记录"""
-        re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
-        result = re[0]
-        Assertions().assert_text(result['checkOutTypeStr'], expect["carLeaveTypeHistoryMsg"])
-        Assertions().assert_text(result['billValue'], expect["carLeaveBillValueHistoryMsg"])
+    # def test_presentCar(self,userLogin,send_data,expect):
+    #     """查看在场记录"""
+    #     re = Information(userLogin).getPresentCar(send_data["parkName"],send_data["carNum"])
+    #     result = re
+    #     Assertions().assert_in_text(result,expect["presentCarMessage"])
+    #
+    # def test_mockCarOut(self,centerMonitorLogin, send_data, expect):
+    #     """模拟车辆进场"""
+    #     re = cloudparking_service(centerMonitorLogin).mockCarInOut(send_data["carNum"], 1, send_data["outClientID"])
+    #     result = re
+    #     Assertions().assert_in_text(result, expect["mockCarOutMessage"])
+    #
+    # def test_dutyRoomCheckCarOut(self, centerMonitorLogin, send_data, expect):
+    #     """值班室异常放行车辆"""
+    #     re = CarInOutHandle(centerMonitorLogin).checkCarOut(send_data['carNum'])
+    #     result = re['status']
+    #     Assertions().assert_text(result, expect["dutyRoomCheckCarOutMsg"])
+    #
+    # def test_cendutyCarOutRecord(self, centerMonitorLogin, send_data, expect):
+    #     """查看远程值班室出场记录"""
+    #     re = CarInOutHandle(centerMonitorLogin).carInOutRecord(send_data['parkName'], send_data['carNum'], 'out')
+    #     result = re[0]
+    #     Assertions().assert_text(result['carCode'], expect["checkCarOutRecordMsg"])
+    #
+    # def test_carLeaveHistory(self,userLogin,send_data,expect):
+    #     """获取出场记录"""
+    #     re = Information(userLogin).getCarLeaveHistory(send_data["parkName"],send_data["carNum"])
+    #     result = re[0]
+    #     Assertions().assert_text(result['checkOutTypeStr'], expect["carLeaveTypeHistoryMsg"])
+    #     Assertions().assert_text(result['billValue'], expect["carLeaveBillValueHistoryMsg"])
